@@ -756,6 +756,58 @@ ON doctors.Phone=treatments.DoctorsPhone;''')
                     print("Wrong phone number. Re-enter it.")
                     continue
 
+    def show_treatments_of_doctor():
+        while True:
+            DoctorsPhone=input('''\
+Enter phone number of a doctor to show their treatments
+(or even `show doctors`): ''')
+            if DoctorsPhone=='show doctors':
+                show_doctors()
+                continue
+            else:
+                if exists(value=DoctorsPhone, column='Phone', table='doctors'):
+                    inner_cursor=connection.cursor()
+                    inner_command=(f'''\
+SELECT
+patients.Name, patients.Phone,
+treatments.treatmentID, doctors.Name AS "Name of Doctor", treatments.DoctorsPhone AS "Doctor's Phone", 
+treatments.Date, treatments.Time, treatments.Treatment, treatments.Status, treatments.Fee,
+
+CASE treatments.Paid
+WHEN 0 THEN "False"
+WHEN 1 THEN "True"
+END AS Paid
+
+FROM
+patients
+
+
+JOIN appointments
+ON patients.Phone=appointments.Phone
+JOIN treatments
+ON treatments.TreatmentID=appointments.TreatmentID
+JOIN doctors
+ON doctors.Phone=treatments.DoctorsPhone;''')
+                    inner_cursor.execute(inner_command)
+                    table=from_db_cursor(inner_cursor)
+
+                    df=pd.DataFrame(table.rows, columns=table.field_names)
+
+                    temp=PrettyTable(field_names=table.field_names)
+
+                    for index, value in enumerate(df["Doctor's Phone"]):
+                            if value==DoctorsPhone:
+                                temp_row=list(df.loc[index])
+                                temp_row[6]=str(temp_row[6])[-8:]
+                                temp.add_row(temp_row)
+                    print(temp)
+                    break
+
+                else:
+                    print("Wrong phone number of doctor. Re-enter it.")
+                    continue
+
+
     while True:
         command=input('Enter command> ')
         command=command.strip().lower()
