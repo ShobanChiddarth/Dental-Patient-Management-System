@@ -279,7 +279,7 @@ Gets user input and updates a patient in table `patients`'''
                                             if isinstance(the_value, str):
                                                 the_value='"'+the_value+'"'
                                             break
-                                        except:
+                                        except (NameError, SyntaxError):
                                             print('ERROR, INVALID VALUE')
                                             continue
                             break
@@ -406,7 +406,7 @@ Updatable values
             try:
                 the_value=eval(input('Enter the value (will be `eval`utated by python): '))
                 break
-            except:
+            except (NameError, SyntaxError):
                 print("ERROR, CAN'T BE `EVAL`UATED.")
                 continue
 
