@@ -807,6 +807,35 @@ ON doctors.Phone=treatments.DoctorsPhone;''')
                     print("Wrong phone number of doctor. Re-enter it.")
                     continue
 
+    def add_doctor():
+        """Add a doctor record to the list of doctors in the table `doctors`"""
+        Name=input("Enter name of the doctor: ")
+
+        while True:
+            Phone=input("Enter the phone number of doctor (with country code): ")
+            if len(Phone)>17:
+                print("Phone number with country code can't be more than 17 digits. Re-enter it.")
+                continue
+            else:
+                break
+
+        Qualification=input("Enter qualifications of the doctor: ")
+        Role=input("Enter the role of the doctor in the clinic: ")
+
+        Special_In=input("""\
+(Type `None` or `null` if this doctor is not a specialist)
+Specialist in what? """)
+        if Special_In.lower() in ("none", "null"):
+            Special_In='NULL'
+        else:
+            Special_In='"'+Special_In+'"'
+
+        inner_cursor=connection.cursor()
+        inner_cursor.execute(f"""\
+INSERT INTO doctors (Phone, Name, Qualification, Role, Special_In) values
+("{Phone}", "{Name}", "{Qualification}", "{Role}", {Special_In});""")
+        connection.commit()
+        print("Added successfully")
 
     while True:
         command=input('Enter command> ')
@@ -865,6 +894,10 @@ ON doctors.Phone=treatments.DoctorsPhone;''')
 
         elif command=='show treatments of doctor':
             show_treatments_of_doctor()
+
+        elif command=='add doctor':
+            add_doctor()
+
         else:
             print("WRONG COMMAND [See `help`]")
 
