@@ -71,6 +71,9 @@ Return a random string'''
         choice_of_strings.extend(deque(string.ascii_lowercase))
     return ''.join(random.choices(choice_of_strings, k=length)).strip()
 
+if __name__!='__main__':
+    sys.exit()
+
 
 filepath=os.path.join(os.path.dirname(__file__), 'sqlcredentials_sample.json')
 
