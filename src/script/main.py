@@ -746,7 +746,6 @@ ON doctors.Phone=treatments.DoctorsPhone;''')
 
                     for index, value in enumerate(df["Phone"]):
                             if value==phone:
-                                # temp.append(df.loc[index])
                                 temp_row=list(df.loc[index])
                                 temp_row[6]=str(temp_row[6])[-8:]
                                 temp.add_row(temp_row)
