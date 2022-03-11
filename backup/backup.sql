@@ -82,7 +82,6 @@ DROP TABLE IF EXISTS `treatments`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `treatments` (
   `Sno` int NOT NULL AUTO_INCREMENT,
-  `patientID` varchar(10) NOT NULL,
   `treatmentID` varchar(10) NOT NULL,
   `date` date DEFAULT NULL,
   `time` time DEFAULT NULL,

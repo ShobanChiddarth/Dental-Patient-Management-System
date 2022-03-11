@@ -38,7 +38,6 @@ VALUES ('2022-07-12', '10:00', "ABC1234", "A24DS67");
 
 CREATE TABLE `treatments` (
     `Sno` int NOT NULL AUTO_INCREMENT,
-    `patientID` varchar(10) NOT NULL REFERENCES patients(patientID),
     `treatmentID` VARCHAR(10) NOT NULL REFERENCES Appointments(treatmentID),
     `date` DATE,
     `time` TIME,
