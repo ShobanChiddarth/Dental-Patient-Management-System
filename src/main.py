@@ -1,4 +1,6 @@
 import mysql.connector as connector
+import prettytable
+from prettytable import from_db_cursor
 
 print('''\
 SRI SAKTHI DENTAL CLINIC
@@ -93,8 +95,16 @@ NOTE: You can remove appointments only if the treatment didn\'t take place''',
                 print(helpparse(command, helpdict))
         elif command.lower() in ('exit', 'quit'):
             break
+
+        elif command.strip()=='show patients':
+            cursor=connection.cursor()
+            cursor.execute('SELECT * FROM patients;')
+            mytable = from_db_cursor(cursor)
+            mytable.align='l'
+            print(mytable)
     
     print('Exited')
+    input()
     connection.close()
 else:
     print('Connection to MySQL Database SriSakthiPatients FAILED')
