@@ -15,7 +15,7 @@ CREATE TABLE `patients` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO patients (patientID, name, dob, gender, phone, address)
-VALUES ("ABC1234", "MUTHU", '2000-03-28', "M", "+919000000000", "Cecilia Chapman\\n711-2880 Nulla St.\\nMankato Mississippi 96522");
+VALUES ("ABC1234", "MUTHU", '2000-03-28', "M", "+919000000000", "Cecilia Chapman\n711-2880 Nulla St.\nMankato Mississippi 96522");
 
 
 

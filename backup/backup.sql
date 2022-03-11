@@ -69,7 +69,7 @@ CREATE TABLE `patients` (
 
 LOCK TABLES `patients` WRITE;
 /*!40000 ALTER TABLE `patients` DISABLE KEYS */;
-INSERT INTO `patients` VALUES (1,'ABC1234','MUTHU','2000-03-28','M','+919000000000','Cecilia Chapman\\n711-2880 Nulla St.\\nMankato Mississippi 96522');
+INSERT INTO `patients` VALUES (1,'ABC1234','MUTHU','2000-03-28','M','+919000000000','Cecilia Chapman\n711-2880 Nulla St.\nMankato Mississippi 96522');
 /*!40000 ALTER TABLE `patients` ENABLE KEYS */;
 UNLOCK TABLES;
 
