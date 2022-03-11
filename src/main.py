@@ -52,10 +52,10 @@ Return a random string'''
         r=requests.get(f'https://www.random.org/strings/?num=1&len={chars}&digits={nums}&upperalpha={upper}&loweralpha={lower}&unique=on&format=plain&rnd=new')
         return r.content.decode('utf-8')
     
-    def table_from_db(table:str):
+    def table_from_db(table:str, v='*'):
         '''Return the given table name as prettytable from database'''
         cursor=connection.cursor()
-        cursor.execute(f'SELECT * FROM {table};')
+        cursor.execute(f'SELECT {v} FROM {table};')
         table = from_db_cursor(cursor)
         return table
     
@@ -149,9 +149,9 @@ NOTE: You can remove appointments only if the treatment didn\'t take place''',
             break
 
         elif command=='show patients':
-            mytable = table_from_db('patients')
-            mytable.align='l'
-            print(mytable)
+            patients = table_from_db('patients')
+            patients.align='l'
+            print(patients)
         
         elif command=='add patient':
             print('Adding new patient in table `patients` in database `SrisakthiPatients`')
@@ -201,11 +201,58 @@ VALUES ("{patientID}", "{name}", '{dob}', "{gender}", "{phone}", "{address}");''
 
             print('New patient created')
 
+            """elif command=='update patient': #-\t-\t
+            print('''Enter patientID to update''')
+            while True:
+                    try:
+                        patientID=input('patientID>')
+                        cursor=connection.cursor()
+                        cursor.execute(f'''select * from patients
+WHERE patientid='{patientID}';''')
+                        table = from_db_cursor(cursor)
+                        print(table)
+                        choice=input('Is the the patient you wan\'t to update (Y/N)? ')
+                        if choice.lower()=='y':
+                            break
+                    except:
+                        print('Invalid patientID')
+            print('''PRO TIP
+Just copy and paste the old details if you need to leave it unchanged''')
+            name=input('new name of patient: ')
+            dob=input('new Enter dob: ')
+            while not (dob[0:4].isdigit() and 
+                        dob[4]=='-' and 
+                        dob[5:7].isdigit() and 
+                        dob[7]=='-' and
+                        dob[8:10].isdigit()
+                        and len(dob)==10 ):
+                    print('Invalid DOB')
+                    dob=input('Re-enter DOB: ')
+            while True:
+                gender=input('Enter gender (M/F) : ')
+                if gender in ('M', "F"):
+                    break
+                else:
+                    print('Invalid gender')
+                    print('Re-enter gender')
+            phone=input('Enter new phone number with country code: ')
+            print('''Please enter line by line
+Enter new address:''')
+            address=multi_line_input()
 
+            cursor=connection.cursor()
+            cursor.execute(f'''UPDATE patients
+SET name="{name}", dob='{dob}', gender="{gender}", phone="{phone}", address="{address}"
+WHERE patientID="{patientID}";''')
+            connection.commit()
+            print('Updated')"""
+
+        elif command=='show appointments':
+            appointments = table_from_db('Appointments')
+            appointments.align='l'
+            print(appointments)
     
     print('Exited')
     connection.close()
 else:
     print('Connection to MySQL Database SriSakthiPatients FAILED')
-
-
