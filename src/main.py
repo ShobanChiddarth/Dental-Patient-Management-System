@@ -59,11 +59,12 @@ Return a random string'''
         r=requests.get(f'https://www.random.org/strings/?num=1&len={chars}&digits={nums}&upperalpha={upper}&loweralpha={lower}&unique=on&format=plain&rnd=new')
         return r.content.decode('utf-8')
     
-    def table_from_db(table:str, v='*'):
+    def table_from_db(table:str, v='*', align='l'):
         '''Return the given table name as prettytable from database'''
         cursor=connection.cursor()
         cursor.execute(f'SELECT {v} FROM {table};')
         table = from_db_cursor(cursor)
+        table.align=align
         return table
     
     def show_patients():
@@ -216,7 +217,7 @@ NOTE: You can remove appointments only if the treatment didn\'t take place''',
             break
 
         elif command=='show patients':
-            show_patients(table_from_db)
+            show_patients()
         
         elif command=='add patient':
             add_patient()
@@ -312,7 +313,7 @@ VALUES ('{date}', '{time}', "{patientID}", "{treatmentID}");''')
 
             print('New appointment created')
 
-        """elif command=='update appointment':
+            """elif command=='update appointment':
             print('You can update an appointment only if the treatment didn\'t take place')
             while True:
                     # if input treatmentID exists in `treatments`
@@ -355,7 +356,10 @@ WHERE treatmentID="{treatmentID}"''')
             print('Updated appointment')
             show_appointments()"""
 
-    
+        elif command=='show treatments':
+            treatments=table_from_db('treatments')
+            print(treatments)
+
     print('Exited')
     connection.close()
 else:
