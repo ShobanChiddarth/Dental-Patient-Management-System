@@ -9,14 +9,21 @@ print('''\
 SRI SAKTHI DENTAL CLINIC
 DENTAL PATIENT MANAGEMENT SYSTEM
 ''')
+try:
+    connection=connector.connect(
+        host='localhost',
+        port='3306',
+        user='root',
+        password='1234',
+        database='SrisakthiPatients',
+        buffered=True
+    )
+except connector.errors.DatabaseError as connectionerror:
+    print(connectionerror)
 
-connection=connector.connect(
-    host='localhost',
-    port='3306',
-    user='root',
-    password='1234',
-    database='SrisakthiPatients'
-)
+
+
+
 if connection.is_connected():
     print('Connected to MySQL Database SriSakthiPatients')
     print('''\
@@ -59,6 +66,66 @@ Return a random string'''
         table = from_db_cursor(cursor)
         return table
     
+    def show_patients():
+        patients = table_from_db('patients')
+        patients.align='l'
+        print(patients)
+
+    def add_patient():
+        print('Adding new patient in table `patients` in database `SrisakthiPatients`')
+
+        patientID=randomstring(7)
+        patientcursor=connection.cursor()
+        patientcursor.execute('SELECT patientID from patients;')
+        iddata=patientcursor.fetchall()
+        patientIDlist=[id for id in iddata]
+        while patientID in patientIDlist:
+            patientID=randomstring(7)
+
+        del patientcursor, iddata, patientIDlist
+
+        name=input('Enter patient name: ')
+
+        print('''Date Of Birth Format: YYYY-MM-DD
+Example: 1999-03-12''')
+        dob=input('Enter dob: ')
+        while not (dob[0:4].isdigit() and 
+                            dob[4]=='-' and 
+                            dob[5:7].isdigit() and 
+                            dob[7]=='-' and
+                            dob[8:10].isdigit()
+                            and len(dob)==10 ):
+                print('Invalid DOB')
+                dob=input('Re-enter DOB: ')
+
+        phone=input('Enter phone number with country code: ')
+
+        while True:
+            gender=input('Enter gender (M/F) : ')
+            if gender in ('M', "F"):
+                break
+            else:
+                print('Invalid gender')
+                print('Re-enter gender')
+
+        print('Enter address:')
+        address=multi_line_input()
+
+        cursor=connection.cursor()
+        cursor.execute(f'''INSERT INTO patients (patientID, name, dob, gender, phone, address)
+VALUES ("{patientID}", "{name}", '{dob}', "{gender}", "{phone}", "{address}");''')
+        connection.commit()
+
+        print('New patient created')
+
+    def show_appointments():
+            cursor=connection.cursor()
+            cursor.execute(f'''SELECT * FROM Appointments
+ORDER BY date, time;''')
+            appointments = from_db_cursor(cursor)
+            appointments.align='l'
+            print(appointments)
+
     def multi_line_input(
     margin='| ',
     end='\n',
@@ -149,57 +216,10 @@ NOTE: You can remove appointments only if the treatment didn\'t take place''',
             break
 
         elif command=='show patients':
-            patients = table_from_db('patients')
-            patients.align='l'
-            print(patients)
+            show_patients(table_from_db)
         
         elif command=='add patient':
-            print('Adding new patient in table `patients` in database `SrisakthiPatients`')
-
-            patientID=randomstring(7)
-            patientcursor=connection.cursor()
-            patientcursor.execute('SELECT patientID from patients;')
-            iddata=patientcursor.fetchall()
-            patientIDlist=[id for id in iddata]
-            while patientID in patientIDlist:
-
-                patientID=randomstring(7)
-
-            del patientcursor, iddata, patientIDlist
-
-            name=input('Enter patient name: ')
-
-            print('''Date Of Birth Format: YYYY-MM-DD
-Example: 1999-03-12''')
-            dob=input('Enter dob: ')
-            while not (dob[0:4].isdigit() and 
-                        dob[4]=='-' and 
-                        dob[5:7].isdigit() and 
-                        dob[7]=='-' and
-                        dob[8:10].isdigit()
-                        and len(dob)==10 ):
-                    print('Invalid DOB')
-                    dob=input('Re-enter DOB: ')
-
-            phone=input('Enter phone number with country code: ')
-
-            while True:
-                gender=input('Enter gender (M/F) : ')
-                if gender in ('M', "F"):
-                    break
-                else:
-                    print('Invalid gender')
-                    print('Re-enter gender')
-
-            print('Enter address:')
-            address=multi_line_input()
-
-            cursor=connection.cursor()
-            cursor.execute(f'''INSERT INTO patients (patientID, name, dob, gender, phone, address)
-VALUES ("{patientID}", "{name}", '{dob}', "{gender}", "{phone}", "{address}");''')
-            connection.commit()
-
-            print('New patient created')
+            add_patient()
 
             """elif command=='update patient': #-\t-\t
             print('''Enter patientID to update''')
@@ -248,9 +268,93 @@ WHERE patientID="{patientID}";''')
             print('Updated')"""
 
         elif command=='show appointments':
-            appointments = table_from_db('Appointments')
-            appointments.align='l'
-            print(appointments)
+            show_appointments()
+        
+        elif command=='add appointment':
+            print('''Date format: YYYY-MM-DD
+Example: 1999-03-12''')
+            date=input('Enter date: ')
+            while not (date[0:4].isdigit() and 
+                        date[4]=='-' and 
+                        date[5:7].isdigit() and 
+                        date[7]=='-' and
+                        date[8:10].isdigit()
+                        and len(date)==10 ):
+                    print('Invalid Date')
+                    date=input('Re-enter Date: ')
+            
+            print('''Time format: HH:MM (24 hr format)
+Example: 13:50''')
+            time=input('Enter time: ')
+            while not (time[0:2].isdigit() and
+                        time[2]==':' and
+                        time[3:5] and
+                        len(time)==5):
+                        print('Invalid Time')
+                        time=input('Re-enter time: ')
+            while True:
+                print('''TIP: Enter `show patients` to show all patients
+   Enter `add patient` to add a patient''')
+                patientID=input('Enter patientID: ').strip()
+                if patientID.strip()=='show patients':
+                    show_patients()
+                elif patientID.strip()=='add patient':
+                    add_patient()
+                else:
+                    break
+            
+            treatmentID=randomstring(8)
+
+            cursor=connection.cursor()
+            cursor.execute(f'''INSERT INTO Appointments (date, time, patientID, treatmentID)
+VALUES ('{date}', '{time}', "{patientID}", "{treatmentID}");''')
+            connection.commit()
+
+            print('New appointment created')
+
+        """elif command=='update appointment':
+            print('You can update an appointment only if the treatment didn\'t take place')
+            while True:
+                    # if input treatmentID exists in `treatments`
+                    print('''TIP: Enter 'show appointments' to see all appointments''')
+                    treatmentID=input('Enter treatmentID: ')
+                    if treatmentID=='show appointments':
+                        show_appointments()
+                    else:
+                        data=connection.cursor().execute(f'''SELECT treatmentID from Appointments
+WHERE treatmentID="{treatmentID}";''')
+                        if data:
+                            print('Invalid treatmentID')
+                        else:
+                            break
+                            
+
+            date=input('Enter new date: ')
+            while not (date[0:4].isdigit() and 
+                        date[4]=='-' and 
+                        date[5:7].isdigit() and 
+                        date[7]=='-' and
+                        date[8:10].isdigit()
+                        and len(date)==10 ):
+                    print('Invalid Date')
+                    date=input('Re-enter new Date: ')
+
+
+            time=input('Enter new time: ')
+            while not (time[0:2].isdigit() and
+                        time[2]==':' and
+                        time[3:5] and
+                        len(time)==5):
+                        print('Invalid Time')
+                        time=input('Re-enter new time: ')
+            
+            cursor=connection.cursor(buffered=True)
+            cursor.execute(f'''UPDATE Appointments
+SET date='{date}', time=\'{time}\'
+WHERE treatmentID="{treatmentID}"''')
+            print('Updated appointment')
+            show_appointments()"""
+
     
     print('Exited')
     connection.close()
