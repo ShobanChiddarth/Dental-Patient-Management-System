@@ -1,3 +1,5 @@
+from collections import deque
+import random
 import mysql.connector as connector
 import prettytable
 from prettytable import from_db_cursor
@@ -6,6 +8,7 @@ import requests
 import sys
 import json
 import os
+import string
 
 filepath=os.path.join(os.path.dirname(__file__), 'sqlcredentials_sample.json')
 
@@ -58,7 +61,7 @@ Welcome admin
 Tyoe `help` for help
 ''')
 
-    def randomstring(chars, nums='on', upper='on', lower='off') -> str:
+    def randomstring(chars, online=True, nums=True, upper=True, lower=False) -> str:
         '''\
 Random String Generator
 
@@ -82,9 +85,25 @@ lower : Lowercase letters (a-z)
 OUTPUT
 ------
 Return a random string'''
-
-        r=requests.get(f'https://www.random.org/strings/?num=1&len={chars}&digits={nums}&upperalpha={upper}&loweralpha={lower}&unique=on&format=plain&rnd=new')
-        return r.content.decode('utf-8')
+        if online:
+            tempdict={
+                True:'on',
+                False:'off'
+            }
+            nums=tempdict[nums]
+            upper=tempdict[upper]
+            lower=tempdict[lower]
+            r=requests.get(f'https://www.random.org/strings/?num=1&len={chars}&digits={nums}&upperalpha={upper}&loweralpha={lower}&unique=on&format=plain&rnd=new')
+            return r.content.decode('utf-8')
+        else:
+            choice_of_strings=deque()
+            if nums:
+                choice_of_strings.append(string.digits)
+            if upper:
+                choice_of_strings.append(string.ascii_uppercase)
+            if lower:
+                choice_of_strings.append(string.ascii_lowercase)
+            return ''.join(random.choices(choice_of_strings, k=chars))
     
     def table_from_db(table:str, v='*', align='l'):
         '''Return the given table name as prettytable from database'''
