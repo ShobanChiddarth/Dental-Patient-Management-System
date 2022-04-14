@@ -10,6 +10,23 @@ import json
 import os
 import string
 
+def multilineinput(
+    margin = '| ',
+    stream = sys.stdout,
+    error = KeyboardInterrupt
+    ):
+    '''[Gist on multi line input in Python](https://gist.github.com/ShobanChiddarth/bf5002290c2116fe30350e37bebde5a0)'''
+    lines=str()
+    try:
+        while True:
+            stream.write(margin)
+            lines=lines+input()+'\n'
+    except error:
+        stream.write('\r')
+        stream.write('\n')
+        return lines
+
+
 filepath=os.path.join(os.path.dirname(__file__), 'sqlcredentials_sample.json')
 
 print('''\
