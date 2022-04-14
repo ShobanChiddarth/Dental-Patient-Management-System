@@ -6,6 +6,9 @@ GENERAL
 - help: show this message
 - exit: exit the script
 - quit: alias of exit
+- enter-python-eval : whatever you type in python, will be evaluated and printed (or) executed
+- enter-sql-mode : whatever you type in python, is sent to mysql as mysql commands
+                   But output won't be printed. It is only for managing data.
 
 PATIENTS
 --------
