@@ -173,7 +173,10 @@ ORDER BY date, time;''')
         if command.lower().startswith('help'):
             if command=='help':
                 
-                with open('help.md','rt', encoding='utf-8', newline='\r\n') as helpfile:
+                with open(os.path.join(os.path.dirname(__file__),'help.md'),
+                            mode='rt', 
+                            encoding='utf-8',
+                            newline='\r\n') as helpfile:
                     print(helpfile.read())
             else:
                 command=command.split()
