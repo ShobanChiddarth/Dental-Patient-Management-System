@@ -14,7 +14,7 @@ PATIENTS
                in database `SrisakthiPatients`, table `patients`
 - update patient: update a patient in table `patients` in database `SrisakthiPatients`
                   You must provide `patientID`
-NOTE: You can\'t delete patients
+NOTE: You can't delete patients
 
 APPOINTMENTS
 ------------
@@ -24,7 +24,7 @@ APPOINTMENTS
                     You must provide `treatmentID`
 - remove appointment: remove an appointment in table `Appointments` in database `SrisakthiPatients`
                       You must provide `treatmentID`
-NOTE: You can remove appointments only if the treatment didn\'t take place
+NOTE: You can remove appointments only if the treatment didn't take place
 
 TREATMENTS
 ----------
@@ -36,7 +36,7 @@ TREATMENTS
                  You must provide `treatmentID`
 - update treatment: update treatment in in table `treatments` in database `SrisakthiPatients`
                     You must provide `treatmentID`
-NOTE: You can\'t remove treatments
+NOTE: You can't remove treatments
 
 END OF HELP
 
