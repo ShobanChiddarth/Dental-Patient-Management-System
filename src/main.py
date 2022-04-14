@@ -1,25 +1,52 @@
 import mysql.connector as connector
 import prettytable
 from prettytable import from_db_cursor
-import json
+import sqlconfig
 import requests
 import sys
+import json
+import os
+
+filepath=os.path.join(os.path.dirname(__file__), 'sqlcredentials_sample.json')
 
 print('''\
 SRI SAKTHI DENTAL CLINIC
 DENTAL PATIENT MANAGEMENT SYSTEM
 ''')
+print('''Using current sql connection configuration
+''', sqlconfig.load.load_data(0), sep='')
+
+print('''Please look at this dictionary to get an idea about sql connection config dict.
+Your dictionary must look somewhat like this.''')
+with open(file=filepath, mode='rt', encoding='utf-8', newline='') as fh:
+    print(fh.read())
+
+print('But it looks like')
+with open(file=sqlconfig.load._filepath, mode='rt', encoding='utf-8', newline='') as fh:
+    print(fh.read())
+
+while True:
+    try:
+        proceeddict={'y':True, 'n': False}
+        proceed=proceeddict[input('Do you wish to proceed with the following (please make changes according to your need) [Y/n]?')[0].lower()]
+        break
+    except KeyError:
+        print('Invalid input')
+        continue
+
+while not proceed:
+    item=input('Enter item to edit: ')
+    value=eval(input('Enter updated value: '))
+    sqlconfig.manage.edit_credentials(item, value)
+    print('Dictionary now is')
+    print(sqlconfig.load.load_data(0))
+    proceed=proceeddict[input('Are you satisfied [Y/n]?')[0].lower()]
+ 
 try:
-    connection=connector.connect(
-        host='localhost',
-        port='3306',
-        user='root',
-        password='1234',
-        database='SrisakthiPatients',
-        buffered=True
-    )
+    connection=connector.connect(**sqlconfig.load.load_data(1))
 except connector.errors.DatabaseError as connectionerror:
     print(connectionerror)
+    exit()
 
 
 
@@ -146,7 +173,10 @@ ORDER BY date, time;''')
         if command.lower().startswith('help'):
             if command=='help':
                 
-                with open('help.md','rt', encoding='utf-8', newline='\r\n') as helpfile:
+                with open(os.path.join(os.path.dirname(__file__),'help.md'),
+                            mode='rt', 
+                            encoding='utf-8',
+                            newline='\r\n') as helpfile:
                     print(helpfile.read())
             else:
                 command=command.split()
