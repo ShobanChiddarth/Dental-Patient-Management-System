@@ -156,7 +156,7 @@ Example: 1999-03-12''')
                 print('Re-enter gender')
 
         print('Enter address:')
-        address=multi_line_input()
+        address=multilineinput()
 
         cursor=connection.cursor()
         cursor.execute(f'''INSERT INTO patients (patientID, name, dob, gender, phone, address)
@@ -173,18 +173,21 @@ ORDER BY date, time;''')
             appointments.align='l'
             print(appointments)
 
-    def multi_line_input(
-    margin='| ',
-    end='\n',
-    error=KeyboardInterrupt
-):
-        line=input(margin)
-        while True:
-            try:
-                line=line+end+input(margin)
-            except error as e:
-                sys.stdout.write('\r\n')
-                return line
+    def multilineinput(
+        margin = '| ',
+        stream = sys.stdout,
+        error = KeyboardInterrupt
+        ):
+        '''[Gist on multi line input in Python](https://gist.github.com/ShobanChiddarth/bf5002290c2116fe30350e37bebde5a0)'''
+        lines=str()
+        try:
+            while True:
+                stream.write(margin)
+                lines=lines+input()+'\n'
+        except error:
+            stream.write('\r')
+            stream.write('\n')
+            return lines
 
     while True:
         command=input('Enter command> ')
