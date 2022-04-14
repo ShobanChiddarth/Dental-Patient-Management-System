@@ -1,20 +1,17 @@
 import json
-from . import _filepath
-from load import sqlcredentialsdict
+from .load import _filepath, current_sqlcredentials
 
 def fileisemtpy():
-    return not not sqlcredentialsdict
+    return not not current_sqlcredentials
 
 def flushdict():
-    global sqlcredentialsdict
+    global current_sqlcredentials
     with open(file=_filepath, mode='w', encoding='utf-8', newline='') as fh:
-        fh.write(json.dumps(sqlcredentialsdict, indent=4))
+        fh.write(json.dumps(current_sqlcredentials, indent=4))
 
 
 
 def edit_credentials(item:str, edited):
-    '''\
-'''
-    global sqlcredentialsdict
-    sqlcredentialsdict[item] = edited
+    global current_sqlcredentials
+    current_sqlcredentials[item] = edited
     flushdict()
