@@ -190,21 +190,7 @@ ORDER BY date, time;''')
             appointments.align='l'
             print(appointments)
 
-    def multilineinput(
-        margin = '| ',
-        stream = sys.stdout,
-        error = KeyboardInterrupt
-        ):
-        '''[Gist on multi line input in Python](https://gist.github.com/ShobanChiddarth/bf5002290c2116fe30350e37bebde5a0)'''
-        lines=str()
-        try:
-            while True:
-                stream.write(margin)
-                lines=lines+input()+'\n'
-        except error:
-            stream.write('\r')
-            stream.write('\n')
-            return lines
+
 
     while True:
         command=input('Enter command> ')
@@ -290,52 +276,50 @@ NOTE: You can remove appointments only if the treatment didn\'t take place''',
         
         elif command=='add patient':
             add_patient()
-
-            """elif command=='update patient': #-\t-\t
-            print('''Enter patientID to update''')
+        
+        elif command=='update patient':
             while True:
-                    try:
-                        patientID=input('patientID>')
+                try:
+                    patientID=input('Enter patientID to update (or show patients): ')
+                    if patientID=='show patients':
+                        show_patients()
+                        continue
+                    else:
+                        print('''Enter value to be updated, detail.
+For example
+`name="Steven"`
+
+Updatable values
+- name
+- dob
+- gender
+- phone
+- address''')
+                        xpair=''.join(map(str.strip, input('> ').split('=')))
                         cursor=connection.cursor()
-                        cursor.execute(f'''select * from patients
-WHERE patientid='{patientID}';''')
-                        table = from_db_cursor(cursor)
-                        print(table)
-                        choice=input('Is the the patient you wan\'t to update (Y/N)? ')
-                        if choice.lower()=='y':
+                        cursor.execute(f'''UPDATE patients
+SET {xpair} WHERE patientID={patientID}''')
+                        connection.commit()
+                        print('Updated successfully')
+                        show_patients()
+                        while True:
+                            try:
+                                proceed=proceeddict[input('Are you satisfied [Y/n] ?')[0].lower()]
+                                break
+                            except KeyError:
+                                print('Invalid Input')
+                                continue
+                        if proceed:
                             break
-                    except:
-                        print('Invalid patientID')
-            print('''PRO TIP
-Just copy and paste the old details if you need to leave it unchanged''')
-            name=input('new name of patient: ')
-            dob=input('new Enter dob: ')
-            while not (dob[0:4].isdigit() and 
-                        dob[4]=='-' and 
-                        dob[5:7].isdigit() and 
-                        dob[7]=='-' and
-                        dob[8:10].isdigit()
-                        and len(dob)==10 ):
-                    print('Invalid DOB')
-                    dob=input('Re-enter DOB: ')
-            while True:
-                gender=input('Enter gender (M/F) : ')
-                if gender in ('M', "F"):
-                    break
-                else:
-                    print('Invalid gender')
-                    print('Re-enter gender')
-            phone=input('Enter new phone number with country code: ')
-            print('''Please enter line by line
-Enter new address:''')
-            address=multi_line_input()
+                        else:
+                            continue
+                except:
+                    print('You made a mistake somewhere. Start from first')
+                    continue
 
-            cursor=connection.cursor()
-            cursor.execute(f'''UPDATE patients
-SET name="{name}", dob='{dob}', gender="{gender}", phone="{phone}", address="{address}"
-WHERE patientID="{patientID}";''')
-            connection.commit()
-            print('Updated')"""
+
+        elif command=='remove patient':
+            print('You can\'t remove patients')
 
         elif command=='show appointments':
             show_appointments()
@@ -381,49 +365,6 @@ VALUES ('{date}', '{time}', "{patientID}", "{treatmentID}");''')
             connection.commit()
 
             print('New appointment created')
-
-            """elif command=='update appointment':
-            print('You can update an appointment only if the treatment didn\'t take place')
-            while True:
-                    # if input treatmentID exists in `treatments`
-                    print('''TIP: Enter 'show appointments' to see all appointments''')
-                    treatmentID=input('Enter treatmentID: ')
-                    if treatmentID=='show appointments':
-                        show_appointments()
-                    else:
-                        data=connection.cursor().execute(f'''SELECT treatmentID from Appointments
-WHERE treatmentID="{treatmentID}";''')
-                        if data:
-                            print('Invalid treatmentID')
-                        else:
-                            break
-                            
-
-            date=input('Enter new date: ')
-            while not (date[0:4].isdigit() and 
-                        date[4]=='-' and 
-                        date[5:7].isdigit() and 
-                        date[7]=='-' and
-                        date[8:10].isdigit()
-                        and len(date)==10 ):
-                    print('Invalid Date')
-                    date=input('Re-enter new Date: ')
-
-
-            time=input('Enter new time: ')
-            while not (time[0:2].isdigit() and
-                        time[2]==':' and
-                        time[3:5] and
-                        len(time)==5):
-                        print('Invalid Time')
-                        time=input('Re-enter new time: ')
-            
-            cursor=connection.cursor(buffered=True)
-            cursor.execute(f'''UPDATE Appointments
-SET date='{date}', time=\'{time}\'
-WHERE treatmentID="{treatmentID}"''')
-            print('Updated appointment')
-            show_appointments()"""
 
         elif command=='show treatments':
             treatments=table_from_db('treatments')
