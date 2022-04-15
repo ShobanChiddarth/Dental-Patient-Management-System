@@ -75,7 +75,7 @@ if connection.is_connected():
     print('Connected to MySQL Database SriSakthiPatients')
     print('''\
 Welcome admin
-Tyoe `help` for help
+Type `help` for help
 ''')
 
     def randomstring(chars, online=True, nums=True, upper=True, lower=False) -> str:
@@ -295,10 +295,11 @@ Updatable values
 - gender
 - phone
 - address''')
-                        xpair=''.join(map(str.strip, input('> ').split('=')))
+                        xpair='='.join(map(str.strip, input('> ').split('=')))
                         cursor=connection.cursor()
-                        cursor.execute(f'''UPDATE patients
-SET {xpair} WHERE patientID={patientID}''')
+                        command=f'''UPDATE patients
+SET {xpair} WHERE patientID="{patientID}";'''
+                        cursor.execute(command)
                         connection.commit()
                         print('Updated successfully')
                         show_patients()
@@ -313,6 +314,8 @@ SET {xpair} WHERE patientID={patientID}''')
                             break
                         else:
                             continue
+                except KeyboardInterrupt:
+                    break
                 except:
                     print('You made a mistake somewhere. Start from first')
                     continue
