@@ -34,6 +34,7 @@ def multilineinput(
 def randomstring(chars, online=True, nums=True, upper=True, lower=False) -> str:
         '''\
 Random String Generator
+(Will update docstring later)
 
 Function to use the form at https://www.random.org/strings/
 (modified as per the requirements of the program)
