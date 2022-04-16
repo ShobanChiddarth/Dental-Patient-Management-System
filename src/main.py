@@ -425,7 +425,59 @@ VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {
                     show_treatments()
                     break
 
-                            
+    def update_treatment():
+        while True:
+            print('Enter treatmentID below:')
+            treatmentID=input('(even `show treatments`) >')
+            if treatmentID=='show treatments':
+                show_treatments()
+                continue
+            else:
+                cursor=connection.cursor()
+                cursor.execute(f'''SELECT * FROM treatments WHERE treatmentID="{treatmentID}"''')
+                data=cursor.fetchall()
+                if not data:
+                    print('Wrong treatmentID. Enter again.')
+                    continue
+                else:
+                    break
+
+        print('''`update treatment` options
+    0 : status
+    1 : paid (if payment is over)
+
+NOTE: You can\'t update anything else''')
+        choice=int(input('Update what? '))
+        if choice==0:
+            print('''What is the new status of the treatment?
+Enter status below (ENTER for newline, CTRL+C on newline to stop)''')
+            status=multilineinput()
+            command=f'''UPDATE treatments
+SET status="{status}" WHERE treatmentID={treatmentID}"'''
+            cursor=connection.cursor()
+            cursor.execute(command)
+            connection.commit()
+            print('Updated successfully')
+            show_treatments()
+
+        elif choice==1:
+            while True:
+                try:
+                    paid=bool(TrueFalseDict[input('Is the payment complete now [True/False] ?').strip().lower()[0]])
+                    break
+                except KeyError as k:
+                    print('You entered',k)
+                    print('Anything other than `True`, `False`, `0`, `1` cannot be accepted')
+                    continue
+            
+            command=f'''UPDATE treatments
+SET paid={paid} WHERE treatmentID="{treatmentID}"'''
+            cursor=connection.cursor()
+            cursor.execute(command)
+            connection.commit()
+            print('Updated Successfully')
+            show_treatments()
+
 
 
     while True:
@@ -533,6 +585,9 @@ NOTE: You can remove appointments only if the treatment didn\'t take place''',
         
         elif command=='add treatment':
             add_treatment()
+
+        elif command=='update treatment':
+            update_treatment()
 
     print('logout')
     connection.close()
