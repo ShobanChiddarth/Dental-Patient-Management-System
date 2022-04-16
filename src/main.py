@@ -10,6 +10,11 @@ import json
 import os
 import string
 
+
+
+online=True # variable to tell the program if internet connectivity is available/not available
+# It is used in `randomstring` function
+
 def multilineinput(
     margin = '| ',
     stream = sys.stdout,
