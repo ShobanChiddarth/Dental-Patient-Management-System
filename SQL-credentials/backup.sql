@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.28, for Win64 (x86_64)
 --
--- Host: localhost    Database: Srisakthipatients
+-- Host: localhost    Database: srisakthipatients
 -- ------------------------------------------------------
 -- Server version	8.0.28
 
@@ -16,12 +16,12 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Current Database: `Srisakthipatients`
+-- Current Database: `srisakthipatients`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `Srisakthipatients` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `srisakthipatients` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
-USE `Srisakthipatients`;
+USE `srisakthipatients`;
 
 --
 -- Table structure for table `appointments`
@@ -47,7 +47,7 @@ CREATE TABLE `appointments` (
 
 LOCK TABLES `appointments` WRITE;
 /*!40000 ALTER TABLE `appointments` DISABLE KEYS */;
-INSERT INTO `appointments` VALUES (1,'2022-07-12','10:00:00','ABC1234','A24DS67'),(2,'2022-07-13','13:50:00','BU8GT5P','B2QJLENJ');
+INSERT INTO `appointments` VALUES (1,'2022-07-12','16:00:00','ABC1234','A24DS67'),(2,'2022-04-16','15:00:00','BU8GT5P','B2QJLENJ');
 /*!40000 ALTER TABLE `appointments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -77,7 +77,7 @@ CREATE TABLE `patients` (
 
 LOCK TABLES `patients` WRITE;
 /*!40000 ALTER TABLE `patients` DISABLE KEYS */;
-INSERT INTO `patients` VALUES (1,'ABC1234','MUTHU','2000-03-28','M','+919000000000','Cecilia Chapman\n711-2880 Nulla St.\nMankato Mississippi 96522'),(2,'BU8GT5P\n','Kumarswamy','2005-03-28','M','+919876543210','20, Lamp Street\nKarur Main Road'),(3,'KV1G241\n','Murugan','1999-03-12','M','+917895234164','30, Banker\'s colony\nChennai main road\nChennai - 20');
+INSERT INTO `patients` VALUES (1,'ABC1234','MUTHU KUMAR','1999-03-28','M','+919000000000','Cecilia Chapman\n711-2880 Nulla St.\nMankato Mississippi 96522'),(2,'BU8GT5P\n','Kumarswamy','2005-03-28','M','+919876543210','20, Lamp Street\nKarur Main Road'),(3,'KV1G241\n','Murugan','1999-03-12','M','+917895234164','30, Banker\'s colony\nChennai main road\nChennai - 20');
 /*!40000 ALTER TABLE `patients` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -98,7 +98,7 @@ CREATE TABLE `treatments` (
   `fee` double(16,2) DEFAULT NULL,
   `paid` tinyint(1) DEFAULT NULL,
   UNIQUE KEY `Sno` (`Sno`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -107,7 +107,7 @@ CREATE TABLE `treatments` (
 
 LOCK TABLES `treatments` WRITE;
 /*!40000 ALTER TABLE `treatments` DISABLE KEYS */;
-INSERT INTO `treatments` VALUES (1,'A24DS67','2022-07-12','10:07:00','Root Canal','Completed',7000.00,1);
+INSERT INTO `treatments` VALUES (2,'B2QJLENJ','2022-04-16','15:15:00','Root canal','Completed',10000.00,1);
 /*!40000 ALTER TABLE `treatments` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -120,4 +120,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-04-14 18:14:22
+-- Dump completed on 2022-04-16 16:09:45
