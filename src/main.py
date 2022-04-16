@@ -31,6 +31,50 @@ def multilineinput(
         stream.write('\n')
         return lines
 
+def randomstring(chars, online=True, nums=True, upper=True, lower=False) -> str:
+        '''\
+Random String Generator
+
+Function to use the form at https://www.random.org/strings/
+(modified as per the requirements of the program)
+
+RANDOM.ORG Documentation
+------------------------
+This form allows you to generate random text strings. 
+The randomness comes from atmospheric noise, which for 
+many purposes is better than the pseudo-random number 
+algorithms typically used in computer programs.
+
+PARAMETERS
+----------
+chars : length of the string
+nums : Numeric digits (0-9)
+upper : Uppercase letters (A-Z)
+lower : Lowercase letters (a-z)
+
+OUTPUT
+------
+Return a random string'''
+        if online:
+            tempdict={
+                True:'on',
+                False:'off'
+            }
+            nums=tempdict[nums]
+            upper=tempdict[upper]
+            lower=tempdict[lower]
+            r=requests.get(f'https://www.random.org/strings/?num=1&len={chars}&digits={nums}&upperalpha={upper}&loweralpha={lower}&unique=on&format=plain&rnd=new')
+            return r.content.decode('utf-8')
+        else:
+            choice_of_strings=deque()
+            if nums:
+                choice_of_strings.append(string.digits)
+            if upper:
+                choice_of_strings.append(string.ascii_uppercase)
+            if lower:
+                choice_of_strings.append(string.ascii_lowercase)
+            return ''.join(random.choices(choice_of_strings, k=chars))
+
 
 filepath=os.path.join(os.path.dirname(__file__), 'sqlcredentials_sample.json')
 
@@ -83,49 +127,7 @@ Welcome admin
 Type `help` for help
 ''')
 
-    def randomstring(chars, online=True, nums=True, upper=True, lower=False) -> str:
-        '''\
-Random String Generator
 
-Function to use the form at https://www.random.org/strings/
-(modified as per the requirements of the program)
-
-RANDOM.ORG Documentation
-------------------------
-This form allows you to generate random text strings. 
-The randomness comes from atmospheric noise, which for 
-many purposes is better than the pseudo-random number 
-algorithms typically used in computer programs.
-
-PARAMETERS
-----------
-chars : length of the string
-nums : Numeric digits (0-9)
-upper : Uppercase letters (A-Z)
-lower : Lowercase letters (a-z)
-
-OUTPUT
-------
-Return a random string'''
-        if online:
-            tempdict={
-                True:'on',
-                False:'off'
-            }
-            nums=tempdict[nums]
-            upper=tempdict[upper]
-            lower=tempdict[lower]
-            r=requests.get(f'https://www.random.org/strings/?num=1&len={chars}&digits={nums}&upperalpha={upper}&loweralpha={lower}&unique=on&format=plain&rnd=new')
-            return r.content.decode('utf-8')
-        else:
-            choice_of_strings=deque()
-            if nums:
-                choice_of_strings.append(string.digits)
-            if upper:
-                choice_of_strings.append(string.ascii_uppercase)
-            if lower:
-                choice_of_strings.append(string.ascii_lowercase)
-            return ''.join(random.choices(choice_of_strings, k=chars))
     
     def table_from_db(table:str, v='*', align='l'):
         '''Return the given table name as prettytable from database'''
@@ -143,13 +145,13 @@ Return a random string'''
     def add_patient():
         print('Adding new patient in table `patients` in database `SrisakthiPatients`')
 
-        patientID=randomstring(7)
+        patientID=randomstring(7, online=online)
         patientcursor=connection.cursor()
         patientcursor.execute('SELECT patientID from patients;')
         iddata=patientcursor.fetchall()
         patientIDlist=[id for id in iddata]
         while patientID in patientIDlist:
-            patientID=randomstring(7)
+            patientID=randomstring(7, online=online)
 
         del patientcursor, iddata, patientIDlist
 
@@ -365,7 +367,7 @@ Example: 13:50''')
                 else:
                     break
             
-            treatmentID=randomstring(8)
+            treatmentID=randomstring(8, online=online)
 
             cursor=connection.cursor()
             cursor.execute(f'''INSERT INTO Appointments (date, time, patientID, treatmentID)
