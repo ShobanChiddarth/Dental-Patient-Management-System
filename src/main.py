@@ -301,6 +301,9 @@ SET {xpair} WHERE treatmentID="{treatmentID}";'''
             except KeyboardInterrupt:
                 break
 
+    def show_treatments():
+        treatments=table_from_db('treatments')
+        print(treatments)
 
     while True:
         command=input('Enter command> ')
@@ -443,8 +446,7 @@ VALUES ('{date}', '{time}', "{patientID}", "{treatmentID}");''')
 
 
         elif command=='show treatments':
-            treatments=table_from_db('treatments')
-            print(treatments)
+            show_treatments()
 
     print('logout')
     connection.close()
