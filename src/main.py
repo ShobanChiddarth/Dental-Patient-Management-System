@@ -201,6 +201,48 @@ ORDER BY date, time;''')
             appointments.align='l'
             print(appointments)
 
+    def add_appointment(): # intended 2 tabs unnecasarily
+            print('''Date format: YYYY-MM-DD
+Example: 1999-03-12''')
+            date=input('Enter date: ')
+            while not (date[0:4].isdigit() and 
+                        date[4]=='-' and 
+                        date[5:7].isdigit() and 
+                        date[7]=='-' and
+                        date[8:10].isdigit()
+                        and len(date)==10 ):
+                    print('Invalid Date')
+                    date=input('Re-enter Date: ')
+            
+            print('''Time format: HH:MM (24 hr format)
+Example: 13:50''')
+            time=input('Enter time: ')
+            while not (time[0:2].isdigit() and
+                        time[2]==':' and
+                        time[3:5] and
+                        len(time)==5):
+                        print('Invalid Time')
+                        time=input('Re-enter time: ')
+            while True:
+                print('''TIP: Enter `show patients` to show all patients
+   Enter `add patient` to add a patient''')
+                patientID=input('Enter patientID: ').strip()
+                if patientID.strip()=='show patients':
+                    show_patients()
+                elif patientID.strip()=='add patient':
+                    add_patient()
+                else:
+                    break
+            
+            treatmentID=randomstring(8, online=online)
+
+            cursor=connection.cursor()
+            cursor.execute(f'''INSERT INTO Appointments (date, time, patientID, treatmentID)
+VALUES ('{date}', '{time}', "{patientID}", "{treatmentID}");''')
+            connection.commit()
+
+            print('New appointment created')
+
     def update_patient():
         while True:
             try:
@@ -400,46 +442,7 @@ NOTE: You can remove appointments only if the treatment didn\'t take place''',
             show_appointments()
         
         elif command=='add appointment':
-            print('''Date format: YYYY-MM-DD
-Example: 1999-03-12''')
-            date=input('Enter date: ')
-            while not (date[0:4].isdigit() and 
-                        date[4]=='-' and 
-                        date[5:7].isdigit() and 
-                        date[7]=='-' and
-                        date[8:10].isdigit()
-                        and len(date)==10 ):
-                    print('Invalid Date')
-                    date=input('Re-enter Date: ')
-            
-            print('''Time format: HH:MM (24 hr format)
-Example: 13:50''')
-            time=input('Enter time: ')
-            while not (time[0:2].isdigit() and
-                        time[2]==':' and
-                        time[3:5] and
-                        len(time)==5):
-                        print('Invalid Time')
-                        time=input('Re-enter time: ')
-            while True:
-                print('''TIP: Enter `show patients` to show all patients
-   Enter `add patient` to add a patient''')
-                patientID=input('Enter patientID: ').strip()
-                if patientID.strip()=='show patients':
-                    show_patients()
-                elif patientID.strip()=='add patient':
-                    add_patient()
-                else:
-                    break
-            
-            treatmentID=randomstring(8, online=online)
-
-            cursor=connection.cursor()
-            cursor.execute(f'''INSERT INTO Appointments (date, time, patientID, treatmentID)
-VALUES ('{date}', '{time}', "{patientID}", "{treatmentID}");''')
-            connection.commit()
-
-            print('New appointment created')
+            add_appointment()
 
         elif command=='update appointment':
             update_appointment()
