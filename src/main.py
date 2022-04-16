@@ -121,6 +121,8 @@ except connector.errors.DatabaseError as connectionerror:
 
 
 
+
+
 if connection.is_connected():
     print('Connected to MySQL Database SriSakthiPatients')
     print('''\
@@ -198,7 +200,48 @@ ORDER BY date, time;''')
             appointments.align='l'
             print(appointments)
 
-
+    def update_patient():
+        while True:
+            try:
+                patientID=input('Enter patientID to update (or show patients): ')
+                if patientID=='show patients':
+                    show_patients()
+                    continue
+                else:
+                    print('''Enter value to be updated, detail.
+For example
+`name="Steven"`
+Updatable values
+- name
+- dob
+- gender
+- phone
+- address''')
+                    xpair='='.join(map(str.strip, input('> ').split('=')))
+                    cursor=connection.cursor()
+                    command=f'''UPDATE patients
+SET {xpair} WHERE patientID="{patientID}";'''
+                    cursor.execute(command)
+                    connection.commit()
+                    print('Updated successfully')
+                    show_patients()
+                    while True:
+                        try:
+                            proceed=proceeddict[input('Are you satisfied [Y/n] ?')[0].lower()]
+                            break
+                        except KeyError:
+                            print('Invalid Input')
+                            continue
+                    if proceed:
+                        break
+                    else:
+                        continue
+            except KeyboardInterrupt:
+                break
+            except:
+                print('You made a mistake somewhere. Start from first')
+                continue
+        return command
 
     while True:
         command=input('Enter command> ')
@@ -286,47 +329,7 @@ NOTE: You can remove appointments only if the treatment didn\'t take place''',
             add_patient()
         
         elif command=='update patient':
-            while True:
-                try:
-                    patientID=input('Enter patientID to update (or show patients): ')
-                    if patientID=='show patients':
-                        show_patients()
-                        continue
-                    else:
-                        print('''Enter value to be updated, detail.
-For example
-`name="Steven"`
-
-Updatable values
-- name
-- dob
-- gender
-- phone
-- address''')
-                        xpair='='.join(map(str.strip, input('> ').split('=')))
-                        cursor=connection.cursor()
-                        command=f'''UPDATE patients
-SET {xpair} WHERE patientID="{patientID}";'''
-                        cursor.execute(command)
-                        connection.commit()
-                        print('Updated successfully')
-                        show_patients()
-                        while True:
-                            try:
-                                proceed=proceeddict[input('Are you satisfied [Y/n] ?')[0].lower()]
-                                break
-                            except KeyError:
-                                print('Invalid Input')
-                                continue
-                        if proceed:
-                            break
-                        else:
-                            continue
-                except KeyboardInterrupt:
-                    break
-                except:
-                    print('You made a mistake somewhere. Start from first')
-                    continue
+            command = update_patient()
 
 
         elif command=='remove patient':
