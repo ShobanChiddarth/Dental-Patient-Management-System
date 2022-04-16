@@ -98,6 +98,14 @@ with open(file=sqlconfig.load._filepath, mode='rt', encoding='utf-8', newline=''
 while True:
     try:
         proceeddict={'y':True, 'n': False}
+        TrueFalseDict={
+            'y':True,
+            'n':False,
+            't':True,
+            'f':False,
+            '0':False,
+            '1':True
+        }
         proceed=proceeddict[input('Do you wish to proceed with the following (please make changes according to your need) [Y/n]?')[0].lower()]
         break
     except KeyError:
@@ -284,7 +292,6 @@ SET {xpair} WHERE patientID="{patientID}";'''
             except:
                 print('You made a mistake somewhere. Start from first')
                 continue
-        return command
 
     def update_appointment():
         print('You can update an appointment only if there is no `treatment` related to it')
@@ -346,6 +353,80 @@ SET {xpair} WHERE treatmentID="{treatmentID}";'''
     def show_treatments():
         treatments=table_from_db('treatments')
         print(treatments)
+
+    def add_treatment():
+        while True:
+            print('Enter treatmentID below:')
+            treatmentID=input('(also `show appointments` or `add appointment`) : ')
+
+            if treatmentID=='show appointments':
+                show_appointments()
+                continue
+            elif treatmentID=='add appointment':
+                add_appointment()
+            else:
+                cursor=connection.cursor()
+                cursor.execute(f"SELECT * FROM appointments WHERE treatmentID='{treatmentID}'")
+                data=cursor.fetchall()
+                if data:
+                    print('Invalid treatmentID. Start from first.')
+                else:
+
+                    print('''Date format: YYYY-MM-DD
+Example: 1999-03-12''')
+                    date=input('Enter date: ')
+                    while not (date[0:4].isdigit() and 
+                                date[4]=='-' and 
+                                date[5:7].isdigit() and 
+                                date[7]=='-' and
+                                date[8:10].isdigit()
+                                and len(date)==10 ):
+                        print('Invalid Date')
+                        date=input('Re-enter Date: ')
+
+                    print('''Time format: HH:MM (24 hr format)
+Example: 13:50''')
+                    time=input('Enter time: ')
+                    while not (time[0:2].isdigit() and
+                                time[2]==':' and
+                                time[3:5] and
+                                len(time)==5):
+                        print('Invalid Time')
+                        time=input('Re-enter time: ')
+
+                    treatment=input('What treatment it is ? ')
+
+                    print('''What is the status of the treatment?
+Enter status below (ENTER for newline, CTRL+C on newline to stop)''')
+                    status=multilineinput()
+                        
+                    while True:
+                        fee=eval(input('Enter amount in rupees (without symbols) : '))
+                        if not isinstance(fee, (int, float)):
+                            print('Should be integer or decimal')
+                            continue
+                        break
+                        
+                    while True:
+                        try:
+                            paid=bool(TrueFalseDict[input('Is the payment complete [True/False] ?').strip().lower()[0]])
+                            break
+                        except KeyError as k:
+                            print('You entered',k)
+                            print('Anything other than `True`, `False`, `0`, `1` cannot be accepted')
+                            continue
+                        
+                    command=f'''INSERT INTO treatments (treatmentID, date, time, treatment, status, fee, paid)
+VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid})'''
+                    cursor=connection.cursor()
+                    cursor.execute(command)
+                    connection.commit()
+                    print('Added successfully')
+                    show_treatments()
+                    break
+
+                            
+
 
     while True:
         command=input('Enter command> ')
@@ -447,9 +528,11 @@ NOTE: You can remove appointments only if the treatment didn\'t take place''',
         elif command=='update appointment':
             update_appointment()
 
-
         elif command=='show treatments':
             show_treatments()
+        
+        elif command=='add treatment':
+            add_treatment()
 
     print('logout')
     connection.close()
