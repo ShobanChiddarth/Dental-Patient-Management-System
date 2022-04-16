@@ -38,7 +38,7 @@ CREATE TABLE `appointments` (
   `treatmentID` varchar(10) NOT NULL,
   PRIMARY KEY (`treatmentID`),
   UNIQUE KEY `Sno` (`Sno`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -47,7 +47,7 @@ CREATE TABLE `appointments` (
 
 LOCK TABLES `appointments` WRITE;
 /*!40000 ALTER TABLE `appointments` DISABLE KEYS */;
-INSERT INTO `appointments` VALUES (1,'2022-07-12','16:00:00','ABC1234','A24DS67'),(2,'2022-04-16','15:00:00','BU8GT5P','B2QJLENJ');
+INSERT INTO `appointments` VALUES (3,'2022-04-16','20:30:00','KV1G241','4QW0A45J\n'),(1,'2022-07-12','16:01:00','ABC1234','A24DS67'),(2,'2022-04-16','15:00:00','BU8GT5P','B2QJLENJ');
 /*!40000 ALTER TABLE `appointments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -98,7 +98,7 @@ CREATE TABLE `treatments` (
   `fee` double(16,2) DEFAULT NULL,
   `paid` tinyint(1) DEFAULT NULL,
   UNIQUE KEY `Sno` (`Sno`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -107,7 +107,7 @@ CREATE TABLE `treatments` (
 
 LOCK TABLES `treatments` WRITE;
 /*!40000 ALTER TABLE `treatments` DISABLE KEYS */;
-INSERT INTO `treatments` VALUES (2,'B2QJLENJ','2022-04-16','15:15:00','Root canal','Completed',10000.00,1);
+INSERT INTO `treatments` VALUES (2,'B2QJLENJ','2022-04-16','15:15:00','Root canal','Completed',10000.00,1),(3,'A24DS67','2022-04-16','20:15:00','Checkup','Over',700.00,1),(4,'4QW0A45J','2022-04-16','20:30:00','Crowning','Fully completed',5000.00,1);
 /*!40000 ALTER TABLE `treatments` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -120,4 +120,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-04-16 16:09:45
+-- Dump completed on 2022-04-16 21:48:46
