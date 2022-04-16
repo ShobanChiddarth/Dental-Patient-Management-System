@@ -383,7 +383,7 @@ VALUES ('{date}', '{time}', "{patientID}", "{treatmentID}");''')
             treatments=table_from_db('treatments')
             print(treatments)
 
-    print('Exited')
+    print('logout')
     connection.close()
 else:
     print('Connection to MySQL Database SriSakthiPatients FAILED')
