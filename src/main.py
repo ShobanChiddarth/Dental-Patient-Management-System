@@ -130,7 +130,8 @@ Welcome admin
 Type `help` for help
 ''')
 
-
+    def get_xpair():
+        return '='.join(map(str.strip, input('> ').split('=')))
     
     def table_from_db(table:str, v='*', align='l'):
         '''Return the given table name as prettytable from database'''
@@ -217,7 +218,7 @@ Updatable values
 - gender
 - phone
 - address''')
-                    xpair='='.join(map(str.strip, input('> ').split('=')))
+                    xpair=get_xpair()
                     cursor=connection.cursor()
                     command=f'''UPDATE patients
 SET {xpair} WHERE patientID="{patientID}";'''
@@ -242,6 +243,64 @@ SET {xpair} WHERE patientID="{patientID}";'''
                 print('You made a mistake somewhere. Start from first')
                 continue
         return command
+
+    def update_appointment():
+        print('You can update an appointment only if there is no `treatment` related to it')
+        while True:
+            try:
+                treatmentID=input('''Enter treatmentID of appointment to update it:
+(`show appointments` to show all appointments) > ''')
+                if treatmentID=='show appointments':
+                    show_appointments()
+                    continue
+                else:
+                    try:
+                        cursor=connection.cursor()
+                        cursor.execute(f'SELECT * FROM treatments WHERE treatmentID=\"{treatmentID}\"')
+                        data=cursor.fetchall()
+                        if not data: # checks if treatmentID not in treatments
+                            try:
+                                cursor=connection.cursor()
+                                print('''Enter value to be updated, detail.
+For example
+`date="2022-07-23"` (or) `time="14:30"`
+Updatable values
+- date
+- time''')
+                                xpair=get_xpair()
+                                command=f'''UPDATE appointments
+SET {xpair} WHERE treatmentID="{treatmentID}";'''
+                                cursor.execute(command)
+                                connection.commit()
+                                print('Updated successfully')
+                                show_appointments()
+                                while True:
+                                    try:
+                                        proceed=proceeddict[input('Are you satisfied [Y/n] ?')[0].lower()]
+                                        break
+                                    except KeyError:
+                                        print('Invalid Input')
+                                        continue
+                                if proceed:
+                                    break
+                                else:
+                                    continue
+                            except KeyboardInterrupt:
+                                break
+                            except:
+                                print('You made a mistake somewhere. Start from first')
+                                continue
+
+                        else:
+                            print('Wrong treatmentID. Do it again.')
+                    except KeyboardInterrupt:
+                        break
+                    except:
+                        print('You made a mistake somewhere. Start from first')
+                        continue
+            except KeyboardInterrupt:
+                break
+
 
     while True:
         command=input('Enter command> ')
@@ -378,6 +437,10 @@ VALUES ('{date}', '{time}', "{patientID}", "{treatmentID}");''')
             connection.commit()
 
             print('New appointment created')
+
+        elif command=='update appointment':
+            update_appointment()
+
 
         elif command=='show treatments':
             treatments=table_from_db('treatments')
