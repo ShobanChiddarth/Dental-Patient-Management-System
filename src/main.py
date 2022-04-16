@@ -329,8 +329,7 @@ NOTE: You can remove appointments only if the treatment didn\'t take place''',
             add_patient()
         
         elif command=='update patient':
-            command = update_patient()
-
+            update_patient()
 
         elif command=='remove patient':
             print('You can\'t remove patients')
