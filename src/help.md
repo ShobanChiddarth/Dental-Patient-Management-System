@@ -9,7 +9,8 @@ GENERAL
 
 DEBUG
 -----
-- enter-python-eval : whatever you type in python, will be evaluated and printed (or) executed
+- enter-python-eval : whatever you type in python, will be evaluated and printed
+- enter-python-exec : whatever you type in python, will be executed
 - enter-sql-mode : whatever you type in python, is sent to mysql as mysql commands
                    But output won't be printed. It is only for managing data.
 
