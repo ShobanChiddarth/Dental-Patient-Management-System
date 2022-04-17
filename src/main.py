@@ -513,7 +513,7 @@ WHERE treatmentID="{treatmentID}"''')
 
     while True:
         command=input('Enter command> ')
-        command=command.strip()
+        command=command.strip().lower()
         if command.lower().startswith('help'):
             if command=='help':
                 
@@ -588,7 +588,7 @@ NOTE: You can remove appointments only if the treatment didn\'t take place''',
                 
                 print(helpparse(command, helpdict))
 
-        elif command.lower() in ('exit', 'quit'):
+        elif command in ('exit', 'quit'):
             break
 
         elif command=='show patients':
