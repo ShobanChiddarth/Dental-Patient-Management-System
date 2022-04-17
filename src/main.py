@@ -591,6 +591,53 @@ NOTE: You can remove appointments only if the treatment didn\'t take place''',
         elif command in ('exit', 'quit'):
             break
 
+        elif command=='enter-python-eval':
+            while True:
+                subcommand=input('enter-python-eval> ').strip().lower()
+                try:
+                    if subcommand in ('exit', 'quit'):
+                        print('exited `enter-python-eval`')
+                        break
+                    else:
+                        print(eval(subcommand))
+                        continue
+                except SyntaxError as s:
+                    print('SyntaxError:',s, file=sys.stderr)
+                    continue
+                except:
+                    print('ERROR', file=sys.stderr)
+                    continue
+
+        elif command=='enter-python-exec':
+            while True:
+                subcommand=input('enter-python-exec> ').strip().lower()
+                try:
+                    if subcommand in ('exit', 'quit'):
+                        print('exited `enter-python-exec`')
+                        break
+                    else:
+                        exec(subcommand)
+                        continue
+                except:
+                    print('ERROR', file=sys.stderr)
+                    continue
+
+        elif command=='enter-sql-mode':
+            while True:
+                subcommand=input('enter-sql-mode> ').strip().lower()
+                if command in ('exit', 'quit'):
+                    break
+                try:
+                    cursor=connection.cursor()
+                    cursor.execute(subcommand)
+                    connection.commit()
+                except:
+                    print('ERROR', file=sys.stderr)
+                else:
+                    print('SUCCESS')
+                finally:
+                    continue
+
         elif command=='show patients':
             show_patients()
         
