@@ -478,6 +478,37 @@ SET paid={paid} WHERE treatmentID="{treatmentID}"'''
             print('Updated Successfully')
             show_treatments()
 
+    def remove_appointment():
+
+        print('You can remove an appointment only if it doesn\'t have a treatment associated with it')
+        print('Enter treatmentID below : ')
+        while True:
+            treatmentID=input('(or even `show appointments`) : ')
+
+            if treatmentID=='show appointments':
+                show_appointments()
+                continue
+            else:
+                cursor=connection.cursor()
+                cursor.execute(f'SELECT * FROM appointments WHERE treatmentID="{treatmentID}";')
+                data=cursor.fetchall()
+                if not data:
+                    print('Wrong treatmentID. It does not exist.')
+                    continue
+                else:
+                    cursor=connection.cursor()
+                    cursor.execute(f'SELECT * FROM treatments WHERE treatmentID="{treatmentID}"')
+                    data=cursor.fetchall()
+                    if data:
+                        print('Wrong treatmentID. There is a treatment associated with it.')
+                        continue
+                    else:
+                        cursor=connection.cursor()
+                        cursor.execute(f'''DELETE FROM treatments
+WHERE treatmentID="{treatmentID}"''')
+                        print('Deleted successfully')
+                        show_treatments()                        
+
 
 
     while True:
@@ -556,6 +587,7 @@ NOTE: You can remove appointments only if the treatment didn\'t take place''',
 
                 
                 print(helpparse(command, helpdict))
+
         elif command.lower() in ('exit', 'quit'):
             break
 
@@ -579,6 +611,9 @@ NOTE: You can remove appointments only if the treatment didn\'t take place''',
 
         elif command=='update appointment':
             update_appointment()
+
+        elif command=='remove appointment':
+            remove_appointment()
 
         elif command=='show treatments':
             show_treatments()
