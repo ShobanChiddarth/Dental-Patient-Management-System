@@ -624,6 +624,9 @@ NOTE: You can remove appointments only if the treatment didn\'t take place''',
         elif command=='update treatment':
             update_treatment()
 
+        elif command=='remove treatment':
+            print('You can\'t remove treatments')
+
     print('logout')
     connection.close()
 else:
