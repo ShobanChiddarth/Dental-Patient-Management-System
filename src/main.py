@@ -201,6 +201,48 @@ VALUES ("{patientID}", "{name}", '{dob}', "{gender}", "{phone}", "{address}");''
 
         print('New patient created')
 
+    def update_patient():
+        while True:
+            try:
+                patientID=input('Enter patientID to update (or show patients): ')
+                if patientID=='show patients':
+                    show_patients()
+                    continue
+                else:
+                    print('''Enter value to be updated, detail.
+For example
+`name="Steven"`
+Updatable values
+- name
+- dob
+- gender
+- phone
+- address''')
+                    xpair=get_xpair()
+                    cursor=connection.cursor()
+                    command=f'''UPDATE patients
+SET {xpair} WHERE patientID="{patientID}";'''
+                    cursor.execute(command)
+                    connection.commit()
+                    print('Updated successfully')
+                    show_patients()
+                    while True:
+                        try:
+                            proceed=proceeddict[input('Are you satisfied [Y/n] ?')[0].lower()]
+                            break
+                        except KeyError:
+                            print('Invalid Input')
+                            continue
+                    if proceed:
+                        break
+                    else:
+                        continue
+            except KeyboardInterrupt:
+                break
+            except:
+                print('You made a mistake somewhere. Start from first')
+                continue
+
     def show_appointments():
             cursor=connection.cursor()
             cursor.execute(f'''SELECT * FROM Appointments
@@ -250,48 +292,6 @@ VALUES ('{date}', '{time}', "{patientID}", "{treatmentID}");''')
             connection.commit()
 
             print('New appointment created')
-
-    def update_patient():
-        while True:
-            try:
-                patientID=input('Enter patientID to update (or show patients): ')
-                if patientID=='show patients':
-                    show_patients()
-                    continue
-                else:
-                    print('''Enter value to be updated, detail.
-For example
-`name="Steven"`
-Updatable values
-- name
-- dob
-- gender
-- phone
-- address''')
-                    xpair=get_xpair()
-                    cursor=connection.cursor()
-                    command=f'''UPDATE patients
-SET {xpair} WHERE patientID="{patientID}";'''
-                    cursor.execute(command)
-                    connection.commit()
-                    print('Updated successfully')
-                    show_patients()
-                    while True:
-                        try:
-                            proceed=proceeddict[input('Are you satisfied [Y/n] ?')[0].lower()]
-                            break
-                        except KeyError:
-                            print('Invalid Input')
-                            continue
-                    if proceed:
-                        break
-                    else:
-                        continue
-            except KeyboardInterrupt:
-                break
-            except:
-                print('You made a mistake somewhere. Start from first')
-                continue
 
     def update_appointment():
         print('You can update an appointment only if there is no `treatment` related to it')
