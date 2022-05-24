@@ -333,6 +333,8 @@ Shows all records in table `treatments`'''
         print(treatments)
 
     def add_treatment():
+        '''\
+Gets user input and adds a treatment to table `treatments`'''
         while True:
             print('Enter treatmentID below:')
             treatmentID=input('(also `show appointments` or `add appointment`) : ')
