@@ -423,7 +423,63 @@ VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {
                     connection.commit()
                     print('Added successfully')
                     show_treatments()
-                    break
+
+    def add_treatment_exact():
+        while True:
+            print('Enter treatmentID to add treatment in exact date, time of appointment')
+            treatmentID=input('(or even `show appointments`) : ')
+            if treatmentID=='show appointments':
+                show_appointments()
+                continue
+            else:
+                cursor=connection.cursor()
+                cursor.execute(f'SELECT * FROM appointments WHERE treatmentID="{treatmentID}"')
+                data=cursor.fetchall()
+                if not data:
+                    print('Wrong treatmentID. Appointment does not exist.')
+                else:
+                    cursor=connection.cursor()
+                    cursor.execute(f'SELECT * FROM treatments WHERE treatmentID="{treatmentID}"')
+                    data=cursor.fetchall()
+                    if data:
+                        print('Wrong treatmentID. Treatment exists.')
+                        continue
+                    else:
+                        cursor=connection.cursor()
+                        cursor.execute(f'SELECT date, time from appointments WHERE treatmentID="{treatmentID}"')
+                        (date, time)=cursor.fetchall()[0]
+                        date=date.strftime('%Y-%m-%d')
+                        time=time.strftime('%H:%M:%S')
+
+                        treatment=input('What treatment it is ? ')
+
+                        print('''What is the status of the treatment?
+Enter status below (ENTER for newline, CTRL+C on newline to stop)''')
+                        status=multilineinput()
+                        
+                        while True:
+                            fee=eval(input('Enter amount in rupees (without symbols) : '))
+                            if not isinstance(fee, (int, float)):
+                                print('Should be integer or decimal')
+                                continue
+                            break
+                        
+                        while True:
+                            try:
+                                paid=bool(TrueFalseDict[input('Is the payment complete [True/False] ?').strip().lower()[0]])
+                                break
+                            except KeyError as k:
+                                print('You entered',k)
+                                print('Anything other than `True`, `False`, `0`, `1` cannot be accepted')
+                                continue
+                        
+                        command=f'''INSERT INTO treatments (treatmentID, date, time, treatment, status, fee, paid)
+VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid})'''
+                        cursor=connection.cursor()
+                        cursor.execute(command)
+                        connection.commit()
+                        print('Updated Successfully')
+
 
     def update_treatment():
         while True:
@@ -667,6 +723,9 @@ NOTE: You can remove appointments only if the treatment didn\'t take place''',
         
         elif command=='add treatment':
             add_treatment()
+
+        elif command=='add treatment-exact':
+            add_treatment_exact()
 
         elif command=='update treatment':
             update_treatment()
