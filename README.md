@@ -20,7 +20,7 @@ and will take care of everything related to keeping record of
 ### PRE REQUISITES
 1. [Python >= 3.6](https://realpython.com/installing-python/)
 2. [MySQL](https://www.mysql.com/)
-3. Virtual Environment in Python
+3. Virtual Environment in Python (Optional)
 
 ### SETUP
 1. [Clone](https://www.howtogeek.com/451360/how-to-clone-a-github-repository/)/[download zip](https://sites.northwestern.edu/researchcomputing/resources/downloading-from-github/) this repo
@@ -29,6 +29,7 @@ and will take care of everything related to keeping record of
    ```cmd
    pip install -r "requirements.txt"
    ```
+   Virtual Environment is optional
 1. Restore the backed up MySQL database in [backup.sql](/SQL-credentials/backup.sql)
    ```cmd
    mysql -u root -p SrisakthiPatients < SQL-credentials/backup.sql
