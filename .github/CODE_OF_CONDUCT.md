@@ -1,5 +1,5 @@
 <h1 align='center'>
-   CODE OF CONDUCT
+   <img src='../Assets/CODE_OF_CONDUCT_IMG.jpg'>
 </h1>
 
 ## INTRODUCTION
