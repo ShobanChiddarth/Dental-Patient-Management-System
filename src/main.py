@@ -224,6 +224,8 @@ Shows all the appointments in `appointments` table'''
             print(appointments)
 
     def add_appointment(): # intended 2 tabs unnecasarily
+            '''\
+Gets user input and adds an appointment in the table `appointments`'''
             print('''Date format: YYYY-MM-DD
 Example: 1999-03-12''')
             date=input('Enter date: ')
