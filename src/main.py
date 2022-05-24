@@ -31,42 +31,10 @@ def multilineinput(
         stream.write('\n')
         return string.strip()
 
-def randomstring(chars, online=True, nums=True, upper=True, lower=False) -> str:
-        '''\
-Random String Generator
-(Will update docstring later)
 
-Function to use the form at https://www.random.org/strings/
-(modified as per the requirements of the program)
-
-RANDOM.ORG Documentation
-------------------------
-This form allows you to generate random text strings. 
-The randomness comes from atmospheric noise, which for 
-many purposes is better than the pseudo-random number 
-algorithms typically used in computer programs.
-
-PARAMETERS
-----------
-chars : length of the string
-nums : Numeric digits (0-9)
-upper : Uppercase letters (A-Z)
-lower : Lowercase letters (a-z)
-
-OUTPUT
-------
+def randomstring(length, nums=True, upper=True, lower=False) -> str:
+            '''\
 Return a random string'''
-        if online:
-            tempdict={
-                True:'on',
-                False:'off'
-            }
-            nums=tempdict[nums]
-            upper=tempdict[upper]
-            lower=tempdict[lower]
-            r=requests.get(f'https://www.random.org/strings/?num=1&len={chars}&digits={nums}&upperalpha={upper}&loweralpha={lower}&unique=on&format=plain&rnd=new')
-            return r.content.decode('utf-8').strip()
-        else:
             choice_of_strings=deque()
             if nums:
                 choice_of_strings.append(string.digits)
@@ -74,7 +42,7 @@ Return a random string'''
                 choice_of_strings.append(string.ascii_uppercase)
             if lower:
                 choice_of_strings.append(string.ascii_lowercase)
-            return ''.join(random.choices(choice_of_strings, k=chars)).strip()
+            return ''.join(random.choices(choice_of_strings, k=length)).strip()
 
 
 filepath=os.path.join(os.path.dirname(__file__), 'sqlcredentials_sample.json')
