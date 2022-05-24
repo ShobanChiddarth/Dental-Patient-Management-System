@@ -21,15 +21,15 @@ def multilineinput(
     error = KeyboardInterrupt
     ):
     '''[Gist on multi line input in Python](https://gist.github.com/ShobanChiddarth/bf5002290c2116fe30350e37bebde5a0)'''
-    lines=str()
+    string=str()
     try:
         while True:
             stream.write(margin)
-            lines=lines+input()+'\n'
+            string=string+input()+'\n'
     except error:
         stream.write('\r')
         stream.write('\n')
-        return lines
+        return string.strip()
 
 def randomstring(chars, online=True, nums=True, upper=True, lower=False) -> str:
         '''\
@@ -65,7 +65,7 @@ Return a random string'''
             upper=tempdict[upper]
             lower=tempdict[lower]
             r=requests.get(f'https://www.random.org/strings/?num=1&len={chars}&digits={nums}&upperalpha={upper}&loweralpha={lower}&unique=on&format=plain&rnd=new')
-            return r.content.decode('utf-8')
+            return r.content.decode('utf-8').strip()
         else:
             choice_of_strings=deque()
             if nums:
@@ -74,7 +74,7 @@ Return a random string'''
                 choice_of_strings.append(string.ascii_uppercase)
             if lower:
                 choice_of_strings.append(string.ascii_lowercase)
-            return ''.join(random.choices(choice_of_strings, k=chars))
+            return ''.join(random.choices(choice_of_strings, k=chars)).strip()
 
 
 filepath=os.path.join(os.path.dirname(__file__), 'sqlcredentials_sample.json')
@@ -423,7 +423,63 @@ VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {
                     connection.commit()
                     print('Added successfully')
                     show_treatments()
-                    break
+
+    def add_treatment_exact():
+        while True:
+            print('Enter treatmentID to add treatment in exact date, time of appointment')
+            treatmentID=input('(or even `show appointments`) : ')
+            if treatmentID=='show appointments':
+                show_appointments()
+                continue
+            else:
+                cursor=connection.cursor()
+                cursor.execute(f'SELECT * FROM appointments WHERE treatmentID="{treatmentID}"')
+                data=cursor.fetchall()
+                if not data:
+                    print('Wrong treatmentID. Appointment does not exist.')
+                else:
+                    cursor=connection.cursor()
+                    cursor.execute(f'SELECT * FROM treatments WHERE treatmentID="{treatmentID}"')
+                    data=cursor.fetchall()
+                    if data:
+                        print('Wrong treatmentID. Treatment exists.')
+                        continue
+                    else:
+                        cursor=connection.cursor()
+                        cursor.execute(f'SELECT date, time from appointments WHERE treatmentID="{treatmentID}"')
+                        (date, time)=cursor.fetchall()[0]
+                        date=date.strftime('%Y-%m-%d')
+                        time=time.strftime('%H:%M:%S')
+
+                        treatment=input('What treatment it is ? ')
+
+                        print('''What is the status of the treatment?
+Enter status below (ENTER for newline, CTRL+C on newline to stop)''')
+                        status=multilineinput()
+                        
+                        while True:
+                            fee=eval(input('Enter amount in rupees (without symbols) : '))
+                            if not isinstance(fee, (int, float)):
+                                print('Should be integer or decimal')
+                                continue
+                            break
+                        
+                        while True:
+                            try:
+                                paid=bool(TrueFalseDict[input('Is the payment complete [True/False] ?').strip().lower()[0]])
+                                break
+                            except KeyError as k:
+                                print('You entered',k)
+                                print('Anything other than `True`, `False`, `0`, `1` cannot be accepted')
+                                continue
+                        
+                        command=f'''INSERT INTO treatments (treatmentID, date, time, treatment, status, fee, paid)
+VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid})'''
+                        cursor=connection.cursor()
+                        cursor.execute(command)
+                        connection.commit()
+                        print('Updated Successfully')
+
 
     def update_treatment():
         while True:
@@ -667,6 +723,9 @@ NOTE: You can remove appointments only if the treatment didn\'t take place''',
         
         elif command=='add treatment':
             add_treatment()
+
+        elif command=='add treatment-exact':
+            add_treatment_exact()
 
         elif command=='update treatment':
             update_treatment()
