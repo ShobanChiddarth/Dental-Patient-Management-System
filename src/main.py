@@ -220,11 +220,7 @@ SET {xpair} WHERE patientID="{patientID}";'''
     def show_appointments():
             '''\
 Shows all the appointments in `appointments` table'''
-            cursor=connection.cursor()
-            cursor.execute(f'''SELECT * FROM Appointments
-ORDER BY date, time;''')
-            appointments = from_db_cursor(cursor)
-            appointments.align='l'
+            appointments=table_from_db('appointments')
             print(appointments)
 
     def add_appointment(): # intended 2 tabs unnecasarily
