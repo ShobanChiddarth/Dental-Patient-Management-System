@@ -449,7 +449,7 @@ VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {
                         cursor.execute(f'SELECT date, time from appointments WHERE treatmentID="{treatmentID}"')
                         (date, time)=cursor.fetchall()[0]
                         date=date.strftime('%Y-%m-%d')
-                        time=time.strftime('%H:%M:%S')
+                        time=str(time)
 
                         treatment=input('What treatment it is ? ')
 
