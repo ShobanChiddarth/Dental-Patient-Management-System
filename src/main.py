@@ -65,7 +65,7 @@ Return a random string'''
             upper=tempdict[upper]
             lower=tempdict[lower]
             r=requests.get(f'https://www.random.org/strings/?num=1&len={chars}&digits={nums}&upperalpha={upper}&loweralpha={lower}&unique=on&format=plain&rnd=new')
-            return r.content.decode('utf-8')
+            return r.content.decode('utf-8').strip()
         else:
             choice_of_strings=deque()
             if nums:
@@ -74,7 +74,7 @@ Return a random string'''
                 choice_of_strings.append(string.ascii_uppercase)
             if lower:
                 choice_of_strings.append(string.ascii_lowercase)
-            return ''.join(random.choices(choice_of_strings, k=chars))
+            return ''.join(random.choices(choice_of_strings, k=chars)).strip()
 
 
 filepath=os.path.join(os.path.dirname(__file__), 'sqlcredentials_sample.json')
