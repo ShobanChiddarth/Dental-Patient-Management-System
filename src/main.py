@@ -128,7 +128,7 @@ Type `help` for help
         '''Gets user input and adds a new patient in the table `patients`'''
         print('Adding new patient in table `patients` in database `SrisakthiPatients`')
 
-        patientID=randomstring(7)
+        patientID=randomstring(7, online=online)
         patientcursor=connection.cursor()
         patientcursor.execute('SELECT patientID from patients;')
         iddata=patientcursor.fetchall()
