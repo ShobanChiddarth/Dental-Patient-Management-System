@@ -31,42 +31,10 @@ def multilineinput(
         stream.write('\n')
         return string.strip()
 
-def randomstring(chars, online=True, nums=True, upper=True, lower=False) -> str:
-        '''\
-Random String Generator
-(Will update docstring later)
 
-Function to use the form at https://www.random.org/strings/
-(modified as per the requirements of the program)
-
-RANDOM.ORG Documentation
-------------------------
-This form allows you to generate random text strings. 
-The randomness comes from atmospheric noise, which for 
-many purposes is better than the pseudo-random number 
-algorithms typically used in computer programs.
-
-PARAMETERS
-----------
-chars : length of the string
-nums : Numeric digits (0-9)
-upper : Uppercase letters (A-Z)
-lower : Lowercase letters (a-z)
-
-OUTPUT
-------
+def randomstring(length, nums=True, upper=True, lower=False) -> str:
+            '''\
 Return a random string'''
-        if online:
-            tempdict={
-                True:'on',
-                False:'off'
-            }
-            nums=tempdict[nums]
-            upper=tempdict[upper]
-            lower=tempdict[lower]
-            r=requests.get(f'https://www.random.org/strings/?num=1&len={chars}&digits={nums}&upperalpha={upper}&loweralpha={lower}&unique=on&format=plain&rnd=new')
-            return r.content.decode('utf-8').strip()
-        else:
             choice_of_strings=deque()
             if nums:
                 choice_of_strings.append(string.digits)
@@ -74,7 +42,7 @@ Return a random string'''
                 choice_of_strings.append(string.ascii_uppercase)
             if lower:
                 choice_of_strings.append(string.ascii_lowercase)
-            return ''.join(random.choices(choice_of_strings, k=chars)).strip()
+            return ''.join(random.choices(choice_of_strings, k=length)).strip()
 
 
 filepath=os.path.join(os.path.dirname(__file__), 'sqlcredentials_sample.json')
@@ -97,6 +65,7 @@ with open(file=sqlconfig.load._filepath, mode='rt', encoding='utf-8', newline=''
 
 while True:
     try:
+        # proceedict and TrueFalseDict are just to turn user input into python boolean variables
         proceeddict={'y':True, 'n': False}
         TrueFalseDict={
             'y':True,
@@ -150,14 +119,17 @@ Type `help` for help
         return table
     
     def show_patients():
+        '''Prints table `patients` in python output'''
         patients = table_from_db('patients')
         patients.align='l'
         print(patients)
 
     def add_patient():
+        '''\
+Gets user input and adds a new patient in the table `patients`'''
         print('Adding new patient in table `patients` in database `SrisakthiPatients`')
 
-        patientID=randomstring(7, online=online)
+        patientID=randomstring(7)
         patientcursor=connection.cursor()
         patientcursor.execute('SELECT patientID from patients;')
         iddata=patientcursor.fetchall()
@@ -202,6 +174,8 @@ VALUES ("{patientID}", "{name}", '{dob}', "{gender}", "{phone}", "{address}");''
         print('New patient created')
 
     def update_patient():
+        '''\
+Gets user input and updates a patient in table `patients`'''
         while True:
             try:
                 patientID=input('Enter patientID to update (or show patients): ')
@@ -244,14 +218,14 @@ SET {xpair} WHERE patientID="{patientID}";'''
                 continue
 
     def show_appointments():
-            cursor=connection.cursor()
-            cursor.execute(f'''SELECT * FROM Appointments
-ORDER BY date, time;''')
-            appointments = from_db_cursor(cursor)
-            appointments.align='l'
+            '''\
+Shows all the appointments in `appointments` table'''
+            appointments=table_from_db('appointments')
             print(appointments)
 
     def add_appointment(): # intended 2 tabs unnecasarily
+            '''\
+Gets user input and adds an appointment in the table `appointments`'''
             print('''Date format: YYYY-MM-DD
 Example: 1999-03-12''')
             date=input('Enter date: ')
@@ -294,6 +268,8 @@ VALUES ('{date}', '{time}', "{patientID}", "{treatmentID}");''')
             print('New appointment created')
 
     def update_appointment():
+        '''\
+Gets user input and updates an appointment in the table `appointments`'''
         print('You can update an appointment only if there is no `treatment` related to it')
         while True:
             try:
@@ -351,10 +327,14 @@ SET {xpair} WHERE treatmentID="{treatmentID}";'''
                 break
 
     def show_treatments():
+        '''\
+Shows all records in table `treatments`'''
         treatments=table_from_db('treatments')
         print(treatments)
 
     def add_treatment():
+        '''\
+Gets user input and adds a treatment to table `treatments`'''
         while True:
             print('Enter treatmentID below:')
             treatmentID=input('(also `show appointments` or `add appointment`) : ')
@@ -425,6 +405,9 @@ VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {
                     show_treatments()
 
     def add_treatment_exact():
+        '''\
+Gets user input but date and time are of the exact time as per table `appointments`
+and inserts into table `treatments`'''
         while True:
             print('Enter treatmentID to add treatment in exact date, time of appointment')
             treatmentID=input('(or even `show appointments`) : ')
@@ -482,6 +465,8 @@ VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {
 
 
     def update_treatment():
+        '''\
+Gets user input and updates a record in table `treatments`'''
         while True:
             print('Enter treatmentID below:')
             treatmentID=input('(even `show treatments`) >')
@@ -535,6 +520,9 @@ SET paid={paid} WHERE treatmentID="{treatmentID}"'''
             show_treatments()
 
     def remove_appointment():
+        '''\
+Gets user input and removed a record in table `appointments` if it is not linked to
+a record in the table `treatments`'''
 
         print('You can remove an appointment only if it doesn\'t have a treatment associated with it')
         print('Enter treatmentID below : ')
@@ -626,7 +614,19 @@ NOTE: You can remove appointments only if the treatment didn\'t take place''',
                     }
 
                 
-                def helpparse(words, searchdict):
+                def helpparse(words, searchdict) -> str: # needs to be updated
+                    '''\
+Recursively gets the string in a nested dictionary of n dimensions
+and return it
+
+PARAMETERS
+----------
+words : list of strings
+searchdict : nested dictionary of n dimensions
+
+OUTPUT
+---
+The final string in a nested dictionary of n dimensions'''
                     try:
                         if isinstance(words, list):
 
