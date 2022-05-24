@@ -50,6 +50,6 @@ future. It is always a free and open source project.
 Links will be updated later
 - [Documentation]()
 - [Dev Docs]()
-- [Bug Reports](https://github.com/ShobanChiddarth/Dental-Patient-Management-System/issues)
+- [Bugs and Features + Discussions](https://github.com/ShobanChiddarth/Dental-Patient-Management-System/issues)
 - [Contributing]()
 
