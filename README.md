@@ -5,17 +5,27 @@ DENTAL PATIENT MANAGEMENT SYSTEM
 </h1>
 
 
-Just a school project. This is a school project to use python with [class 12 concepts](https://csstudy.in/sumita-arora-python-class-12-pdf-cs-book/). 
+Just a school project, running in Python Interpreter. It is purely written in python. 
+This is not a GUI or CLI application. It is just run in Python Interpreter directly 
+and the output is everything. This is a school project to use python with [class 12 concepts](https://csstudy.in/sumita-arora-python-class-12-pdf-cs-book/). 
 My aim was not to use the concepts but to make it a good software and anyways I 
 ended up using all the concepts taught in school for this project.
 
 This is a project made in python, it can keep a record of patients who visit a Dental
-clinic, keep a record of their appointments and treatments. It is purely written in python
-and will take care of everything related to keeping record of
+clinic, keep a record of their appointments and treatments. It will take care of everything related to keeping record of
 - patients
 - treatments
 - appointments
 
+When I say it is just a school project, I mean it can't be used in real life, as
+a real software to manage patient records in a clinic. It is very very very limited
+and has very less features. If you are looking for an open-source Dental management
+system, this is not the one you are looking for.
+
+This is an educational material for students who wan't to make their school project.
+Students can refer this for their projects and etc. This is solely for educational
+purpose and not anything commercial, and also won't be a commercial product in the 
+future. It is always a free and open source project.
 
 ### PRE REQUISITES
 1. [Python >= 3.6](https://realpython.com/installing-python/)
@@ -35,16 +45,6 @@ and will take care of everything related to keeping record of
    mysql -u root -p SrisakthiPatients < SQL-credentials/backup.sql
    ```
 1. Success. Now you can run [main.py](/src/main.py).
-
-When I say it is just a school project, I mean it can't be used in real life, as
-a real software to manage patient records in a clinic. It is very very very limited
-and has very less features. If you are looking for an open-source Dental management
-system, this is not the one you are looking for.
-
-This is an educational material for students who wan't to make their school project.
-Students can refer this for their projects and etc. This is solely for educational
-purpose and not anything commercial, and also won't be a commercial product in the 
-future. It is always a free and open source project.
 
 #### LINKS
 Links will be updated later
