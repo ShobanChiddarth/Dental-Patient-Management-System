@@ -119,6 +119,7 @@ Type `help` for help
         return table
     
     def show_patients():
+        '''Prints table `patients` in python output'''
         patients = table_from_db('patients')
         patients.align='l'
         print(patients)
