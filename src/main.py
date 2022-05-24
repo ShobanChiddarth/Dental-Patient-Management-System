@@ -173,7 +173,6 @@ VALUES ("{patientID}", "{name}", '{dob}', "{gender}", "{phone}", "{address}");''
         print('New patient created')
 
     def update_patient():
-        '''Gets user input and updates a patient in table `patients`'''
         while True:
             try:
                 patientID=input('Enter patientID to update (or show patients): ')
