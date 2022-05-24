@@ -405,6 +405,9 @@ VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {
                     show_treatments()
 
     def add_treatment_exact():
+        '''\
+Gets user input but date and time are of the exact time as per table `appointments`
+and inserts into table `treatments`'''
         while True:
             print('Enter treatmentID to add treatment in exact date, time of appointment')
             treatmentID=input('(or even `show appointments`) : ')
