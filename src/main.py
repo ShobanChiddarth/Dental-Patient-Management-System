@@ -614,19 +614,7 @@ NOTE: You can remove appointments only if the treatment didn\'t take place''',
                     }
 
                 
-                def helpparse(words, searchdict) -> str: # needs to be updated
-                    '''\
-Recursively gets the string in a nested dictionary of n dimensions
-and return it
-
-PARAMETERS
-----------
-words : list of strings
-searchdict : nested dictionary of n dimensions
-
-OUTPUT
----
-The final string in a nested dictionary of n dimensions'''
+                def helpparse(words, searchdict):
                     try:
                         if isinstance(words, list):
 
