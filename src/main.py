@@ -21,15 +21,15 @@ def multilineinput(
     error = KeyboardInterrupt
     ):
     '''[Gist on multi line input in Python](https://gist.github.com/ShobanChiddarth/bf5002290c2116fe30350e37bebde5a0)'''
-    lines=str()
+    string=str()
     try:
         while True:
             stream.write(margin)
-            lines=lines+input()+'\n'
+            string=string+input()+'\n'
     except error:
         stream.write('\r')
         stream.write('\n')
-        return lines
+        return string.strip()
 
 def randomstring(chars, online=True, nums=True, upper=True, lower=False) -> str:
         '''\
