@@ -268,8 +268,6 @@ VALUES ('{date}', '{time}', "{patientID}", "{treatmentID}");''')
             print('New appointment created')
 
     def update_appointment():
-        '''\
-Gets user input and updates an appointment in the table `appointments`'''
         print('You can update an appointment only if there is no `treatment` related to it')
         while True:
             try:
