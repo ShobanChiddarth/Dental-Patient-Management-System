@@ -12,9 +12,9 @@ def load_data(n: 0 | 1):
     with open(_filepath, mode='rt', encoding='utf-8', newline='') as fh:
         _data= fh.read()
         sqlcredentialsdict = json.loads(_data)
-        if n is 0:
+        if n == 0:
             return _data
-        elif n is 1:
+        elif n == 1:
             return sqlcredentialsdict
         else:
             raise ValueError('n must be 0 or 1')
