@@ -125,7 +125,8 @@ Type `help` for help
         print(patients)
 
     def add_patient():
-        '''Gets user input and adds a new patient in the table `patients`'''
+        '''\
+Gets user input and adds a new patient in the table `patients`'''
         print('Adding new patient in table `patients` in database `SrisakthiPatients`')
 
         patientID=randomstring(7)
@@ -173,7 +174,8 @@ VALUES ("{patientID}", "{name}", '{dob}', "{gender}", "{phone}", "{address}");''
         print('New patient created')
 
     def update_patient():
-        '''Gets user input and updates a patient in table `patients`'''
+        '''\
+Gets user input and updates a patient in table `patients`'''
         while True:
             try:
                 patientID=input('Enter patientID to update (or show patients): ')
