@@ -65,7 +65,6 @@ with open(file=sqlconfig.load._filepath, mode='rt', encoding='utf-8', newline=''
 
 while True:
     try:
-        # proceedict and TrueFalseDict are just to turn user input into python boolean variables
         proceeddict={'y':True, 'n': False}
         TrueFalseDict={
             'y':True,
