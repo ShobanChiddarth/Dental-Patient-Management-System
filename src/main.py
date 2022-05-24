@@ -465,6 +465,8 @@ VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {
 
 
     def update_treatment():
+        '''\
+Gets user input and updates a record in table `treatments`'''
         while True:
             print('Enter treatmentID below:')
             treatmentID=input('(even `show treatments`) >')
