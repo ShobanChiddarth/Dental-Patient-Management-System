@@ -125,7 +125,6 @@ Type `help` for help
         print(patients)
 
     def add_patient():
-        '''Gets user input and adds a new patient in the table `patients`'''
         print('Adding new patient in table `patients` in database `SrisakthiPatients`')
 
         patientID=randomstring(7, online=online)
