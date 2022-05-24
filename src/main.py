@@ -218,8 +218,6 @@ SET {xpair} WHERE patientID="{patientID}";'''
                 continue
 
     def show_appointments():
-            '''\
-Shows all the appointments in `appointments` table'''
             cursor=connection.cursor()
             cursor.execute(f'''SELECT * FROM Appointments
 ORDER BY date, time;''')
