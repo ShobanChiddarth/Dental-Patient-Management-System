@@ -520,6 +520,9 @@ SET paid={paid} WHERE treatmentID="{treatmentID}"'''
             show_treatments()
 
     def remove_appointment():
+        '''\
+Gets user input and removed a record in table `appointments` if it is not linked to
+a record in the table `treatments`'''
 
         print('You can remove an appointment only if it doesn\'t have a treatment associated with it')
         print('Enter treatmentID below : ')
