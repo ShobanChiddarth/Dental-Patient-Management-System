@@ -327,6 +327,8 @@ SET {xpair} WHERE treatmentID="{treatmentID}";'''
                 break
 
     def show_treatments():
+        '''\
+Shows all records in table `treatments`'''
         treatments=table_from_db('treatments')
         print(treatments)
 
