@@ -1,12 +1,9 @@
 from collections import deque
 import random
 import mysql.connector as connector
-import prettytable
 from prettytable import from_db_cursor
 import sqlconfig
-import requests
 import sys
-import json
 import os
 import string
 
