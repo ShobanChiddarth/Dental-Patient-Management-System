@@ -31,7 +31,7 @@ And store it in a dictionary `flattenedDict`, later look for the key in it and r
 
             
 
-def helpParse(command : str, searchdict : dict):
+def helpParse(command : str):
         command=command.lstrip('help').strip()
         flattenDict(_data)
         for key, value in global_flattened_list:
@@ -64,7 +64,7 @@ DENTAL PATIENT MANAGEMENT SYSTEM DOCUMENTATION
         return string
     
     elif helpCommand.startswith('help'):
-        return helpParse(helpCommand, _data)
+        return helpParse(helpCommand)
 
                     
 
