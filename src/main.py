@@ -50,8 +50,8 @@ print('''\
 SRI SAKTHI DENTAL CLINIC
 DENTAL PATIENT MANAGEMENT SYSTEM
 ''')
-print('''Using current sql connection configuration
-''', pprint.pformat(sqlconfig.load.load_data(1), indent=4), sep='')
+print('Using current sql connection configuration',
+    pprint.pformat(sqlconfig.load.load_data(1), indent=4), sep='\n')
 
 print('''Please look at this dictionary to get an idea about sql connection config dict.
 Your dictionary must look somewhat like this.''')
