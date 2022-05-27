@@ -9,8 +9,9 @@ _filepath=os.path.join(_directory, 'sqlcredentials.json')
 
 if not os.path.exists(_filepath):
     # creating an empty file
+    # and dumping an empty dictionary (else, json would raise error when reading from '')
     with open(_filepath, mode='at', encoding='utf-8', newline='') as _credentialsfile:
-        pass
+        _credentialsfile.write(json.dumps({}))
 
 def load_data(n: 0 | 1 = 1):
     """\
