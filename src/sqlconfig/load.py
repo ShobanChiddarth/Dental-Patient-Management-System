@@ -12,7 +12,7 @@ if not os.path.exists(_filepath):
     with open(_filepath, mode='at', encoding='utf-8', newline='') as _credentialsfile:
         pass
 
-def load_data(n: 0 | 1):
+def load_data(n: 0 | 1 = 1):
     """\
 Return the content in the file `sqlcredentials.json` as text if n == 0.
 Return the content in the file `sqlcredentials.json` as a dictionary if n==1.
@@ -27,5 +27,3 @@ Else, raise ValueError
             return sqlcredentialsdict
         else:
             raise ValueError('n must be 0 or 1')
-
-current_sqlcredentials=load_data(1)
