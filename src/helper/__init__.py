@@ -40,18 +40,11 @@ And store it in a dictionary `flattenedDict`, later look for the key in it and r
             
 
 def helpParse(command : str, searchdict : dict):
-    # try:
         command=command.lstrip('help').strip()
         flattenDict(_data)
         for key, value in global_flattened_list:
             if key==command:
                 return value
-            
-
-        # return global_flattened_list[command]
-        
-    # except KeyError as k:
-    #     return str(k)+' '+'does not exist'
 
 def processHelp(helpCommand : str):
 
