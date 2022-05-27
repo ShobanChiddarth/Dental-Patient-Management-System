@@ -1,27 +1,45 @@
 """\
 This submodule is to be used to **edit** the data (configuration credentials)
+
+In this module docstrings, allowed means it is present in the list of values in
+the file `allowed_args.json`.
 """
 import json
-from .load import _filepath, current_sqlcredentials
+from typing import Any
+from . import load
+
+def dictHasOnlyAllowedValues(d : dict) -> bool:
+    """\
+If d has only values that are allowed,
+return True.
+else,
+return False"""
+    return all((x in load.load_allowed(1)) for x in d)
+
 
 def fileisemtpy():
     """Tell if `sqlcredentails` is empty or not"""
-    return not not current_sqlcredentials
+    return not not load.load_data(0).replace(json.dumps({}), '')
 
-def flushdict():
+
+def flushdict(d : dict):
     """\
-Flush the dictionary to the file holding credentials
+Flush the dictionary to the file holding credentials if dict has only allowed values.
+else, ValueError
 
-To be called after modifying the dictionary in memory"""
-    global current_sqlcredentials
-    with open(file=_filepath, mode='w', encoding='utf-8', newline='') as fh:
-        fh.write(json.dumps(current_sqlcredentials, indent=4))
+To be called after modifying the dictionary in memory.
+"""
+    if dictHasOnlyAllowedValues(d):
+        with open(file=load._filepath, mode='w', encoding='utf-8', newline='') as fh:
+            fh.write(json.dumps(d, indent=4))
+    else:
+        raise ValueError('dict has unallowed values')
 
-
-
-def edit_credentials(item:str, edited):
+def safe_edit(d : dict, key : str, value : Any):
     """\
-Edit the dictionary holding the connection configuration with the given data."""
-    global current_sqlcredentials
-    current_sqlcredentials[item] = edited
-    flushdict()
+If key is allowed, set the value in `d`. Else, raise ValueError.
+"""
+    if key in load.load_allowed(1):
+        d[key]=value
+    else:
+        raise ValueError('`key` is a not-llowed value')

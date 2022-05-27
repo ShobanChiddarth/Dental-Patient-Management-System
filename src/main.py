@@ -1,4 +1,6 @@
 from collections import deque
+import json
+import pprint
 import random
 import mysql.connector as connector
 from prettytable import from_db_cursor
@@ -7,6 +9,8 @@ import sqlconfig
 import sys
 import os
 import string
+from pyautogui import password
+from pwinput import pwinput
 
 
 
@@ -47,17 +51,18 @@ print('''\
 SRI SAKTHI DENTAL CLINIC
 DENTAL PATIENT MANAGEMENT SYSTEM
 ''')
-print('''Using current sql connection configuration
-''', sqlconfig.load.load_data(0), sep='')
+
+current_sql_configuration = sqlconfig.load.load_data(1)
+
+print('Using current sql connection configuration',
+    pprint.pformat(current_sql_configuration, indent=4), sep='\n')
 
 print('''Please look at this dictionary to get an idea about sql connection config dict.
 Your dictionary must look somewhat like this.''')
 with open(file=filepath, mode='rt', encoding='utf-8', newline='') as fh:
-    print(fh.read())
+    pprint.pprint(json.loads(fh.read()))
 
-print('But it looks like')
-with open(file=sqlconfig.load._filepath, mode='rt', encoding='utf-8', newline='') as fh:
-    print(fh.read())
+print('But it looks like', pprint.pformat(current_sql_configuration, indent=4), sep='\n')
 
 while True:
     try:
@@ -78,18 +83,43 @@ while True:
         continue
 
 while not proceed:
-    item=input('Enter item to edit: ')
-    value=eval(input('Enter updated value: '))
-    sqlconfig.manage.edit_credentials(item, value)
-    print('Dictionary now is')
-    print(sqlconfig.load.load_data(0))
-    proceed=proceeddict[input('Are you satisfied [Y/n]?')[0].lower()]
+    print('''\
+Enter the item you wish to update/add
+You have to add only items that are allowed.
+Type `allowed` to get a list of all allowed items''')
+    allowed = sqlconfig.load.load_allowed(1)
+    item=input(': ').strip()
+    if item=='allowed':
+        
+        pprint.pprint(allowed, indent=4)
+        continue
+    elif item in allowed:
+        value=eval(input("Enter updated value (will be evaluated by python's `eval` function): "))
+    
+        sqlconfig.manage.safe_edit(current_sql_configuration, item, value)
+        sqlconfig.manage.flushdict(current_sql_configuration)
+        print('Dictionary now is')
+        pprint.pprint(sqlconfig.load.load_data(1), indent=4)
+        # not using the variable `current_sql_configuration`
+        # just in case if there is some error when flushing the dict, it would be detected
+        proceed=proceeddict[input('Are you satisfied [Y/n]?')[0].lower()]
  
+    else:
+        print('Your `item` is not allowed. ')
+        continue
+
+# begin password getting process
+if ('idlelib.run' in sys.modules):
+    password=password(text='Enter MYSQL Password', title='Dental Patient Management System', mask='•')
+else:
+    password=pwinput(prompt='Enter MYSQL Password: ', mask='•')
+
+current_sql_configuration['password']=password
 try:
-    connection=connector.connect(**sqlconfig.load.load_data(1))
+    connection=connector.connect(**current_sql_configuration)
 except connector.errors.DatabaseError as connectionerror:
     print(connectionerror)
-    exit()
+    sys.exit()
 
 
 
@@ -131,7 +161,7 @@ Gets user input and adds a new patient in the table `patients`'''
         iddata=patientcursor.fetchall()
         patientIDlist=[id for id in iddata]
         while patientID in patientIDlist:
-            patientID=randomstring(7, online=online)
+            patientID=randomstring(7)
 
         del patientcursor, iddata, patientIDlist
 
