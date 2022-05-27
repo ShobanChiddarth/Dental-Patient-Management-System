@@ -91,7 +91,7 @@ try:
     connection=connector.connect(**sqlconfig.load.load_data(1))
 except connector.errors.DatabaseError as connectionerror:
     print(connectionerror)
-    exit()
+    sys.exit()
 
 
 
