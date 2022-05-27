@@ -284,7 +284,7 @@ Example: 13:50''')
                 else:
                     break
             
-            treatmentID=randomstring(8, online=online)
+            treatmentID=randomstring(8)
 
             cursor=connection.cursor()
             cursor.execute(f'''INSERT INTO Appointments (date, time, patientID, treatmentID)
