@@ -51,6 +51,9 @@ print('''\
 SRI SAKTHI DENTAL CLINIC
 DENTAL PATIENT MANAGEMENT SYSTEM
 ''')
+
+current_sql_configuration = sqlconfig.load.load_data(1)
+
 print('Using current sql connection configuration',
     pprint.pformat(sqlconfig.load.load_data(1), indent=4), sep='\n')
 
