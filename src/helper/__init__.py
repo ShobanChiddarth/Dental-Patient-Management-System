@@ -37,6 +37,8 @@ def helpParse(command : str):
         for key, value in global_flattened_list:
             if key==command:
                 return value
+        else:
+                return "UNKNOWN COMMAND"
 
 def processHelp(helpCommand : str):
 
