@@ -56,7 +56,7 @@ print('Using current sql connection configuration',
 print('''Please look at this dictionary to get an idea about sql connection config dict.
 Your dictionary must look somewhat like this.''')
 with open(file=filepath, mode='rt', encoding='utf-8', newline='') as fh:
-    print(fh.read())
+    pprint.pprint(json.loads(fh.read()))
 
 print('But it looks like', pprint.pformat(sqlconfig.load.load_data(1)), sep='\n')
 
