@@ -1,4 +1,5 @@
 from collections import deque
+import pprint
 import random
 import mysql.connector as connector
 from prettytable import from_db_cursor
@@ -50,16 +51,14 @@ SRI SAKTHI DENTAL CLINIC
 DENTAL PATIENT MANAGEMENT SYSTEM
 ''')
 print('''Using current sql connection configuration
-''', sqlconfig.load.load_data(0), sep='')
+''', pprint.pformat(sqlconfig.load.load_data(1), indent=4), sep='')
 
 print('''Please look at this dictionary to get an idea about sql connection config dict.
 Your dictionary must look somewhat like this.''')
 with open(file=filepath, mode='rt', encoding='utf-8', newline='') as fh:
     print(fh.read())
 
-print('But it looks like')
-with open(file=sqlconfig.load._filepath, mode='rt', encoding='utf-8', newline='') as fh:
-    print(fh.read())
+print('But it looks like', pprint.pformat(sqlconfig.load.load_data(1)), sep='\n')
 
 while True:
     try:
