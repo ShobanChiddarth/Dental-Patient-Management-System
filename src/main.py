@@ -55,14 +55,14 @@ DENTAL PATIENT MANAGEMENT SYSTEM
 current_sql_configuration = sqlconfig.load.load_data(1)
 
 print('Using current sql connection configuration',
-    pprint.pformat(sqlconfig.load.load_data(1), indent=4), sep='\n')
+    pprint.pformat(current_sql_configuration, indent=4), sep='\n')
 
 print('''Please look at this dictionary to get an idea about sql connection config dict.
 Your dictionary must look somewhat like this.''')
 with open(file=filepath, mode='rt', encoding='utf-8', newline='') as fh:
     pprint.pprint(json.loads(fh.read()))
 
-print('But it looks like', pprint.pformat(sqlconfig.load.load_data(1)), sep='\n')
+print('But it looks like', pprint.pformat(current_sql_configuration, indent=4), sep='\n')
 
 while True:
     try:
@@ -83,14 +83,31 @@ while True:
         continue
 
 while not proceed:
-    item=input('Enter item to edit: ')
-    value=eval(input('Enter updated value: '))
-    sqlconfig.manage.edit_credentials(item, value)
-    print('Dictionary now is')
-    pprint.pprint(sqlconfig.load.load_data(1), indent=4) # not using the variable `current_sql_configuration`
-    # just in case if there is some error when flushing the dict
-    proceed=proceeddict[input('Are you satisfied [Y/n]?')[0].lower()]
+    print('''\
+Enter the item you wish to update/add
+You have to add only items that are allowed.
+Type `allowed` to get a list of all allowed items''')
+    allowed = sqlconfig.load.load_allowed(1)
+    item=input(': ').strip()
+    if item=='allowed':
+        
+        pprint.pprint(allowed, indent=4)
+        continue
+    elif item in allowed:
+        value=eval(input("Enter updated value (will be evaluated by python's `eval` function): "))
+    
+        sqlconfig.manage.safe_edit(current_sql_configuration, item, value)
+        sqlconfig.manage.flushdict(current_sql_configuration)
+        print('Dictionary now is')
+        pprint.pprint(sqlconfig.load.load_data(1), indent=4)
+        # not using the variable `current_sql_configuration`
+        # just in case if there is some error when flushing the dict, it would be detected
+        proceed=proceeddict[input('Are you satisfied [Y/n]?')[0].lower()]
  
+    else:
+        print('Your `item` is not allowed. ')
+        continue
+        
 try:
     connection=connector.connect(**current_sql_configuration)
 except connector.errors.DatabaseError as connectionerror:
@@ -137,7 +154,7 @@ Gets user input and adds a new patient in the table `patients`'''
         iddata=patientcursor.fetchall()
         patientIDlist=[id for id in iddata]
         while patientID in patientIDlist:
-            patientID=randomstring(7, online=online)
+            patientID=randomstring(7)
 
         del patientcursor, iddata, patientIDlist
 
