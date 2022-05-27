@@ -2,7 +2,7 @@
 This submodule is to be used to **edit** the data (configuration credentials)
 """
 import json
-from .load import _filepath
+import load
 
 def fileisemtpy():
     """Tell if `sqlcredentails` is empty or not"""
