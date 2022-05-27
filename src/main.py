@@ -2,6 +2,7 @@ from collections import deque
 import random
 import mysql.connector as connector
 from prettytable import from_db_cursor
+import helper
 import sqlconfig
 import sys
 import os
@@ -555,91 +556,9 @@ WHERE treatmentID="{treatmentID}"''')
     while True:
         command=input('Enter command> ')
         command=command.strip().lower()
-        if command.lower().startswith('help'):
-            if command=='help':
-                
-                with open(os.path.join(os.path.dirname(__file__),'help.md'),
-                            mode='rt', 
-                            encoding='utf-8',
-                            newline='\r\n') as helpfile:
-                    print(helpfile.read())
-            else:
-                command=command.split()
-                del command[0]
 
-                helpdict={
-                    'help':'show help message',
-                    'exit':'exit the script',
-                    'quit':'alias of exit',
-                    'show':{
-                        'patients':'print the table `patients` in database `SrisakthiPatients`',
-                        'appointments':'print the table `Appointments` in database `SrisakthiPatients`',
-                        'treatments':'print the table `treatments` in database `SrisakthiPatients`',
-                    },
-                    'add':{
-                        'patient':'''\
-create a new patient
-in database `SrisakthiPatients`, table `patients`''',
-                        'appointment':'add a new appointment in table `Appointments` in database `',
-                        'treatment':'''\
-add new treatment in table `treatments` in database `SrisakthiPatients`
-You must provide `treatmentID`''',
-                        'treatment-exact':'''\
-add new treatment in table `treatments` in database `SrisakthiPatients`
-with the exact date and time in table `Appointments`
-You must provide `treatmentID`'''
-                    },
-                    'update':{
-                        'patient':'''\
-update a patient in table `patients` in database `SrisakthiPatients`
-You must provide `patientID`''',
-                        'appointment':'''\
-update an existing appointment in table `Appointments` in database `SrisakthiPatients`
-You must provide `treatmentID`''',
-                        'treatment':'''\
-update treatment in in table `treatments` in database `SrisakthiPatients`
-You must provide `treatmentID`'''
-                    },
-                    'remove':{
-                        'patient':'You can\'t delete patients',
-                        'appointment':'''\
-remove an appointment in table `Appointments` in database `SrisakthiPatients`
-You must provide `treatmentID`
-NOTE: You can remove appointments only if the treatment didn\'t take place''',
-                        'treatment':'You can\'t remove treatments'
-                        }
-                    }
-
-                
-                def helpparse(words, searchdict) -> str: # needs to be updated
-                    '''\
-Recursively gets the string in a nested dictionary of n dimensions
-and return it
-
-PARAMETERS
-----------
-words : list of strings
-searchdict : nested dictionary of n dimensions
-
-OUTPUT
----
-The final string in a nested dictionary of n dimensions'''
-                    try:
-                        if isinstance(words, list):
-
-                            if isinstance(searchdict[words[0]], str):
-                                return searchdict[words[0]]
-                            elif isinstance(searchdict[words[0]], dict):
-                                searchdict=searchdict[words[0]]
-                                del words[0]
-                                return helpparse(words, searchdict)
-                    except KeyError as k:
-                        return str(k)+'\n'+'Invalid Input'
-                    except IndexError as I:
-                        return 'Invalid Input'
-
-                
-                print(helpparse(command, helpdict))
+        if command.startswith('help'):
+            print(helper.process(command))
 
         elif command in ('exit', 'quit'):
             break
