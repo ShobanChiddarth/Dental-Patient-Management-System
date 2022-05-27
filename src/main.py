@@ -9,8 +9,8 @@ import sqlconfig
 import sys
 import os
 import string
-import pyautogui
-import pwinput
+from pyautogui import password
+from pwinput import pwinput
 
 
 
@@ -109,7 +109,14 @@ Type `allowed` to get a list of all allowed items''')
     else:
         print('Your `item` is not allowed. ')
         continue
-        
+
+# begin password getting process
+if ('idlelib.run' in sys.modules):
+    password=password(text='Enter MYSQL Password', title='Dental Patient Management System', mask='•')
+else:
+    password=pwinput(prompt='Enter MYSQL Password: ', mask='•')
+
+current_sql_configuration['password']=password
 try:
     connection=connector.connect(**current_sql_configuration)
 except connector.errors.DatabaseError as connectionerror:
