@@ -18,10 +18,3 @@ To be called after modifying the dictionary in memory"""
         fh.write(json.dumps(current_sqlcredentials, indent=4))
 
 
-
-def edit_credentials(item:str, edited):
-    """\
-Edit the dictionary holding the connection configuration with the given data."""
-    global current_sqlcredentials
-    current_sqlcredentials[item] = edited
-    flushdict()
