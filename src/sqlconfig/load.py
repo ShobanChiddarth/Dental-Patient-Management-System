@@ -15,8 +15,8 @@ if not os.path.exists(_filepath):
 def load_data(n: 0 | 1 = 1):
     """\
 Return the content in the file `sqlcredentials.json` as text if n == 0.
-Return the content in the file `sqlcredentials.json` as a dictionary if n==1.
-Else, raise ValueError
+Return the content in the file `sqlcredentials.json` as a dictionary if n == 1.
+Else, raise ValueError.
 """
     with open(_filepath, mode='rt', encoding='utf-8', newline='') as fh:
         _data= fh.read()
