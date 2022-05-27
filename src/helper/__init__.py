@@ -4,7 +4,6 @@ Everything related to the `help` command of 'src/main.py'
 import os
 import json
 import pprint
-import pandas as pd
 
 
 def notempty(line:str):
