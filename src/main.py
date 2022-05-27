@@ -84,7 +84,8 @@ while not proceed:
     value=eval(input('Enter updated value: '))
     sqlconfig.manage.edit_credentials(item, value)
     print('Dictionary now is')
-    print(sqlconfig.load.load_data(0))
+    pprint.pprint(sqlconfig.load.load_data(1), indent=4) # not using the variable `current_sql_configuration`
+    # just in case if there is some error when flushing the dict
     proceed=proceeddict[input('Are you satisfied [Y/n]?')[0].lower()]
  
 try:
