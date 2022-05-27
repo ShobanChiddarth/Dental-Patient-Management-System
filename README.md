@@ -51,5 +51,5 @@ Links will be updated later
 - [Documentation]()
 - [Dev Docs]()
 - [Bugs and Features + Discussions](https://github.com/ShobanChiddarth/Dental-Patient-Management-System/issues)
-- [Contributing]()
+- [Contributing](.github/CONTRIBUTING.md)
 
