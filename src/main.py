@@ -89,7 +89,7 @@ while not proceed:
     proceed=proceeddict[input('Are you satisfied [Y/n]?')[0].lower()]
  
 try:
-    connection=connector.connect(**sqlconfig.load.load_data(1))
+    connection=connector.connect(**current_sql_configuration)
 except connector.errors.DatabaseError as connectionerror:
     print(connectionerror)
     sys.exit()
