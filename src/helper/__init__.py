@@ -15,14 +15,7 @@ def mappingTitles(line:str):
             else:
                 return '- '+line
 
-def homogeneous_type(seq):
-    """https://stackoverflow.com/questions/13252333/check-if-all-elements-of-a-list-are-of-the-same-type"""
-    iseq = iter(seq)
-    first_type = type(next(iseq))
-    if all( (type(x) is first_type) for x in iseq ):
-        return first_type
-    else:
-        return False
+
 
 global_flattened_list=[]
 def flattenDict(d : dict,):
