@@ -50,8 +50,8 @@ return appropriate msg.
     for key, value in global_flattened_list:
         if key==command:
             return value
-    else:
-            return "UNKNOWN COMMAND"
+ 
+    return "UNKNOWN COMMAND"
 
 def process_help(help_command : str):
     """\
