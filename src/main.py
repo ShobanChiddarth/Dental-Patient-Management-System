@@ -140,9 +140,9 @@ Remove the whitespaces before, between, and after """
 
     def table_from_db(table:str, v='*', align='l'):
         '''Return the given table name as prettytable from database'''
-        cursor=connection.cursor()
-        cursor.execute(f'SELECT {v} FROM {table};')
-        table = from_db_cursor(cursor)
+        inner_cursor=connection.cursor()
+        inner_cursor.execute(f'SELECT {v} FROM {table};')
+        table = from_db_cursor(inner_cursor)
         table.align=align
         return table
 
@@ -194,8 +194,8 @@ Example: 1999-03-12''')
         print('Enter address:')
         address=multilineinput()
 
-        cursor=connection.cursor()
-        cursor.execute(f'''INSERT INTO patients (patientID, name, dob, gender, phone, address)
+        inner_cursor=connection.cursor()
+        inner_cursor.execute(f'''INSERT INTO patients (patientID, name, dob, gender, phone, address)
 VALUES ("{patientID}", "{name}", '{dob}', "{gender}", "{phone}", "{address}");''')
         connection.commit()
 
@@ -221,21 +221,21 @@ Updatable values
 - phone
 - address''')
                     xpair=get_xpair()
-                    cursor=connection.cursor()
-                    command=f'''UPDATE patients
+                    inner_cursor=connection.cursor()
+                    inner_command=f'''UPDATE patients
 SET {xpair} WHERE patientID="{patientID}";'''
-                    cursor.execute(command)
+                    inner_cursor.execute(inner_command)
                     connection.commit()
                     print('Updated successfully')
                     show_patients()
                     while True:
                         try:
-                            proceed=proceeddict[input('Are you satisfied [Y/n] ?')[0].lower()]
+                            inner_proceed=proceeddict[input('Are you satisfied [Y/n] ?')[0].lower()]
                             break
                         except KeyError:
                             print('Invalid Input')
                             continue
-                    if proceed:
+                    if inner_proceed:
                         break
                     else:
                         continue
@@ -301,56 +301,55 @@ Gets user input and updates an appointment in the table `appointments`'''
         print('You can update an appointment only if there is no `treatment` related to it')
         while True:
             try:
-                treatmentID=input('''Enter treatmentID of appointment to update it:
+                treatment_ID=input('''Enter treatmentID of appointment to update it:
 (`show appointments` to show all appointments) > ''')
-                if treatmentID=='show appointments':
+                if treatment_ID=='show appointments':
                     show_appointments()
                     continue
-                else:
-                    try:
-                        cursor=connection.cursor()
-                        cursor.execute(f'SELECT * FROM treatments WHERE treatmentID=\"{treatmentID}\"')
-                        data=cursor.fetchall()
-                        if not data: # checks if treatmentID not in treatments
-                            try:
-                                cursor=connection.cursor()
-                                print('''Enter value to be updated, detail.
+                try:
+                    inner_cursor=connection.cursor()
+                    inner_cursor.execute(f'SELECT * FROM treatments WHERE treatmentID="{treatment_ID}"')
+                    data=inner_cursor.fetchall()
+                    if not data: # checks if treatmentID not in treatments
+                        try:
+                            inner_cursor=connection.cursor()
+                            print('''Enter value to be updated, detail.
 For example
 `date="2022-07-23"` (or) `time="14:30"`
 Updatable values
 - date
 - time''')
-                                xpair=get_xpair()
-                                command=f'''UPDATE appointments
-SET {xpair} WHERE treatmentID="{treatmentID}";'''
-                                cursor.execute(command)
-                                connection.commit()
-                                print('Updated successfully')
-                                show_appointments()
-                                while True:
-                                    try:
-                                        proceed=proceeddict[input('Are you satisfied [Y/n] ?')[0].lower()]
-                                        break
-                                    except KeyError:
-                                        print('Invalid Input')
-                                        continue
-                                if proceed:
+                            xpair=get_xpair()
+                            inner_command=f'''UPDATE appointments
+SET {xpair} WHERE treatmentID="{treatment_ID}";'''
+                            inner_cursor.execute(inner_command)
+                            connection.commit()
+                            print('Updated successfully')
+                            show_appointments()
+                            while True:
+                                try:
+                                    proceed=proceeddict[input('Are you satisfied [Y/n] ?')[0].lower()]
                                     break
-                                else:
+                                except KeyError:
+                                    print('Invalid Input')
                                     continue
-                            except KeyboardInterrupt:
+                            if proceed:
                                 break
-                            except:
-                                print('You made a mistake somewhere. Start from first')
+                            else:
                                 continue
+                        except KeyboardInterrupt:
+                            break
+                        except:
+                            print('You made a mistake somewhere. Start from first')
+                            continue
 
-                        else:
-                            print('Wrong treatmentID. Do it again.')
-                    except KeyboardInterrupt:
-                        break
-                    except:
-                        print('You made a mistake somewhere. Start from first')
-                        continue
+                    else:
+                        print('Wrong treatmentID. Do it again.')
+                except KeyboardInterrupt:
+                    break
+                except:
+                    print('You made a mistake somewhere. Start from first')
+                    continue
             except KeyboardInterrupt:
                 break
 
@@ -365,17 +364,17 @@ Shows all records in table `treatments`'''
 Gets user input and adds a treatment to table `treatments`'''
         while True:
             print('Enter treatmentID below:')
-            treatmentID=input('(also `show appointments` or `add appointment`) : ')
+            treatment_ID=input('(also `show appointments` or `add appointment`) : ')
 
-            if treatmentID=='show appointments':
+            if treatment_ID=='show appointments':
                 show_appointments()
                 continue
-            elif treatmentID=='add appointment':
+            elif treatment_ID=='add appointment':
                 add_appointment()
             else:
-                cursor=connection.cursor()
-                cursor.execute(f"SELECT * FROM appointments WHERE treatmentID='{treatmentID}'")
-                data=cursor.fetchall()
+                inner_cursor=connection.cursor()
+                inner_cursor.execute(f"SELECT * FROM appointments WHERE treatmentID='{treatment_ID}'")
+                data=inner_cursor.fetchall()
                 if data:
                     print('Invalid treatmentID. Start from first.')
                 else:
@@ -424,10 +423,10 @@ Enter status below (ENTER for newline, CTRL+C on newline to stop)''')
                             print('Anything other than `True`, `False`, `0`, `1` cannot be accepted')
                             continue
 
-                    command=f'''INSERT INTO treatments (treatmentID, date, time, treatment, status, fee, paid)
-VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid})'''
-                    cursor=connection.cursor()
-                    cursor.execute(command)
+                    inner_command=f'''INSERT INTO treatments (treatmentID, date, time, treatment, status, fee, paid)
+VALUES ("{treatment_ID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid})'''
+                    inner_cursor=connection.cursor()
+                    inner_cursor.execute(inner_command)
                     connection.commit()
                     print('Added successfully')
                     show_treatments()
@@ -497,14 +496,14 @@ VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {
 Gets user input and updates a record in table `treatments`'''
         while True:
             print('Enter treatmentID below:')
-            treatmentID=input('(even `show treatments`) >')
-            if treatmentID=='show treatments':
+            treatment_ID=input('(even `show treatments`) >')
+            if treatment_ID=='show treatments':
                 show_treatments()
                 continue
             else:
-                cursor=connection.cursor()
-                cursor.execute(f'''SELECT * FROM treatments WHERE treatmentID="{treatmentID}"''')
-                data=cursor.fetchall()
+                inner_cursor=connection.cursor()
+                inner_cursor.execute(f'''SELECT * FROM treatments WHERE treatmentID="{treatment_ID}"''')
+                data=inner_cursor.fetchall()
                 if not data:
                     print('Wrong treatmentID. Enter again.')
                     continue
@@ -521,10 +520,10 @@ NOTE: You can\'t update anything else''')
             print('''What is the new status of the treatment?
 Enter status below (ENTER for newline, CTRL+C on newline to stop)''')
             status=multilineinput()
-            command=f'''UPDATE treatments
-SET status="{status}" WHERE treatmentID={treatmentID}"'''
-            cursor=connection.cursor()
-            cursor.execute(command)
+            inner_command=f'''UPDATE treatments
+SET status="{status}" WHERE treatmentID={treatment_ID}"'''
+            inner_cursor=connection.cursor()
+            inner_cursor.execute(inner_command)
             connection.commit()
             print('Updated successfully')
             show_treatments()
@@ -539,10 +538,10 @@ SET status="{status}" WHERE treatmentID={treatmentID}"'''
                     print('Anything other than `True`, `False`, `0`, `1` cannot be accepted')
                     continue
 
-            command=f'''UPDATE treatments
-SET paid={paid} WHERE treatmentID="{treatmentID}"'''
-            cursor=connection.cursor()
-            cursor.execute(command)
+            inner_command=f'''UPDATE treatments
+SET paid={paid} WHERE treatmentID="{treatment_ID}"'''
+            inner_cursor=connection.cursor()
+            inner_cursor.execute(inner_command)
             connection.commit()
             print('Updated Successfully')
             show_treatments()
