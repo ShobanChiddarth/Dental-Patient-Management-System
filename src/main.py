@@ -111,7 +111,7 @@ Type `allowed` to get a list of all allowed items''')
         continue
 
 # begin password getting process
-if ('idlelib.run' in sys.modules):
+if 'idlelib.run' in sys.modules:
     password=password(text='Enter MYSQL Password', title='Dental Patient Management System', mask='•')
 else:
     password=pwinput(prompt='Enter MYSQL Password: ', mask='•')
