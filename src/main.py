@@ -33,16 +33,16 @@ def multilineinput(
 
 
 def randomstring(length, nums=True, upper=True, lower=False) -> str:
-            '''\
+    '''\
 Return a random string'''
-            choice_of_strings=deque()
-            if nums:
-                choice_of_strings.append(string.digits)
-            if upper:
-                choice_of_strings.append(string.ascii_uppercase)
-            if lower:
-                choice_of_strings.append(string.ascii_lowercase)
-            return ''.join(random.choices(choice_of_strings, k=length)).strip()
+    choice_of_strings=deque()
+    if nums:
+        choice_of_strings.append(string.digits)
+    if upper:
+        choice_of_strings.append(string.ascii_uppercase)
+    if lower:
+        choice_of_strings.append(string.ascii_lowercase)
+    return ''.join(random.choices(choice_of_strings, k=length)).strip()
 
 
 filepath=os.path.join(os.path.dirname(__file__), 'sqlcredentials_sample.json')
