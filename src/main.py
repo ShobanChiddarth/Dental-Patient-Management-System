@@ -95,7 +95,7 @@ Type `allowed` to get a list of all allowed items''')
         continue
     elif item in allowed:
         value=eval(input("Enter updated value (will be evaluated by python's `eval` function): "))
-    
+
         sqlconfig.manage.safe_edit(current_sql_configuration, item, value)
         sqlconfig.manage.flushdict(current_sql_configuration)
         print('Dictionary now is')
@@ -103,7 +103,7 @@ Type `allowed` to get a list of all allowed items''')
         # not using the variable `current_sql_configuration`
         # just in case if there is some error when flushing the dict, it would be detected
         proceed=proceeddict[input('Are you satisfied [Y/n]?')[0].lower()]
- 
+
     else:
         print('Your `item` is not allowed. ')
         continue
@@ -407,14 +407,14 @@ Example: 13:50''')
                     print('''What is the status of the treatment?
 Enter status below (ENTER for newline, CTRL+C on newline to stop)''')
                     status=multilineinput()
-                        
+
                     while True:
                         fee=eval(input('Enter amount in rupees (without symbols) : '))
                         if not isinstance(fee, (int, float)):
                             print('Should be integer or decimal')
                             continue
                         break
-                        
+
                     while True:
                         try:
                             paid=bool(TrueFalseDict[input('Is the payment complete [True/False] ?').strip().lower()[0]])
@@ -423,7 +423,7 @@ Enter status below (ENTER for newline, CTRL+C on newline to stop)''')
                             print('You entered',k)
                             print('Anything other than `True`, `False`, `0`, `1` cannot be accepted')
                             continue
-                        
+
                     command=f'''INSERT INTO treatments (treatmentID, date, time, treatment, status, fee, paid)
 VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid})'''
                     cursor=connection.cursor()
@@ -467,14 +467,14 @@ and inserts into table `treatments`'''
                         print('''What is the status of the treatment?
 Enter status below (ENTER for newline, CTRL+C on newline to stop)''')
                         status=multilineinput()
-                        
+
                         while True:
                             fee=eval(input('Enter amount in rupees (without symbols) : '))
                             if not isinstance(fee, (int, float)):
                                 print('Should be integer or decimal')
                                 continue
                             break
-                        
+
                         while True:
                             try:
                                 paid=bool(TrueFalseDict[input('Is the payment complete [True/False] ?').strip().lower()[0]])
@@ -483,7 +483,7 @@ Enter status below (ENTER for newline, CTRL+C on newline to stop)''')
                                 print('You entered',k)
                                 print('Anything other than `True`, `False`, `0`, `1` cannot be accepted')
                                 continue
-                        
+
                         command=f'''INSERT INTO treatments (treatmentID, date, time, treatment, status, fee, paid)
 VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid})'''
                         cursor=connection.cursor()
@@ -538,7 +538,7 @@ SET status="{status}" WHERE treatmentID={treatmentID}"'''
                     print('You entered',k)
                     print('Anything other than `True`, `False`, `0`, `1` cannot be accepted')
                     continue
-            
+
             command=f'''UPDATE treatments
 SET paid={paid} WHERE treatmentID="{treatmentID}"'''
             cursor=connection.cursor()
@@ -642,10 +642,10 @@ WHERE treatmentID="{treatmentID}"''')
 
         elif command=='show patients':
             show_patients()
-        
+
         elif command=='add patient':
             add_patient()
-        
+
         elif command=='update patient':
             update_patient()
 
@@ -654,7 +654,7 @@ WHERE treatmentID="{treatmentID}"''')
 
         elif command=='show appointments':
             show_appointments()
-        
+
         elif command=='add appointment':
             add_appointment()
 
@@ -666,7 +666,7 @@ WHERE treatmentID="{treatmentID}"''')
 
         elif command=='show treatments':
             show_treatments()
-        
+
         elif command=='add treatment':
             add_treatment()
 
