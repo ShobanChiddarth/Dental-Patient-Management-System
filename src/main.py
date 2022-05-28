@@ -178,8 +178,8 @@ Example: 1999-03-12''')
                             dob[7]=='-' and
                             dob[8:10].isdigit()
                             and len(dob)==10 ):
-                print('Invalid DOB')
-                dob=input('Re-enter DOB: ')
+            print('Invalid DOB')
+            dob=input('Re-enter DOB: ')
 
         phone=input('Enter phone number with country code: ')
 
@@ -246,45 +246,45 @@ SET {xpair} WHERE patientID="{patientID}";'''
                 continue
 
     def show_appointments():
-            '''\
+        '''\
 Shows all the appointments in `appointments` table'''
-            appointments=table_from_db('appointments')
-            print(appointments)
+        appointments=table_from_db('appointments')
+        print(appointments)
 
     def add_appointment(): # intended 2 tabs unnecasarily
-            '''\
+        '''\
 Gets user input and adds an appointment in the table `appointments`'''
-            print('''Date format: YYYY-MM-DD
+        print('''Date format: YYYY-MM-DD
 Example: 1999-03-12''')
-            date=input('Enter date: ')
-            while not (date[0:4].isdigit() and 
+        date=input('Enter date: ')
+        while not (date[0:4].isdigit() and 
                         date[4]=='-' and 
                         date[5:7].isdigit() and 
                         date[7]=='-' and
                         date[8:10].isdigit()
                         and len(date)==10 ):
-                    print('Invalid Date')
-                    date=input('Re-enter Date: ')
+            print('Invalid Date')
+            date=input('Re-enter Date: ')
 
-            print('''Time format: HH:MM (24 hr format)
+        print('''Time format: HH:MM (24 hr format)
 Example: 13:50''')
-            time=input('Enter time: ')
-            while not (time[0:2].isdigit() and
+        time=input('Enter time: ')
+        while not (time[0:2].isdigit() and
                         time[2]==':' and
                         time[3:5] and
                         len(time)==5):
-                        print('Invalid Time')
-                        time=input('Re-enter time: ')
-            while True:
-                print('''TIP: Enter `show patients` to show all patients
-   Enter `add patient` to add a patient''')
-                patientID=input('Enter patientID: ').strip()
-                if patientID.strip()=='show patients':
-                    show_patients()
-                elif patientID.strip()=='add patient':
-                    add_patient()
-                else:
-                    break
+            print('Invalid Time')
+            time=input('Re-enter time: ')
+        while True:
+            print('''TIP: Enter `show patients` to show all patients
+Enter `add patient` to add a patient''')
+            patientID=input('Enter patientID: ').strip()
+            if patientID.strip()=='show patients':
+                show_patients()
+            elif patientID.strip()=='add patient':
+                add_patient()
+            else:
+                break
 
             treatmentID=randomstring(8)
 
