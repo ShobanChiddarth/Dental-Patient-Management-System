@@ -159,15 +159,15 @@ Remove the whitespaces before, between, and after """
 Gets user input and adds a new patient in the table `patients`'''
         print('Adding new patient in table `patients` in database `SrisakthiPatients`')
 
-        patientID=randomstring(7)
+        patient_id=randomstring(7)
         patientcursor=connection.cursor()
         patientcursor.execute('SELECT patientID from patients;')
         iddata=patientcursor.fetchall()
-        patientIDlist=[id for id in iddata]
-        while patientID in patientIDlist:
-            patientID=randomstring(7)
+        patient_id_list=[id for id in iddata]
+        while patient_id in patient_id_list:
+            patient_id=randomstring(7)
 
-        del patientcursor, iddata, patientIDlist
+        del patientcursor, iddata, patient_id_list
 
         name=input('Enter patient name: ')
 
@@ -198,7 +198,7 @@ Example: 1999-03-12''')
 
         inner_cursor=connection.cursor()
         inner_cursor.execute(f'''INSERT INTO patients (patientID, name, dob, gender, phone, address)
-VALUES ("{patientID}", "{name}", '{dob}', "{gender}", "{phone}", "{address}");''')
+VALUES ("{patient_id}", "{name}", '{dob}', "{gender}", "{phone}", "{address}");''')
         connection.commit()
 
         print('New patient created')
@@ -208,8 +208,8 @@ VALUES ("{patientID}", "{name}", '{dob}', "{gender}", "{phone}", "{address}");''
 Gets user input and updates a patient in table `patients`'''
         while True:
             try:
-                patientID=input('Enter patientID to update (or show patients): ')
-                if patientID=='show patients':
+                patient_id=input('Enter patientID to update (or show patients): ')
+                if patient_id=='show patients':
                     show_patients()
                     continue
                 else:
@@ -225,7 +225,7 @@ Updatable values
                     xpair=get_xpair()
                     inner_cursor=connection.cursor()
                     inner_command=f'''UPDATE patients
-SET {xpair} WHERE patientID="{patientID}";'''
+SET {xpair} WHERE patientID="{patient_id}";'''
                     inner_cursor.execute(inner_command)
                     connection.commit()
                     print('Updated successfully')
@@ -253,7 +253,7 @@ Shows all the appointments in `appointments` table'''
         appointments=table_from_db('appointments')
         print(appointments)
 
-    def add_appointment(): # intended 2 tabs unnecasarily
+    def add_appointment():
         '''\
 Gets user input and adds an appointment in the table `appointments`'''
         print('''Date format: YYYY-MM-DD
@@ -280,19 +280,19 @@ Example: 13:50''')
         while True:
             print('''TIP: Enter `show patients` to show all patients
 Enter `add patient` to add a patient''')
-            patientID=input('Enter patientID: ').strip()
-            if patientID.strip()=='show patients':
+            patient_id=input('Enter patientID: ').strip()
+            if patient_id.strip()=='show patients':
                 show_patients()
-            elif patientID.strip()=='add patient':
+            elif patient_id.strip()=='add patient':
                 add_patient()
             else:
                 break
 
-            treatmentID=randomstring(8)
+            treatment_id=randomstring(8)
 
             cursor=connection.cursor()
             cursor.execute(f'''INSERT INTO Appointments (date, time, patientID, treatmentID)
-VALUES ('{date}', '{time}', "{patientID}", "{treatmentID}");''')
+VALUES ('{date}', '{time}', "{patient_id}", "{treatment_id}");''')
             connection.commit()
 
             print('New appointment created')
@@ -303,14 +303,14 @@ Gets user input and updates an appointment in the table `appointments`'''
         print('You can update an appointment only if there is no `treatment` related to it')
         while True:
             try:
-                treatment_ID=input('''Enter treatmentID of appointment to update it:
+                treatment_id=input('''Enter treatmentID of appointment to update it:
 (`show appointments` to show all appointments) > ''')
-                if treatment_ID=='show appointments':
+                if treatment_id=='show appointments':
                     show_appointments()
                     continue
                 try:
                     inner_cursor=connection.cursor()
-                    inner_cursor.execute(f'SELECT * FROM treatments WHERE treatmentID="{treatment_ID}"')
+                    inner_cursor.execute(f'SELECT * FROM treatments WHERE treatmentID="{treatment_id}"')
                     data=inner_cursor.fetchall()
                     if not data: # checks if treatmentID not in treatments
                         try:
@@ -323,19 +323,19 @@ Updatable values
 - time''')
                             xpair=get_xpair()
                             inner_command=f'''UPDATE appointments
-SET {xpair} WHERE treatmentID="{treatment_ID}";'''
+SET {xpair} WHERE treatmentID="{treatment_id}";'''
                             inner_cursor.execute(inner_command)
                             connection.commit()
                             print('Updated successfully')
                             show_appointments()
                             while True:
                                 try:
-                                    proceed=proceeddict[input('Are you satisfied [Y/n] ?')[0].lower()]
+                                    inner_proceed=proceeddict[input('Are you satisfied [Y/n] ?')[0].lower()]
                                     break
                                 except KeyError:
                                     print('Invalid Input')
                                     continue
-                            if proceed:
+                            if inner_proceed:
                                 break
                             else:
                                 continue
