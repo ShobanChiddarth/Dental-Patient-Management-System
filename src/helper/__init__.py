@@ -46,7 +46,7 @@ and by taking command as the key, return the corresponding value. If key does no
 return appropriate msg.
 """
     command=command.lstrip('help').strip()
-    flatten_dict(_data)
+    flatten_dict(_DATA)
     for key, value in global_flattened_list:
         if key==command:
             return value
@@ -60,8 +60,8 @@ The actual function to be called to **procees** the help statement.
 It does a lot of things."""
 
     with open(os.path.join(os.path.dirname(__file__), 'commands.json'), encoding='utf-8') as fh:
-        global _data
-        _data=json.loads(fh.read())
+        global _DATA
+        _DATA=json.loads(fh.read())
 
     help_command=help_command.strip().lower()
 
@@ -72,7 +72,7 @@ DENTAL PATIENT MANAGEMENT SYSTEM DOCUMENTATION
 
 """
 
-        temp_s=pprint.pformat(_data, width=200, indent=4, compact=True, sort_dicts=False, underscore_numbers=False)
+        temp_s=pprint.pformat(_DATA, width=200, indent=4, compact=True, sort_dicts=False, underscore_numbers=False)
 
         temp_s=temp_s.replace('{','\n').replace(':',' : ').replace('}','\n').replace(',','\n').replace("'", '')
 
