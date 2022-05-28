@@ -59,7 +59,7 @@ The actual function to be called to **procees** the help statement.
 
 It does a lot of things."""
 
-    with open(os.path.join(os.path.dirname(__file__), 'commands.json')) as fh:
+    with open(os.path.join(os.path.dirname(__file__), 'commands.json'), encoding='utf-8') as fh:
         global _data
         _data=json.loads(fh.read())
 
