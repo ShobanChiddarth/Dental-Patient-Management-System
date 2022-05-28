@@ -90,7 +90,7 @@ Type `allowed` to get a list of all allowed items''')
     allowed = sqlconfig.load.load_allowed(1)
     item=input(': ').strip()
     if item=='allowed':
-        
+
         pprint.pprint(allowed, indent=4)
         continue
     elif item in allowed:
@@ -137,7 +137,7 @@ Type `help` for help
         """\
 Remove the whitespaces before, between, and after """
         return '='.join(map(str.strip, input('> ').split('=')))
-    
+
     def table_from_db(table:str, v='*', align='l'):
         '''Return the given table name as prettytable from database'''
         cursor=connection.cursor()
@@ -145,7 +145,7 @@ Remove the whitespaces before, between, and after """
         table = from_db_cursor(cursor)
         table.align=align
         return table
-    
+
     def show_patients():
         '''Prints table `patients` in python output'''
         patients = table_from_db('patients')
@@ -265,7 +265,7 @@ Example: 1999-03-12''')
                         and len(date)==10 ):
                     print('Invalid Date')
                     date=input('Re-enter Date: ')
-            
+
             print('''Time format: HH:MM (24 hr format)
 Example: 13:50''')
             time=input('Enter time: ')
@@ -285,7 +285,7 @@ Example: 13:50''')
                     add_patient()
                 else:
                     break
-            
+
             treatmentID=randomstring(8)
 
             cursor=connection.cursor()
