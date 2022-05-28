@@ -587,7 +587,7 @@ WHERE treatmentID="{treatmentID}"''')
         command=command.strip().lower()
 
         if command.startswith('help'):
-            print(helper.process(command))
+            print(helper.processHelp(command))
 
         elif command in ('exit', 'quit'):
             break
