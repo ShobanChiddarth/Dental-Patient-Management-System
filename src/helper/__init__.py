@@ -82,10 +82,3 @@ DENTAL PATIENT MANAGEMENT SYSTEM DOCUMENTATION
     
     elif helpCommand.startswith('help'):
         return helpParse(helpCommand)
-
-                    
-
-
-
-
-
