@@ -134,6 +134,8 @@ Type `help` for help
 ''')
 
     def get_xpair():
+        """\
+Remove the whitespaces before, between, and after """
         return '='.join(map(str.strip, input('> ').split('=')))
     
     def table_from_db(table:str, v='*', align='l'):
