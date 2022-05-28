@@ -1,16 +1,18 @@
+import sys
+import os
+import string
+
 from collections import deque
 import json
 import pprint
 import random
 from mysql import connector
 from prettytable import from_db_cursor
-import helper
-import sqlconfig
-import sys
-import os
-import string
 from pyautogui import password
 from pwinput import pwinput
+
+import helper
+import sqlconfig
 
 
 
