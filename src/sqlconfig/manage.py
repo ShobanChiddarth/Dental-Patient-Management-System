@@ -19,7 +19,7 @@ return False"""
 
 def fileisemtpy():
     """Tell if `sqlcredentails` is empty or not"""
-    return not not load.load_data(0).replace(json.dumps({}), '')
+    return bool(load.load_data(0).replace(json.dumps({}), ''))
 
 
 def flushdict(d : dict):
