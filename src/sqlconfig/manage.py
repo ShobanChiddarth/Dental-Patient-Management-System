@@ -8,7 +8,7 @@ import json
 from typing import Any
 from . import load
 
-def dictHasOnlyAllowedValues(d : dict) -> bool:
+def dict_has_only_allowed_values(d : dict) -> bool:
     """\
 If d has only values that are allowed,
 return True.
@@ -29,7 +29,7 @@ else, ValueError
 
 To be called after modifying the dictionary in memory.
 """
-    if dictHasOnlyAllowedValues(d):
+    if dict_has_only_allowed_values(d):
         with open(file=load._filepath, mode='w', encoding='utf-8', newline='') as fh:
             fh.write(json.dumps(d, indent=4))
     else:
