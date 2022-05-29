@@ -181,11 +181,7 @@ Gets user input and adds a new patient in the table `patients`'''
         print('Adding new patient in table `patients` in database `SrisakthiPatients`')
 
         patient_id=randomstring(7)
-        inner_cursor=connection.cursor()
-        inner_cursor.execute('SELECT patientID from patients;')
-        iddata=inner_cursor.fetchall()
-        patient_id_list=[id for id in iddata]
-        while patient_id in patient_id_list:
+        while exists(value=patient_id, column='patientID', table='patients'):
             patient_id=randomstring(7)
 
         del inner_cursor, iddata, patient_id_list
@@ -233,13 +229,14 @@ Gets user input and updates a patient in table `patients`'''
                 show_patients()
                 continue
             else:
-                while True:
-                    value_to_be_updated=input('Enter value to be updated: ')
-                    allowed_patient_update_values=['name', 'dob', 'phone', 'address']
-                    if value_to_be_updated in allowed_patient_update_values:
-                        if value_to_be_updated=='address':
-                                print('Enter address: ')
-                                the_value=multilineinput()
+                if exists(value=patient_id, column='patientID', table='patients'):
+                    while True:
+                        value_to_be_updated=input('Enter value to be updated: ')
+                        allowed_patient_update_values=['name', 'dob', 'phone', 'address']
+                        if value_to_be_updated in allowed_patient_update_values:
+                            if value_to_be_updated=='address':
+                                    print('Enter address: ')
+                                    the_value=multilineinput()
                                 break
                         else:
                                 while True:
@@ -312,6 +309,8 @@ Enter `add patient` to add a patient''')
                 break
 
             treatment_id=randomstring(8)
+            while exists(value=treatment_id, column='treatmentID', table='appointments'):
+                treatment_id=randomstring(8)
 
             inner_cursor=connection.cursor()
             inner_cursor.execute(f'''INSERT INTO Appointments (date, time, patientID, treatmentID)
@@ -331,10 +330,7 @@ Gets user input and updates an appointment in the table `appointments`'''
                 show_appointments()
                 continue
             try:
-                inner_cursor=connection.cursor()
-                inner_cursor.execute(f'SELECT * FROM treatments WHERE treatmentID="{treatment_id}"')
-                data=inner_cursor.fetchall()
-                if not data: # checks if treatmentID not in treatments
+                if not exists(value=treatment_id, column='treatmentID', table='treatments'):
                     try:
                         inner_cursor=connection.cursor()
                         print('''\
@@ -402,12 +398,11 @@ Gets user input and adds a treatment to table `treatments`'''
                 continue
             elif treatment_ID=='add appointment':
                 add_appointment()
+                continue
             else:
-                inner_cursor=connection.cursor()
-                inner_cursor.execute(f"SELECT * FROM appointments WHERE treatmentID='{treatment_ID}'")
-                data=inner_cursor.fetchall()
-                if data:
+                if not exists(value=treatment_ID, column='treatmentID', table='appointments'):
                     print('Invalid treatmentID. Start from first.')
+                    continue
                 else:
 
                     print('''Date format: YYYY-MM-DD
@@ -473,16 +468,11 @@ and inserts into table `treatments`'''
                 show_appointments()
                 continue
             else:
-                inner_cursor=connection.cursor()
-                inner_cursor.execute(f'SELECT * FROM appointments WHERE treatmentID="{treatmentID}"')
-                data=inner_cursor.fetchall()
-                if not data:
+                if not exists(value=treatmentID, column='treatmentID', table='appointments'):
                     print('Wrong treatmentID. Appointment does not exist.')
+                    continue
                 else:
-                    inner_cursor=connection.cursor()
-                    inner_cursor.execute(f'SELECT * FROM treatments WHERE treatmentID="{treatmentID}"')
-                    data=inner_cursor.fetchall()
-                    if data:
+                    if exists(value=treatmentID, column='treatmentID', table='treatments'):
                         print('Wrong treatmentID. Treatment exists.')
                         continue
                     else:
@@ -533,10 +523,7 @@ Gets user input and updates a record in table `treatments`'''
                 show_treatments()
                 continue
             else:
-                inner_cursor=connection.cursor()
-                inner_cursor.execute(f'''SELECT * FROM treatments WHERE treatmentID="{treatment_ID}"''')
-                data=inner_cursor.fetchall()
-                if not data:
+                if not exists(value=treatment_ID, column='treatmentID', table='treatments'):
                     print('Wrong treatmentID. Enter again.')
                     continue
                 else:
@@ -590,24 +577,17 @@ a record in the table `treatments`'''
                 show_appointments()
                 continue
             else:
-                inner_cursor=connection.cursor()
-                inner_cursor.execute(f'SELECT * FROM appointments WHERE treatmentID="{treatmentID}";')
-                data=inner_cursor.fetchall()
-                if not data:
+                if not exists(value=treatmentID, column='treatmentID', table='appointments'):
                     print('Wrong treatmentID. It does not exist.')
+                    continue
+                elif exists(value=treatmentID, column='treatmentID', table='treatments'):
+                    print('Wrong treatmentID. There is a treatment associated with it.')
                     continue
                 else:
                     inner_cursor=connection.cursor()
-                    inner_cursor.execute(f'SELECT * FROM treatments WHERE treatmentID="{treatmentID}"')
-                    data=inner_cursor.fetchall()
-                    if data:
-                        print('Wrong treatmentID. There is a treatment associated with it.')
-                        continue
-                    else:
-                        inner_cursor=connection.cursor()
-                        inner_cursor.execute(f'''DELETE FROM treatments
+                    inner_cursor.execute(f'''DELETE FROM appointments
 WHERE treatmentID="{treatmentID}"''')
-                        print('Deleted successfully')                       
+                    print('Deleted successfully')                       
 
 
 
