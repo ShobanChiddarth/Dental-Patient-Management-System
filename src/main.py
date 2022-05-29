@@ -141,6 +141,23 @@ Welcome admin
 Type `help` for help
 ''')
 
+    def exists(
+            value : str,
+            column : str,
+            table : str,
+            connection = connection
+            ):
+        """\
+Tell if the given value exists in the given column in given table.
+
+`"` is added to the front and back of the `value` automatically.
+"""
+        value='"'+value+'"'
+        inner_cursor=connection.cursor()
+        inner_cursor.execute(f'SELECT * from {table} where {column}={value}')
+        data=inner_cursor.fetchall()
+        return bool(data)
+
     def get_xpair():
         """\
 Remove the whitespaces before, between, and after """
