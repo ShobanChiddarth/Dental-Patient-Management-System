@@ -107,7 +107,7 @@ CREATE TABLE `treatments` (
 
 LOCK TABLES `treatments` WRITE;
 /*!40000 ALTER TABLE `treatments` DISABLE KEYS */;
-INSERT INTO `treatments` VALUES (2,'B2QJLENJ','2022-04-16','15:15:00','Root canal','Completed',10000.00,1),(3,'A24DS67','2022-04-16','20:15:00','Checkup','Over',700.00,1),(4,'4QW0A45J','2022-04-16','20:30:00','Crowning','Fully completed',5000.00,1);
+INSERT INTO `treatments` VALUES (1,'B2QJLENJ','2022-04-16','15:15:00','Root canal','Completed',10000.00,1),(3,'A24DS67','2022-04-16','20:15:00','Checkup','Over',700.00,1),(4,'4QW0A45J','2022-04-16','20:30:00','Crowning','Fully completed',5000.00,1);
 /*!40000 ALTER TABLE `treatments` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
