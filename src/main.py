@@ -237,35 +237,30 @@ Gets user input and updates a patient in table `patients`'''
                             if value_to_be_updated=='address':
                                     print('Enter address: ')
                                     the_value=multilineinput()
-                                break
+                            else:
+                                    while True:
+                                        try:
+                                            the_value=eval(input('Enter the value (will be `eval`utated by python): '))
+                                            if isinstance(the_value, str):
+                                                the_value='"'+the_value+'"'
+                                            break
+                                        except:
+                                            print('ERROR, INVALID VALUE')
+                                            continue
+                            break
                         else:
-                                while True:
-                                    try:
-                                        the_value=eval(input('Enter the value (will be `eval`utated by python): '))
-                                        break
-                                    except:
-                                        print('ERROR, INVALID VALUE')
-                                        continue
-                        break
-                    else:
-                        print('Wrong item')
+                            print('Wrong item')
+                            continue
+                else:
+                    print('Wrong patientID. Re-enter it.')
+                    continue
                 inner_cursor=connection.cursor()
                 inner_command=f'''UPDATE patients
 SET {value_to_be_updated}={the_value} WHERE patientID="{patient_id}";'''
                 inner_cursor.execute(inner_command)
                 connection.commit()
                 print('Updated successfully')
-                while True:
-                    try:
-                        inner_proceed=proceeddict[input('Are you satisfied [Y/n] ?')[0].lower()]
-                        break
-                    except KeyError:
-                        print('Invalid Input')
-                        continue
-                if inner_proceed:
-                    break
-                else:
-                    continue
+                break
 
     def show_appointments():
         '''\
@@ -390,7 +385,7 @@ Shows all records in table `treatments`'''
         '''\
 Gets user input and adds a treatment to table `treatments`'''
         while True:
-            print('Enter treatmentID below:')
+            print('Enter treatmentID (from table `appointments`) below:')
             treatment_ID=input('(also `show appointments` or `add appointment`) : ')
 
             if treatment_ID=='show appointments':
@@ -404,7 +399,6 @@ Gets user input and adds a treatment to table `treatments`'''
                     print('Invalid treatmentID. Start from first.')
                     continue
                 else:
-
                     print('''Date format: YYYY-MM-DD
 Example: 1999-03-12''')
                     date=input('Enter date: ')
@@ -534,34 +528,48 @@ Gets user input and updates a record in table `treatments`'''
     1 : paid (if payment is over)
 
 NOTE: You can\'t update anything else''')
-        choice=int(input('Update what? '))
-        if choice==0:
-            print('''What is the new status of the treatment?
+        while True:
+            try:
+                choice=int(input('Update what? '))
+                break
+            except (TypeError, ValueError):
+                print('Invalid Input')
+                continue
+
+        while True:
+            if choice==0:
+                print('''What is the new status of the treatment?
 Enter status below (ENTER for newline, CTRL+C on newline to stop)''')
-            status=multilineinput()
-            inner_command=f'''UPDATE treatments
+                status=multilineinput()
+                inner_command=f'''UPDATE treatments
 SET status="{status}" WHERE treatmentID="{treatment_ID}";'''
-            inner_cursor=connection.cursor()
-            inner_cursor.execute(inner_command)
-            connection.commit()
-            print('Updated successfully')
+                inner_cursor=connection.cursor()
+                inner_cursor.execute(inner_command)
+                connection.commit()
+                print('Updated successfully')
+                break
 
-        elif choice==1:
-            while True:
-                try:
-                    paid=bool(TrueFalseDict[input('Is the payment complete now [True/False] ?').strip().lower()[0]])
-                    break
-                except KeyError as k:
-                    print('You entered',k)
-                    print('Anything other than `True`, `False`, `0`, `1` cannot be accepted')
-                    continue
+            elif choice==1:
+                while True:
+                    try:
+                        paid=bool(TrueFalseDict[input('Is the payment complete now [True/False] ?').strip().lower()[0]])
+                        break
+                    except KeyError as k:
+                        print('You entered',k)
+                        print('Anything other than `True`, `False`, `0`, `1` cannot be accepted')
+                        continue
 
-            inner_command=f'''UPDATE treatments
+                inner_command=f'''UPDATE treatments
 SET paid={paid} WHERE treatmentID="{treatment_ID}";'''
-            inner_cursor=connection.cursor()
-            inner_cursor.execute(inner_command)
-            connection.commit()
-            print('Updated Successfully')
+                inner_cursor=connection.cursor()
+                inner_cursor.execute(inner_command)
+                connection.commit()
+                print('Updated Successfully')
+                break
+        
+            else:
+                print('Invalid Input')
+                continue
 
     def remove_appointment():
         '''\
