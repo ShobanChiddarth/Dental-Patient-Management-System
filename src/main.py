@@ -469,22 +469,22 @@ and inserts into table `treatments`'''
                 show_appointments()
                 continue
             else:
-                cursor=connection.cursor()
-                cursor.execute(f'SELECT * FROM appointments WHERE treatmentID="{treatmentID}"')
-                data=cursor.fetchall()
+                inner_cursor=connection.cursor()
+                inner_cursor.execute(f'SELECT * FROM appointments WHERE treatmentID="{treatmentID}"')
+                data=inner_cursor.fetchall()
                 if not data:
                     print('Wrong treatmentID. Appointment does not exist.')
                 else:
-                    cursor=connection.cursor()
-                    cursor.execute(f'SELECT * FROM treatments WHERE treatmentID="{treatmentID}"')
-                    data=cursor.fetchall()
+                    inner_cursor=connection.cursor()
+                    inner_cursor.execute(f'SELECT * FROM treatments WHERE treatmentID="{treatmentID}"')
+                    data=inner_cursor.fetchall()
                     if data:
                         print('Wrong treatmentID. Treatment exists.')
                         continue
                     else:
-                        cursor=connection.cursor()
-                        cursor.execute(f'SELECT date, time from appointments WHERE treatmentID="{treatmentID}"')
-                        (date, time)=cursor.fetchall()[0]
+                        inner_cursor=connection.cursor()
+                        inner_cursor.execute(f'SELECT date, time from appointments WHERE treatmentID="{treatmentID}"')
+                        (date, time)=inner_cursor.fetchall()[0]
                         date=date.strftime('%Y-%m-%d')
                         time=str(time)
 
@@ -512,8 +512,8 @@ Enter status below (ENTER for newline, CTRL+C on newline to stop)''')
 
                         command=f'''INSERT INTO treatments (treatmentID, date, time, treatment, status, fee, paid)
 VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid})'''
-                        cursor=connection.cursor()
-                        cursor.execute(command)
+                        inner_cursor=connection.cursor()
+                        inner_cursor.execute(command)
                         connection.commit()
                         print('Added Successfully')
                         break
@@ -586,22 +586,22 @@ a record in the table `treatments`'''
                 show_appointments()
                 continue
             else:
-                cursor=connection.cursor()
-                cursor.execute(f'SELECT * FROM appointments WHERE treatmentID="{treatmentID}";')
-                data=cursor.fetchall()
+                inner_cursor=connection.cursor()
+                inner_cursor.execute(f'SELECT * FROM appointments WHERE treatmentID="{treatmentID}";')
+                data=inner_cursor.fetchall()
                 if not data:
                     print('Wrong treatmentID. It does not exist.')
                     continue
                 else:
-                    cursor=connection.cursor()
-                    cursor.execute(f'SELECT * FROM treatments WHERE treatmentID="{treatmentID}"')
-                    data=cursor.fetchall()
+                    inner_cursor=connection.cursor()
+                    inner_cursor.execute(f'SELECT * FROM treatments WHERE treatmentID="{treatmentID}"')
+                    data=inner_cursor.fetchall()
                     if data:
                         print('Wrong treatmentID. There is a treatment associated with it.')
                         continue
                     else:
-                        cursor=connection.cursor()
-                        cursor.execute(f'''DELETE FROM treatments
+                        inner_cursor=connection.cursor()
+                        inner_cursor.execute(f'''DELETE FROM treatments
 WHERE treatmentID="{treatmentID}"''')
                         print('Deleted successfully')                       
 
