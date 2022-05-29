@@ -158,11 +158,6 @@ Tell if the given value exists in the given column in given table.
         data=inner_cursor.fetchall()
         return bool(data)
 
-    def get_xpair():
-        """\
-Remove the whitespaces before, between, and after """
-        return '='.join(map(str.strip, input('> ').split('=')))
-
     def table_from_db(table:str, v='*', align='l'):
         '''Return the given table name as prettytable from database'''
         inner_cursor=connection.cursor()
