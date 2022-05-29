@@ -92,7 +92,6 @@ Type `allowed` to get a list of all allowed items''')
     allowed = sqlconfig.load.load_allowed(1)
     item=input(': ').strip()
     if item=='allowed':
-
         pprint.pprint(allowed, indent=4)
         continue
     elif item in allowed:
@@ -100,11 +99,18 @@ Type `allowed` to get a list of all allowed items''')
 
         sqlconfig.manage.safe_edit(current_sql_configuration, item, value)
         sqlconfig.manage.flushdict(current_sql_configuration)
+
         print('Dictionary now is')
         pprint.pprint(sqlconfig.load.load_data(1), indent=4)
         # not using the variable `current_sql_configuration`
         # just in case if there is some error when flushing the dict, it would be detected
-        proceed=proceeddict[input('Are you satisfied [Y/n]?')[0].lower()]
+        while True:
+            try:
+                proceed=proceeddict[input('Are you satisfied [Y/n]?')[0].lower()]
+            except KeyError:
+                print('Invalid input')
+            else:
+                break
 
     else:
         print('Your `item` is not allowed. ')
@@ -151,7 +157,6 @@ Remove the whitespaces before, between, and after """
     def show_patients():
         '''Prints table `patients` in python output'''
         patients = table_from_db('patients')
-        patients.align='l'
         print(patients)
 
     def add_patient():
@@ -160,14 +165,14 @@ Gets user input and adds a new patient in the table `patients`'''
         print('Adding new patient in table `patients` in database `SrisakthiPatients`')
 
         patient_id=randomstring(7)
-        patientcursor=connection.cursor()
-        patientcursor.execute('SELECT patientID from patients;')
-        iddata=patientcursor.fetchall()
+        inner_cursor=connection.cursor()
+        inner_cursor.execute('SELECT patientID from patients;')
+        iddata=inner_cursor.fetchall()
         patient_id_list=[id for id in iddata]
         while patient_id in patient_id_list:
             patient_id=randomstring(7)
 
-        del patientcursor, iddata, patient_id_list
+        del inner_cursor, iddata, patient_id_list
 
         name=input('Enter patient name: ')
 
@@ -207,45 +212,47 @@ VALUES ("{patient_id}", "{name}", '{dob}', "{gender}", "{phone}", "{address}");'
         '''\
 Gets user input and updates a patient in table `patients`'''
         while True:
-            try:
-                patient_id=input('Enter patientID to update (or show patients): ')
-                if patient_id=='show patients':
-                    show_patients()
-                    continue
-                else:
-                    print('''Enter value to be updated, detail.
-For example
-`name="Steven"`
-Updatable values
-- name
-- dob
-- gender
-- phone
-- address''')
-                    xpair=get_xpair()
-                    inner_cursor=connection.cursor()
-                    inner_command=f'''UPDATE patients
-SET {xpair} WHERE patientID="{patient_id}";'''
-                    inner_cursor.execute(inner_command)
-                    connection.commit()
-                    print('Updated successfully')
-                    show_patients()
-                    while True:
-                        try:
-                            inner_proceed=proceeddict[input('Are you satisfied [Y/n] ?')[0].lower()]
-                            break
-                        except KeyError:
-                            print('Invalid Input')
-                            continue
-                    if inner_proceed:
+            patient_id=input('Enter patientID to update (or show patients): ')
+            if patient_id=='show patients':
+                show_patients()
+                continue
+            else:
+                while True:
+                    value_to_be_updated=input('Enter value to be updated: ')
+                    allowed_patient_update_values=['name', 'dob', 'phone', 'address']
+                    if value_to_be_updated in allowed_patient_update_values:
+                        if value_to_be_updated=='address':
+                                print('Enter address: ')
+                                the_value=multilineinput()
+                                break
+                        else:
+                                while True:
+                                    try:
+                                        the_value=eval(input('Enter the value (will be `eval`utated by python): '))
+                                        break
+                                    except:
+                                        print('ERROR, INVALID VALUE')
+                                        continue
                         break
                     else:
+                        print('Wrong item')
+                inner_cursor=connection.cursor()
+                inner_command=f'''UPDATE patients
+SET {value_to_be_updated}={the_value} WHERE patientID="{patient_id}";'''
+                inner_cursor.execute(inner_command)
+                connection.commit()
+                print('Updated successfully')
+                while True:
+                    try:
+                        inner_proceed=proceeddict[input('Are you satisfied [Y/n] ?')[0].lower()]
+                        break
+                    except KeyError:
+                        print('Invalid Input')
                         continue
-            except KeyboardInterrupt:
-                break
-            except:
-                print('You made a mistake somewhere. Start from first')
-                continue
+                if inner_proceed:
+                    break
+                else:
+                    continue
 
     def show_appointments():
         '''\
@@ -281,17 +288,17 @@ Example: 13:50''')
             print('''TIP: Enter `show patients` to show all patients
 Enter `add patient` to add a patient''')
             patient_id=input('Enter patientID: ').strip()
-            if patient_id.strip()=='show patients':
+            if patient_id=='show patients':
                 show_patients()
-            elif patient_id.strip()=='add patient':
+            elif patient_id=='add patient':
                 add_patient()
             else:
                 break
 
             treatment_id=randomstring(8)
 
-            cursor=connection.cursor()
-            cursor.execute(f'''INSERT INTO Appointments (date, time, patientID, treatmentID)
+            inner_cursor=connection.cursor()
+            inner_cursor.execute(f'''INSERT INTO Appointments (date, time, patientID, treatmentID)
 VALUES ('{date}', '{time}', "{patient_id}", "{treatment_id}");''')
             connection.commit()
 
@@ -302,58 +309,64 @@ VALUES ('{date}', '{time}', "{patient_id}", "{treatment_id}");''')
 Gets user input and updates an appointment in the table `appointments`'''
         print('You can update an appointment only if there is no `treatment` related to it')
         while True:
-            try:
-                treatment_id=input('''Enter treatmentID of appointment to update it:
+            treatment_id=input('''Enter treatmentID of appointment to update it:
 (`show appointments` to show all appointments) > ''')
-                if treatment_id=='show appointments':
-                    show_appointments()
-                    continue
-                try:
-                    inner_cursor=connection.cursor()
-                    inner_cursor.execute(f'SELECT * FROM treatments WHERE treatmentID="{treatment_id}"')
-                    data=inner_cursor.fetchall()
-                    if not data: # checks if treatmentID not in treatments
-                        try:
-                            inner_cursor=connection.cursor()
-                            print('''Enter value to be updated, detail.
+            if treatment_id=='show appointments':
+                show_appointments()
+                continue
+            try:
+                inner_cursor=connection.cursor()
+                inner_cursor.execute(f'SELECT * FROM treatments WHERE treatmentID="{treatment_id}"')
+                data=inner_cursor.fetchall()
+                if not data: # checks if treatmentID not in treatments
+                    try:
+                        inner_cursor=connection.cursor()
+                        print('''\
 For example
 `date="2022-07-23"` (or) `time="14:30"`
 Updatable values
 - date
 - time''')
-                            xpair=get_xpair()
-                            inner_command=f'''UPDATE appointments
-SET {xpair} WHERE treatmentID="{treatment_id}";'''
-                            inner_cursor.execute(inner_command)
-                            connection.commit()
-                            print('Updated successfully')
-                            show_appointments()
-                            while True:
-                                try:
-                                    inner_proceed=proceeddict[input('Are you satisfied [Y/n] ?')[0].lower()]
-                                    break
-                                except KeyError:
-                                    print('Invalid Input')
-                                    continue
-                            if inner_proceed:
+                        while True:
+                            value_to_be_updated=input('Enter value to be updated: ')
+                            allowed_patient_update_values=['date', 'time']
+                            if value_to_be_updated in allowed_patient_update_values:
+                                while True:
+                                    try:
+                                        the_value=eval(input('Enter the value (will be `eval`utated by python): '))
+                                        break
+                                    except:
+                                        print('ERROR, INVALID VALUE')
+                                        continue
                                 break
                             else:
+                                print('Wrong item')
                                 continue
-                        except KeyboardInterrupt:
+                        inner_command=f'''UPDATE appointments
+SET {value_to_be_updated}={the_value} WHERE treatmentID="{treatment_id}";'''
+                        inner_cursor.execute(inner_command)
+                        connection.commit()
+                        print('Updated successfully')
+                        while True:
+                            try:
+                                inner_proceed=proceeddict[input('Are you satisfied [Y/n] ?')[0].lower()]
+                                break
+                            except KeyError:
+                                print('Invalid Input')
+                                continue
+                        if inner_proceed:
                             break
-                        except:
-                            print('You made a mistake somewhere. Start from first')
+                        else:
                             continue
+                    except:
+                        print('You made a mistake somewhere. Start from first')
+                        continue
 
-                    else:
-                        print('Wrong treatmentID. Do it again.')
-                except KeyboardInterrupt:
-                    break
-                except:
-                    print('You made a mistake somewhere. Start from first')
-                    continue
-            except KeyboardInterrupt:
-                break
+                else:
+                    print('Wrong treatmentID. Do it again.')
+            except:
+                print('You made a mistake somewhere. Start from first')
+                continue
 
     def show_treatments():
         '''\
@@ -490,7 +503,8 @@ VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {
                         cursor=connection.cursor()
                         cursor.execute(command)
                         connection.commit()
-                        print('Updated Successfully')
+                        print('Added Successfully')
+                        break
 
 
     def update_treatment():
@@ -523,12 +537,11 @@ NOTE: You can\'t update anything else''')
 Enter status below (ENTER for newline, CTRL+C on newline to stop)''')
             status=multilineinput()
             inner_command=f'''UPDATE treatments
-SET status="{status}" WHERE treatmentID={treatment_ID}"'''
+SET status="{status}" WHERE treatmentID="{treatment_ID}";'''
             inner_cursor=connection.cursor()
             inner_cursor.execute(inner_command)
             connection.commit()
             print('Updated successfully')
-            show_treatments()
 
         elif choice==1:
             while True:
@@ -541,12 +554,11 @@ SET status="{status}" WHERE treatmentID={treatment_ID}"'''
                     continue
 
             inner_command=f'''UPDATE treatments
-SET paid={paid} WHERE treatmentID="{treatment_ID}"'''
+SET paid={paid} WHERE treatmentID="{treatment_ID}";'''
             inner_cursor=connection.cursor()
             inner_cursor.execute(inner_command)
             connection.commit()
             print('Updated Successfully')
-            show_treatments()
 
     def remove_appointment():
         '''\
@@ -579,8 +591,7 @@ a record in the table `treatments`'''
                         cursor=connection.cursor()
                         cursor.execute(f'''DELETE FROM treatments
 WHERE treatmentID="{treatmentID}"''')
-                        print('Deleted successfully')
-                        show_treatments()                        
+                        print('Deleted successfully')                       
 
 
 
@@ -632,6 +643,9 @@ WHERE treatmentID="{treatmentID}"''')
 
         elif command=='remove treatment':
             print('You can\'t remove treatments')
+
+        else:
+            print("WRONG COMMAND [See `help`]")
 
     print('logout')
     connection.close()
