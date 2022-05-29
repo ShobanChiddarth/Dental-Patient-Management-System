@@ -6,6 +6,7 @@ from collections import deque
 import json
 import pprint
 import random
+from typing import Any
 from mysql import connector
 from prettytable import from_db_cursor
 from pyautogui import password
@@ -142,17 +143,20 @@ Type `help` for help
 ''')
 
     def exists(
-            value : str,
+            value : Any,
             column : str,
             table : str,
-            connection = connection
+            connection = connection,
+            add_quotation=True
             ):
         """\
 Tell if the given value exists in the given column in given table.
 
-`"` is added to the front and back of the `value` automatically.
+Set `add_quotation` to False if you don't want `"` being added to the
+ front and back of the `value` automatically (If your `value` is not str).
 """
-        value='"'+value+'"'
+        if add_quotation:
+            value='"'+value+'"'
         inner_cursor=connection.cursor()
         inner_cursor.execute(f'SELECT * from {table} where {column}={value}')
         data=inner_cursor.fetchall()
