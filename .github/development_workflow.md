@@ -96,6 +96,7 @@ In short:
    | REV | revert an earlier commit |
    | STY | style fix (whitespace, PEP8) |
    | REL | related to releases |
+   | DB  | change related to the [database backup](../backup.sql)
 
 3. When finished:
    Contributors: push your feature branch to your own Github repo, and create a pull request.
