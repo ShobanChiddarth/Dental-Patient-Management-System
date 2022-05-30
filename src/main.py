@@ -158,7 +158,7 @@ Set `add_quotation` to False if you don't want `"` being added to the
         if add_quotation:
             value='"'+value+'"'
         inner_cursor=connection.cursor()
-        inner_cursor.execute(f'SELECT * from {table} where {column}={value}')
+        inner_cursor.execute(f'SELECT * from {table} where {column}={value};')
         data=inner_cursor.fetchall()
         return bool(data)
 
@@ -444,7 +444,7 @@ Enter status below (ENTER for newline, CTRL+C on newline to stop)''')
                             continue
 
                     inner_command=f'''INSERT INTO treatments (treatmentID, date, time, treatment, status, fee, paid)
-VALUES ("{treatment_ID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid})'''
+VALUES ("{treatment_ID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid});'''
                     inner_cursor=connection.cursor()
                     inner_cursor.execute(inner_command)
                     connection.commit()
@@ -471,7 +471,7 @@ and inserts into table `treatments`'''
                         continue
                     else:
                         inner_cursor=connection.cursor()
-                        inner_cursor.execute(f'SELECT date, time from appointments WHERE treatmentID="{treatmentID}"')
+                        inner_cursor.execute(f'SELECT date, time from appointments WHERE treatmentID="{treatmentID}";')
                         (date, time)=inner_cursor.fetchall()[0]
                         date=date.strftime('%Y-%m-%d')
                         time=str(time)
@@ -499,7 +499,7 @@ Enter status below (ENTER for newline, CTRL+C on newline to stop)''')
                                 continue
 
                         command=f'''INSERT INTO treatments (treatmentID, date, time, treatment, status, fee, paid)
-VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid})'''
+VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid});'''
                         inner_cursor=connection.cursor()
                         inner_cursor.execute(command)
                         connection.commit()
@@ -594,7 +594,7 @@ a record in the table `treatments`'''
                 else:
                     inner_cursor=connection.cursor()
                     inner_cursor.execute(f'''DELETE FROM appointments
-WHERE treatmentID="{treatmentID}"''')
+WHERE treatmentID="{treatmentID}";''')
                     print('Deleted successfully')                       
 
 
