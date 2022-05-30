@@ -31,14 +31,12 @@ DROP TABLE IF EXISTS `appointments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `appointments` (
-  `Sno` int NOT NULL AUTO_INCREMENT,
   `date` date DEFAULT NULL,
   `time` time DEFAULT NULL,
   `patientID` varchar(10) NOT NULL,
   `treatmentID` varchar(10) NOT NULL,
-  PRIMARY KEY (`treatmentID`),
-  UNIQUE KEY `Sno` (`Sno`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`treatmentID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -47,7 +45,7 @@ CREATE TABLE `appointments` (
 
 LOCK TABLES `appointments` WRITE;
 /*!40000 ALTER TABLE `appointments` DISABLE KEYS */;
-INSERT INTO `appointments` VALUES (3,'2022-04-16','20:30:00','KV1G241','4QW0A45J\n'),(1,'2022-07-12','16:01:00','ABC1234','A24DS67'),(2,'2022-04-16','15:00:00','BU8GT5P','B2QJLENJ');
+INSERT INTO `appointments` VALUES ('2022-04-16','20:30:00','KV1G241','4QW0A45J'),('2022-07-12','16:01:00','ABC1234','A24DS67'),('2022-04-16','15:00:00','BU8GT5P','B2QJLENJ'),('2022-04-17','12:45:00','CTHP5ZX','JBF992A4');
 /*!40000 ALTER TABLE `appointments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -59,16 +57,14 @@ DROP TABLE IF EXISTS `patients`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `patients` (
-  `Sno` int NOT NULL AUTO_INCREMENT,
   `patientID` varchar(10) NOT NULL,
   `name` varchar(225) NOT NULL,
   `dob` date NOT NULL,
   `gender` char(1) NOT NULL,
   `phone` varchar(17) NOT NULL,
   `address` varchar(255) NOT NULL,
-  PRIMARY KEY (`patientID`),
-  UNIQUE KEY `Sno` (`Sno`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`patientID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -77,7 +73,7 @@ CREATE TABLE `patients` (
 
 LOCK TABLES `patients` WRITE;
 /*!40000 ALTER TABLE `patients` DISABLE KEYS */;
-INSERT INTO `patients` VALUES (1,'ABC1234','MUTHU KUMAR','1999-03-28','M','+919000000000','Cecilia Chapman\n711-2880 Nulla St.\nMankato Mississippi 96522'),(2,'BU8GT5P\n','Kumarswamy','2005-03-28','M','+919876543210','20, Lamp Street\nKarur Main Road'),(3,'KV1G241\n','Murugan','1999-03-12','M','+917895234164','30, Banker\'s colony\nChennai main road\nChennai - 20');
+INSERT INTO `patients` VALUES ('ABC1234','MUTHU KUMARAN','1999-03-28','M','+919000000000','Cecilia Chapman\n711-2880 Nulla St.\nMankato Mississippi 96522'),('BU8GT5P','Kumarswamy','2005-03-28','M','+919876543210','20, Lamp Street\nKarur Main Road'),('CTHP5ZX','RAM','2000-04-04','M','+919191919191','Somewhere on\nearth - 123456\n'),('KV1G241','Murugan','1999-03-12','M','+917895234164','30, Banker\'s colony\nChennai main road\nChennai - 20');
 /*!40000 ALTER TABLE `patients` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -89,16 +85,14 @@ DROP TABLE IF EXISTS `treatments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `treatments` (
-  `Sno` int NOT NULL AUTO_INCREMENT,
   `treatmentID` varchar(10) NOT NULL,
   `date` date DEFAULT NULL,
   `time` time DEFAULT NULL,
   `treatment` text,
   `status` text,
   `fee` double(16,2) DEFAULT NULL,
-  `paid` tinyint(1) DEFAULT NULL,
-  UNIQUE KEY `Sno` (`Sno`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `paid` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -107,7 +101,7 @@ CREATE TABLE `treatments` (
 
 LOCK TABLES `treatments` WRITE;
 /*!40000 ALTER TABLE `treatments` DISABLE KEYS */;
-INSERT INTO `treatments` VALUES (1,'B2QJLENJ','2022-04-16','15:15:00','Root canal','Completed',10000.00,1),(3,'A24DS67','2022-04-16','20:15:00','Checkup','Over',700.00,1),(4,'4QW0A45J','2022-04-16','20:30:00','Crowning','Fully completed',5000.00,1);
+INSERT INTO `treatments` VALUES ('B2QJLENJ','2022-04-16','15:15:00','Root canal','Completed',10000.00,1),('A24DS67','2022-04-16','20:15:00','Checkup','Over',700.00,1),('4QW0A45J','2022-04-16','20:30:00','Crowning','Fully completed',5000.00,1);
 /*!40000 ALTER TABLE `treatments` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -120,4 +114,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-04-16 21:48:46
+-- Dump completed on 2022-05-30 12:44:11
