@@ -8,7 +8,7 @@ import pprint
 import random
 from typing import Any
 from mysql import connector
-from prettytable import from_db_cursor
+from prettytable import PrettyTable, from_db_cursor
 from pyautogui import password
 from pwinput import pwinput
 
@@ -162,7 +162,7 @@ Set `add_quotation` to False if you don't want `"` being added to the
         data=inner_cursor.fetchall()
         return bool(data)
 
-    def table_from_db(table:str, v='*', align='l'):
+    def table_from_db(table:str, v='*', align='l') -> PrettyTable:
         '''Return the given table name as prettytable from database'''
         inner_cursor=connection.cursor()
         inner_cursor.execute(f'SELECT {v} FROM {table};')
@@ -173,6 +173,14 @@ Set `add_quotation` to False if you don't want `"` being added to the
     def show_patients():
         '''Prints table `patients` in python output'''
         patients = table_from_db('patients')
+
+        fieldname='Sno'
+        patients.field_names.insert(0, fieldname)
+        patients.align[fieldname]='c'
+        patients.valign[fieldname]='t'
+        for i, _ in enumerate(patients.rows):
+            patients.rows[i].insert(0, i+1)
+
         print(patients)
 
     def add_patient():
@@ -271,6 +279,14 @@ SELECT appointments.patientID, patients.name, patients.phone, appointments.treat
 FROM patients, appointments
 WHERE patients.patientID=appointments.patientID;''')
         appointments=from_db_cursor(inner_cursor)
+
+        fieldname='Sno'
+        appointments.field_names.insert(0, fieldname)
+        appointments.align[fieldname]='c'
+        appointments.valign[fieldname]='t'
+        for i, _ in enumerate(appointments.rows):
+            appointments.rows[i].insert(0, i+1)
+
         print(appointments)
 
     def add_appointment():
@@ -396,6 +412,14 @@ ON treatments.treatmentID=appointments.treatmentID;"""
         inner_cursor=connection.cursor()
         inner_cursor.execute(inner_command)
         treatments=from_db_cursor(inner_cursor)
+
+        fieldname='Sno'
+        treatments.field_names.insert(0, fieldname)
+        treatments.align[fieldname]='c'
+        treatments.valign[fieldname]='t'
+        for i, _ in enumerate(treatments.rows):
+            treatments.rows[i].insert(0, i+1)
+
         print(treatments)
 
     def add_treatment():
