@@ -265,7 +265,12 @@ SET {value_to_be_updated}={the_value} WHERE patientID="{patient_id}";'''
     def show_appointments():
         '''\
 Shows all the appointments in `appointments` table'''
-        appointments=table_from_db('appointments')
+        inner_cursor=connection.cursor()
+        inner_cursor.execute('''\
+SELECT appointments.patientID, patients.name, patients.phone, appointments.treatmentID, appointments.date, appointments.time
+FROM patients, appointments
+WHERE patients.patientID=appointments.patientID;''')
+        appointments=from_db_cursor(inner_cursor)
         print(appointments)
 
     def add_appointment():
@@ -378,7 +383,19 @@ SET {value_to_be_updated}={the_value} WHERE treatmentID="{treatment_id}";'''
     def show_treatments():
         '''\
 Shows all records in table `treatments`'''
-        treatments=table_from_db('treatments')
+        inner_command="""\
+SELECT
+patients.patientID, patients.name, patients.phone,
+treatments.treatmentID, treatments.date, treatments.time, treatments.treatment, treatments.status, treatments.fee, treatments.paid
+FROM
+patients
+JOIN appointments
+ON patients.patientID=appointments.patientID
+JOIN treatments
+ON treatments.treatmentID=appointments.treatmentID;"""
+        inner_cursor=connection.cursor()
+        inner_cursor.execute(inner_command)
+        treatments=from_db_cursor(inner_cursor)
         print(treatments)
 
     def add_treatment():
