@@ -402,7 +402,11 @@ Shows all records in table `treatments`'''
         inner_command="""\
 SELECT
 patients.patientID, patients.name, patients.phone,
-treatments.treatmentID, treatments.date, treatments.time, treatments.treatment, treatments.status, treatments.fee, treatments.paid
+treatments.treatmentID, treatments.date, treatments.time, treatments.treatment, treatments.status, treatments.fee,
+CASE treatments.paid
+WHEN 0 THEN "False"
+WHEN 1 THEN "True"
+END AS paid
 FROM
 patients
 JOIN appointments
