@@ -6,6 +6,7 @@ from collections import deque
 import json
 import pprint
 import random
+import tkinter as tk
 from typing import Any
 from mysql import connector
 from prettytable import PrettyTable, from_db_cursor
@@ -16,24 +17,45 @@ import helper
 import sqlconfig
 
 
+class MutableStringContainer():
+    """Just a mutable container of an immutable type str. The data is in `self.data`."""
+    def __init__(self, data:str='') -> None:
+        self.data=data
+
+    def __str__(self) -> str:
+        return str(self.data)
 
 
-def multilineinput(
-    margin = '| ',
-    stream = sys.stdout,
-    error = KeyboardInterrupt
-    ):
-    '''[Gist on multi line input in Python](https://gist.github.com/ShobanChiddarth/bf5002290c2116fe30350e37bebde5a0)'''
-    _s=str()
-    try:
-        while True:
-            stream.write(margin)
-            _s=_s+input()+'\n'
-    except error:
-        stream.write('\r')
-        stream.write('\n')
-        return _s.strip()
 
+def multilineinput(input_text='Enter your input'):
+    '''Get and return a multi line input (GUI)'''
+    string=MutableStringContainer()
+
+    window=tk.Tk()
+    window.title('Dental Patient Management System')
+    window.geometry('600x230')
+
+    title=tk.Label(window, text=input_text)
+    title.pack(side=tk.TOP)
+
+    yscrollbar=tk.Scrollbar(window, orient='vertical')
+    yscrollbar.pack(side=tk.RIGHT, fill='y')
+
+    text=tk.Text(window, height=7, width=50, padx=30, pady=20, yscrollcommand=yscrollbar.set)
+
+
+    yscrollbar.config(command=text.yview)
+    text.pack()
+
+    def submitf(msc=string):
+        msc.data+=text.get(1.0 , "end-1c")
+        window.destroy()
+    
+    submit=tk.Button(window, text='SUBMIT', command=submitf)
+
+    submit.pack()
+    window.mainloop()
+    return string.data.strip()
 
 def randomstring(length, nums=True, upper=True, lower=False) -> str:
     '''\
@@ -218,8 +240,7 @@ Example: 1999-03-12''')
                 print('Invalid gender')
                 print('Re-enter gender')
 
-        print('Enter address:')
-        address=multilineinput()
+        address=multilineinput("Enter address below")
 
         inner_cursor=connection.cursor()
         inner_cursor.execute(f'''INSERT INTO patients (patientID, name, dob, gender, phone, address)
@@ -243,8 +264,7 @@ Gets user input and updates a patient in table `patients`'''
                         allowed_patient_update_values=['name', 'dob', 'phone', 'address']
                         if value_to_be_updated in allowed_patient_update_values:
                             if value_to_be_updated=='address':
-                                    print('Enter address: ')
-                                    the_value=multilineinput()
+                                    the_value=multilineinput("Enter address below")
                             else:
                                     while True:
                                         try:
@@ -468,10 +488,8 @@ Example: 13:50''')
 
                     treatment=input('What treatment it is ? ')
 
-                    print('''What is the status of the treatment?
-You can also add the prescription here
-Enter status below (ENTER for newline, CTRL+C on newline to stop)''')
-                    status=multilineinput()
+                    status=multilineinput('''What is the status of the treatment?
+You can also add the prescription here''')
 
                     while True:
                         fee=eval(input('Enter amount in rupees (without symbols) : '))
@@ -524,10 +542,8 @@ and inserts into table `treatments`'''
 
                         treatment=input('What treatment it is ? ')
 
-                        print('''What is the status of the treatment?
-You can also add the prescription here
-Enter status below (ENTER for newline, CTRL+C on newline to stop)''')
-                        status=multilineinput()
+                        status=multilineinput('''What is the status of the treatment?
+You can also add the prescription here''')
 
                         while True:
                             fee=eval(input('Enter amount in rupees (without symbols) : '))
@@ -585,9 +601,8 @@ NOTE: You can\'t update anything else''')
 
         while True:
             if choice==0:
-                print('''What is the new status of the treatment?
-Enter status below (ENTER for newline, CTRL+C on newline to stop)''')
-                status=multilineinput()
+                status=multilineinput('''What is the status of the treatment?
+You can also add the prescription here''')
                 inner_command=f'''UPDATE treatments
 SET status="{status}" WHERE treatmentID="{treatment_ID}";'''
                 inner_cursor=connection.cursor()
