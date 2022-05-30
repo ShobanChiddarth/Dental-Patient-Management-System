@@ -469,6 +469,7 @@ Example: 13:50''')
                     treatment=input('What treatment it is ? ')
 
                     print('''What is the status of the treatment?
+You can also add the prescription here
 Enter status below (ENTER for newline, CTRL+C on newline to stop)''')
                     status=multilineinput()
 
@@ -524,6 +525,7 @@ and inserts into table `treatments`'''
                         treatment=input('What treatment it is ? ')
 
                         print('''What is the status of the treatment?
+You can also add the prescription here
 Enter status below (ENTER for newline, CTRL+C on newline to stop)''')
                         status=multilineinput()
 
