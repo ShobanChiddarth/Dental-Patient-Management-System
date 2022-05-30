@@ -214,8 +214,6 @@ Gets user input and adds a new patient in the table `patients`'''
         while exists(value=patient_id, column='patientID', table='patients'):
             patient_id=randomstring(7)
 
-        del inner_cursor, iddata, patient_id_list
-
         name=input('Enter patient name: ')
 
         print('''Date Of Birth Format: YYYY-MM-DD
