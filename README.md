@@ -32,16 +32,16 @@ future. It is always a free and open source project.
 3. Virtual Environment in Python (Optional)
 
 ### SETUP
-1. [Clone](https://www.howtogeek.com/451360/how-to-clone-a-github-repository/)/[download zip](https://sites.northwestern.edu/researchcomputing/resources/downloading-from-github/) this repo
+1. [Clone](https://www.howtogeek.com/451360/how-to-clone-a-github-repository/)/[download zip](https://sites.northwestern.edu/researchcomputing/resources/downloading-from-github/) this repo (you can also download the source code from the [latest release](https://github.com/ShobanChiddarth/Dental-Patient-Management-System/releases/latest))
 1. [Create a Virtual Environment and activate it](https://thepythonguru.com/python-virtualenv-guide/)
 1. Install required modules (available in [requirments.txt](/requirements.txt))
    ```cmd
    pip install -r "requirements.txt"
    ```
    Virtual Environment is optional
-1. Restore the backed up MySQL database in [backup.sql](/SQL-credentials/backup.sql)
+1. Restore the backed up MySQL database in [backup.sql](backup.sql)
    ```cmd
-   mysql -u root -p SrisakthiPatients < SQL-credentials/backup.sql
+   mysql -u root -p SrisakthiPatients < backup.sql
    ```
 1. Success. Now you can run [main.py](/src/main.py).
 
@@ -49,6 +49,7 @@ future. It is always a free and open source project.
 Links will be updated later
 - [Documentation]()
 - [Dev Docs]()
-- [Bugs and Features + Discussions](https://github.com/ShobanChiddarth/Dental-Patient-Management-System/issues)
+- [Bugs and Features](https://github.com/ShobanChiddarth/Dental-Patient-Management-System/issues)
+- [Discussions](https://github.com/ShobanChiddarth/Dental-Patient-Management-System/discussions)
 - [Contributing](.github/CONTRIBUTING.md)
 
