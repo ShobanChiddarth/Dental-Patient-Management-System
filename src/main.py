@@ -62,11 +62,11 @@ def randomstring(length, nums=True, upper=True, lower=False) -> str:
 Return a random string'''
     choice_of_strings=deque()
     if nums:
-        choice_of_strings.append(string.digits)
+        choice_of_strings.extend(deque(string.digits))
     if upper:
-        choice_of_strings.append(string.ascii_uppercase)
+        choice_of_strings.extend(deque(string.ascii_uppercase))
     if lower:
-        choice_of_strings.append(string.ascii_lowercase)
+        choice_of_strings.extend(deque(string.ascii_lowercase))
     return ''.join(random.choices(choice_of_strings, k=length)).strip()
 
 
