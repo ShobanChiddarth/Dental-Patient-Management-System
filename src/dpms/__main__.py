@@ -67,3 +67,23 @@ Return a random string'''
     if lower:
         choice_of_strings.extend(deque(string.ascii_lowercase))
     return ''.join(random.choices(choice_of_strings, k=length)).strip()
+
+def exists(
+            value : Any,
+            column : str,
+            table : str,
+            connection : CMySQLConnection,
+            add_quotation=True
+            ):
+        """\
+Tell if the given value exists in the given column in given table.
+
+Set `add_quotation` to False if you don't want `"` being added to the
+ front and back of the `value` automatically (If your `value` is not str).
+"""
+        if add_quotation:
+            value='"'+value+'"'
+        inner_cursor=connection.cursor()
+        inner_cursor.execute(f'SELECT * from {table} where {column}={value};')
+        data=inner_cursor.fetchall()
+        return bool(data)
