@@ -381,8 +381,6 @@ Gets user input and updates an appointment in the table `appointments`'''
         
         inner_cursor=connection.cursor()
         print('''\
-For example
-`date="2022-07-23"` (or) `time="14:30"`
 Updatable values
 - date
 - time''')
@@ -404,7 +402,7 @@ Updatable values
                 continue
 
         inner_command=f'''UPDATE appointments
-SET {value_to_be_updated}={the_value} WHERE treatmentID="{treatment_id}";'''
+SET {value_to_be_updated}="{the_value}" WHERE treatmentID="{treatment_id}";'''
         inner_cursor.execute(inner_command)
         connection.commit()
         print('Updated successfully')
