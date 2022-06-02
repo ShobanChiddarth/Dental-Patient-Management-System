@@ -341,11 +341,12 @@ Enter `add patient` to add a patient''')
             elif phone=='add patient':
                 add_patient()
             else:
-                if not exists(value=phone, column='phone', table='appointments'):
-                    if exists(value=phone, column='phone', table='patients'):
-                        break
+                if exists(value=phone, column='phone', table='patients'):
+                    break
+
                 else:
-                    print('Wrong phone number. It is either invalid or does not exist.')
+                    print('Wrong phone number. A patient with that number does not exist.')
+                    continue
 
         treatment_id=randomstring(8)
         while exists(value=treatment_id, column='treatmentID', table='appointments'):
