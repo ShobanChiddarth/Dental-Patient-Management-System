@@ -367,56 +367,46 @@ Gets user input and updates an appointment in the table `appointments`'''
             if treatment_id=='show appointments':
                 show_appointments()
                 continue
-            try:
-                if not exists(value=treatment_id, column='treatmentID', table='treatments'):
-                    try:
-                        inner_cursor=connection.cursor()
-                        print('''\
+            else:
+                if exists(value=treatment_id, column='treatmentID', table='appointments'):
+                    if not exists(value=treatment_id, column='treatmentID', table='treatments'):
+                        break
+                    else:
+                        print('Wrong treatmentID. A treatment for that ID exists.')
+                else:
+                    print('Wrong treatmentID. An appointment with that ID does not exists.')
+                    continue
+            
+        
+        inner_cursor=connection.cursor()
+        print('''\
 For example
 `date="2022-07-23"` (or) `time="14:30"`
 Updatable values
 - date
 - time''')
-                        while True:
-                            value_to_be_updated=input('Enter value to be updated: ')
-                            allowed_patient_update_values=['date', 'time']
-                            if value_to_be_updated in allowed_patient_update_values:
-                                while True:
-                                    try:
-                                        the_value=eval(input('Enter the value (will be `eval`utated by python): '))
-                                        break
-                                    except:
-                                        print('ERROR, INVALID VALUE')
-                                        continue
-                                break
-                            else:
-                                print('Wrong item')
-                                continue
-                        inner_command=f'''UPDATE appointments
-SET {value_to_be_updated}={the_value} WHERE treatmentID="{treatment_id}";'''
-                        inner_cursor.execute(inner_command)
-                        connection.commit()
-                        print('Updated successfully')
-                        while True:
-                            try:
-                                inner_proceed=proceeddict[input('Are you satisfied [Y/n] ?')[0].lower()]
-                                break
-                            except KeyError:
-                                print('Invalid Input')
-                                continue
-                        if inner_proceed:
-                            break
-                        else:
-                            continue
-                    except:
-                        print('You made a mistake somewhere. Start from first')
-                        continue
-
-                else:
-                    print('Wrong treatmentID. Do it again.')
-            except:
-                print('You made a mistake somewhere. Start from first')
+        while True:
+            value_to_be_updated=input('Enter value to be updated: ')
+            allowed_appointment_update_values=('date', 'time')
+            if value_to_be_updated in allowed_appointment_update_values:
+                break
+            else:
+                print('It must either be `date` or `time`. Re enter it.')
                 continue
+
+        while True:  
+            try:
+                the_value=eval(input('Enter the value (will be `eval`utated by python): '))
+                break
+            except:
+                print("ERROR, CAN'T BE `EVAL`UATED.")
+                continue
+
+        inner_command=f'''UPDATE appointments
+SET {value_to_be_updated}={the_value} WHERE treatmentID="{treatment_id}";'''
+        inner_cursor.execute(inner_command)
+        connection.commit()
+        print('Updated successfully')
 
     def show_treatments():
         '''\
