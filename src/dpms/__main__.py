@@ -87,3 +87,12 @@ Set `add_quotation` to False if you don't want `"` being added to the
         inner_cursor.execute(f'SELECT * from {table} where {column}={value};')
         data=inner_cursor.fetchall()
         return bool(data)
+
+@click.group()
+def cli():
+    pass
+
+
+if __name__=='__main__':
+    # cli(['--help'], prog_name='dpms')
+    cli()
