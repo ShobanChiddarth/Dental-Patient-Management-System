@@ -216,6 +216,9 @@ Gets user input and adds a new patient in the table `patients`'''
         phone=input('Enter phone number with country code: ')
         while (len(phone)>17 and (not phone.replace('+', '').replace('-', '').isdigit())):
             phone=input('Re-enter proper phone number: ')
+        while exists(value=phone, column='phone', table='patients'):
+            print('A patient with that phone number already exists.')
+            phone=input('Re-enter proper phone number: ')
 
         print('''Date Of Birth Format: YYYY-MM-DD
 Example: 1999-03-12''')
