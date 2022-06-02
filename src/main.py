@@ -294,9 +294,9 @@ SET {value_to_be_updated}={the_value} WHERE phone="{phone}";'''
 Shows all the appointments in `appointments` table'''
         inner_cursor=connection.cursor()
         inner_cursor.execute('''\
-SELECT appointments.patientID, patients.name, patients.phone, appointments.treatmentID, appointments.date, appointments.time
+SELECT patients.name, patients.phone, appointments.treatmentID, appointments.date, appointments.time
 FROM patients, appointments
-WHERE patients.patientID=appointments.patientID;''')
+WHERE patients.phone=appointments.phone;''')
         appointments=from_db_cursor(inner_cursor)
 
         fieldname='Sno'
