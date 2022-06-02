@@ -54,6 +54,7 @@ def multilineinput(input_text='Enter your input'):
     submit=tk.Button(window, text='SUBMIT', command=submitf)
 
     submit.pack()
+    window.attributes('-topmost',1)
     window.mainloop()
     return string.data.strip()
 
