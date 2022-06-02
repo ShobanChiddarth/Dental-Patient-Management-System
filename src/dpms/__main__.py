@@ -9,6 +9,7 @@ import random
 import tkinter as tk
 from typing import Any
 from mysql import connector
+from mysql.connector.connection_cext import CMySQLConnection
 from prettytable import PrettyTable, from_db_cursor
 from pyautogui import password
 from pwinput import pwinput
@@ -87,6 +88,15 @@ Set `add_quotation` to False if you don't want `"` being added to the
         inner_cursor.execute(f'SELECT * from {table} where {column}={value};')
         data=inner_cursor.fetchall()
         return bool(data)
+
+def table_from_db(connection:CMySQLConnection, table:str, v='*', align='l') -> PrettyTable:
+    '''Return the given table name as prettytable from database'''
+    inner_cursor=connection.cursor()
+    inner_cursor.execute(f'SELECT {v} FROM {table};')
+    ptable = from_db_cursor(inner_cursor)
+    if align is not False:
+        ptable.align=align
+    return ptable
 
 @click.group()
 def cli():
