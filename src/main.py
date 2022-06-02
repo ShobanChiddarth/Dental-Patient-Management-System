@@ -335,21 +335,24 @@ Example: 13:50''')
         while True:
             print('''TIP: Enter `show patients` to show all patients
 Enter `add patient` to add a patient''')
-            patient_id=input('Enter patientID: ').strip()
-            if patient_id=='show patients':
+            phone=input('Enter phone number of patient you want to create appointment: ').strip()
+            if phone=='show patients':
                 show_patients()
-            elif patient_id=='add patient':
+            elif phone=='add patient':
                 add_patient()
             else:
-                break
+                if exists(value=phone, column='phone', table='appointments'):
+                    break
+                else:
+                    print('Wrong phone number. It is either invalid or does not exist.')
 
             treatment_id=randomstring(8)
             while exists(value=treatment_id, column='treatmentID', table='appointments'):
                 treatment_id=randomstring(8)
 
             inner_cursor=connection.cursor()
-            inner_cursor.execute(f'''INSERT INTO Appointments (date, time, patientID, treatmentID)
-VALUES ('{date}', '{time}', "{patient_id}", "{treatment_id}");''')
+            inner_cursor.execute(f'''INSERT INTO Appointments (phone, treatmentID, date, time)
+VALUES ("{phone}", "{treatment_id}", '{date}', '{time}');''')
             connection.commit()
 
             print('New appointment created')
