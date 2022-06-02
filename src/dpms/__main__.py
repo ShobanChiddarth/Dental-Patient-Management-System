@@ -102,6 +102,31 @@ def table_from_db(connection:CMySQLConnection, table:str, v='*', align='l') -> P
 def cli():
     pass
 
+@click.command()
+@click.password_option('-p', '--password', confirmation_prompt=False, required=True, type=click.STRING)
+def show_patients(password):
+    '''Prints table `patients`'''
+    connectionDict=sqlconfig.load.load_data(1)
+    connectionDict['password']=password
+    inner_connection=connector.connect(**connectionDict)
+    patients=table_from_db(inner_connection, 'patients')
+
+    fieldname='Sno'
+    patients.field_names.insert(0, fieldname)
+    patients.align[fieldname]='c'
+    patients.valign[fieldname]='t'
+    for i, _ in enumerate(patients.rows):
+        patients.rows[i].insert(0, i+1)
+
+    print(patients)
+
+
+
+
+
+
+
+cli.add_command(show_patients)
 
 if __name__=='__main__':
     # cli(['--help'], prog_name='dpms')
