@@ -54,6 +54,7 @@ def multilineinput(input_text='Enter your input'):
     submit=tk.Button(window, text='SUBMIT', command=submitf)
 
     submit.pack()
+    window.attributes('-topmost',1)
     window.mainloop()
     return string.data.strip()
 
@@ -189,7 +190,8 @@ Set `add_quotation` to False if you don't want `"` being added to the
         inner_cursor=connection.cursor()
         inner_cursor.execute(f'SELECT {v} FROM {table};')
         table = from_db_cursor(inner_cursor)
-        table.align=align
+        if align is not False:
+            table.align=align
         return table
 
     def show_patients():
@@ -210,11 +212,14 @@ Set `add_quotation` to False if you don't want `"` being added to the
 Gets user input and adds a new patient in the table `patients`'''
         print('Adding new patient in table `patients` in database `SrisakthiPatients`')
 
-        patient_id=randomstring(7)
-        while exists(value=patient_id, column='patientID', table='patients'):
-            patient_id=randomstring(7)
 
         name=input('Enter patient name: ')
+        phone=input('Enter phone number with country code: ')
+        while (len(phone)>17 and (not phone.replace('+', '').replace('-', '').isdigit())):
+            phone=input('Re-enter proper phone number: ')
+        while exists(value=phone, column='phone', table='patients'):
+            print('A patient with that phone number already exists.')
+            phone=input('Re-enter proper phone number: ')
 
         print('''Date Of Birth Format: YYYY-MM-DD
 Example: 1999-03-12''')
@@ -228,21 +233,21 @@ Example: 1999-03-12''')
             print('Invalid DOB')
             dob=input('Re-enter DOB: ')
 
-        phone=input('Enter phone number with country code: ')
 
         while True:
             gender=input('Enter gender (M/F) : ')
             if gender in ('M', "F"):
                 break
             else:
-                print('Invalid gender')
-                print('Re-enter gender')
+                print('''\
+Invalid gender
+Re-enter gender''')
 
         address=multilineinput("Enter address below")
 
         inner_cursor=connection.cursor()
-        inner_cursor.execute(f'''INSERT INTO patients (patientID, name, dob, gender, phone, address)
-VALUES ("{patient_id}", "{name}", '{dob}', "{gender}", "{phone}", "{address}");''')
+        inner_cursor.execute(f'''INSERT INTO patients (name, phone, dob, gender, address)
+VALUES ("{name}",  "{phone}", '{dob}', "{gender}", "{address}");''')
         connection.commit()
 
         print('New patient created')
@@ -251,15 +256,15 @@ VALUES ("{patient_id}", "{name}", '{dob}', "{gender}", "{phone}", "{address}");'
         '''\
 Gets user input and updates a patient in table `patients`'''
         while True:
-            patient_id=input('Enter patientID to update (or show patients): ')
-            if patient_id=='show patients':
+            phone=input('Enter phone number of existing patient to update (or even show patients): ')
+            if phone=='show patients':
                 show_patients()
                 continue
             else:
-                if exists(value=patient_id, column='patientID', table='patients'):
+                if exists(value=phone, column='phone', table='patients'):
                     while True:
-                        value_to_be_updated=input('Enter value to be updated: ')
-                        allowed_patient_update_values=['name', 'dob', 'phone', 'address']
+                        value_to_be_updated=input('Enter value to be updated: ').strip()
+                        allowed_patient_update_values=('name', 'dob', 'phone', 'address', 'gender')
                         if value_to_be_updated in allowed_patient_update_values:
                             if value_to_be_updated=='address':
                                     the_value=multilineinput("Enter address below")
@@ -275,14 +280,14 @@ Gets user input and updates a patient in table `patients`'''
                                             continue
                             break
                         else:
-                            print('Wrong item')
+                            print('Wrong item. Your item must be any of', allowed_patient_update_values, sep='\n')
                             continue
                 else:
-                    print('Wrong patientID. Re-enter it.')
+                    print('Wrong phone number. Re-enter it.')
                     continue
                 inner_cursor=connection.cursor()
                 inner_command=f'''UPDATE patients
-SET {value_to_be_updated}={the_value} WHERE patientID="{patient_id}";'''
+SET {value_to_be_updated}={the_value} WHERE phone="{phone}";'''
                 inner_cursor.execute(inner_command)
                 connection.commit()
                 print('Updated successfully')
@@ -293,9 +298,9 @@ SET {value_to_be_updated}={the_value} WHERE patientID="{patient_id}";'''
 Shows all the appointments in `appointments` table'''
         inner_cursor=connection.cursor()
         inner_cursor.execute('''\
-SELECT appointments.patientID, patients.name, patients.phone, appointments.treatmentID, appointments.date, appointments.time
+SELECT patients.name, patients.phone, appointments.treatmentID, appointments.date, appointments.time
 FROM patients, appointments
-WHERE patients.patientID=appointments.patientID;''')
+WHERE patients.phone=appointments.phone;''')
         appointments=from_db_cursor(inner_cursor)
 
         fieldname='Sno'
@@ -334,24 +339,29 @@ Example: 13:50''')
         while True:
             print('''TIP: Enter `show patients` to show all patients
 Enter `add patient` to add a patient''')
-            patient_id=input('Enter patientID: ').strip()
-            if patient_id=='show patients':
+            phone=input('Enter phone number of patient you want to create appointment: ').strip()
+            if phone=='show patients':
                 show_patients()
-            elif patient_id=='add patient':
+            elif phone=='add patient':
                 add_patient()
             else:
-                break
+                if exists(value=phone, column='phone', table='patients'):
+                    break
 
+                else:
+                    print('Wrong phone number. A patient with that number does not exist.')
+                    continue
+
+        treatment_id=randomstring(8)
+        while exists(value=treatment_id, column='treatmentID', table='appointments'):
             treatment_id=randomstring(8)
-            while exists(value=treatment_id, column='treatmentID', table='appointments'):
-                treatment_id=randomstring(8)
 
-            inner_cursor=connection.cursor()
-            inner_cursor.execute(f'''INSERT INTO Appointments (date, time, patientID, treatmentID)
-VALUES ('{date}', '{time}', "{patient_id}", "{treatment_id}");''')
-            connection.commit()
+        inner_cursor=connection.cursor()
+        inner_cursor.execute(f'''INSERT INTO Appointments (phone, treatmentID, date, time)
+VALUES ("{phone}", "{treatment_id}", '{date}', '{time}');''')
+        connection.commit()
 
-            print('New appointment created')
+        print('New appointment created')
 
     def update_appointment():
         '''\
@@ -363,63 +373,51 @@ Gets user input and updates an appointment in the table `appointments`'''
             if treatment_id=='show appointments':
                 show_appointments()
                 continue
-            try:
-                if not exists(value=treatment_id, column='treatmentID', table='treatments'):
-                    try:
-                        inner_cursor=connection.cursor()
-                        print('''\
-For example
-`date="2022-07-23"` (or) `time="14:30"`
+            else:
+                if exists(value=treatment_id, column='treatmentID', table='appointments'):
+                    if not exists(value=treatment_id, column='treatmentID', table='treatments'):
+                        break
+                    else:
+                        print('Wrong treatmentID. A treatment for that ID exists.')
+                else:
+                    print('Wrong treatmentID. An appointment with that ID does not exists.')
+                    continue
+            
+        
+        inner_cursor=connection.cursor()
+        print('''\
 Updatable values
 - date
 - time''')
-                        while True:
-                            value_to_be_updated=input('Enter value to be updated: ')
-                            allowed_patient_update_values=['date', 'time']
-                            if value_to_be_updated in allowed_patient_update_values:
-                                while True:
-                                    try:
-                                        the_value=eval(input('Enter the value (will be `eval`utated by python): '))
-                                        break
-                                    except:
-                                        print('ERROR, INVALID VALUE')
-                                        continue
-                                break
-                            else:
-                                print('Wrong item')
-                                continue
-                        inner_command=f'''UPDATE appointments
-SET {value_to_be_updated}={the_value} WHERE treatmentID="{treatment_id}";'''
-                        inner_cursor.execute(inner_command)
-                        connection.commit()
-                        print('Updated successfully')
-                        while True:
-                            try:
-                                inner_proceed=proceeddict[input('Are you satisfied [Y/n] ?')[0].lower()]
-                                break
-                            except KeyError:
-                                print('Invalid Input')
-                                continue
-                        if inner_proceed:
-                            break
-                        else:
-                            continue
-                    except:
-                        print('You made a mistake somewhere. Start from first')
-                        continue
-
-                else:
-                    print('Wrong treatmentID. Do it again.')
-            except:
-                print('You made a mistake somewhere. Start from first')
+        while True:
+            value_to_be_updated=input('Enter value to be updated: ')
+            allowed_appointment_update_values=('date', 'time')
+            if value_to_be_updated in allowed_appointment_update_values:
+                break
+            else:
+                print('It must either be `date` or `time`. Re enter it.')
                 continue
+
+        while True:  
+            try:
+                the_value=eval(input('Enter the value (will be `eval`utated by python): '))
+                break
+            except:
+                print("ERROR, CAN'T BE `EVAL`UATED.")
+                continue
+
+        inner_command=f'''UPDATE appointments
+SET {value_to_be_updated}="{the_value}" WHERE treatmentID="{treatment_id}";'''
+        inner_cursor.execute(inner_command)
+        connection.commit()
+        print('Updated successfully')
 
     def show_treatments():
         '''\
 Shows all records in table `treatments`'''
         inner_command="""\
 SELECT
-patients.patientID, patients.name, patients.phone,
+patients.name, patients.phone,
 treatments.treatmentID, treatments.date, treatments.time, treatments.treatment, treatments.status, treatments.fee,
 CASE treatments.paid
 WHEN 0 THEN "False"
@@ -428,7 +426,7 @@ END AS paid
 FROM
 patients
 JOIN appointments
-ON patients.patientID=appointments.patientID
+ON patients.phone=appointments.phone
 JOIN treatments
 ON treatments.treatmentID=appointments.treatmentID;"""
         inner_cursor=connection.cursor()
@@ -459,9 +457,9 @@ Gets user input and adds a treatment to table `treatments`'''
                 continue
             else:
                 if not exists(value=treatment_ID, column='treatmentID', table='appointments'):
-                    print('Invalid treatmentID. Start from first.')
+                    print('Invalid treatmentID. It does not exist in table `appointments`.')
                     continue
-                else:
+                elif exists(value=treatment_ID, column='treatmentID', table='treatments'):
                     print('''Date format: YYYY-MM-DD
 Example: 1999-03-12''')
                     date=input('Enter date: ')
@@ -511,7 +509,10 @@ VALUES ("{treatment_ID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, 
                     inner_cursor.execute(inner_command)
                     connection.commit()
                     print('Added successfully')
-                    show_treatments()
+                    break
+                else:
+                    print('An appointment with the given treatmentID does not exist.')
+                    continue
 
     def add_treatment_exact():
         '''\
@@ -585,8 +586,9 @@ Gets user input and updates a record in table `treatments`'''
                     break
 
         print('''`update treatment` options
-    0 : status
-    1 : paid (if payment is over)
+    0 : treatment name
+    1 : status
+    2 : paid (if payment is over)
 
 NOTE: You can\'t update anything else''')
         while True:
@@ -599,6 +601,15 @@ NOTE: You can\'t update anything else''')
 
         while True:
             if choice==0:
+                treatment=input('Enter (new) name of treatment: ')
+                inner_cursor=connection.cursor()
+                inner_cursor.execute(f'''UPDATE treatments
+SET treatment="{treatment}"
+WHERE treatmentID="{treatment_ID}"''')
+                print('Updated successfully')
+                break
+
+            elif choice==1:
                 status=multilineinput('''What is the status of the treatment?
 You can also add the prescription here''')
                 inner_command=f'''UPDATE treatments
@@ -609,7 +620,7 @@ SET status="{status}" WHERE treatmentID="{treatment_ID}";'''
                 print('Updated successfully')
                 break
 
-            elif choice==1:
+            elif choice==2:
                 while True:
                     try:
                         paid=bool(TrueFalseDict[input('Is the payment complete now [True/False] ?').strip().lower()[0]])
