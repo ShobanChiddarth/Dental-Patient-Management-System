@@ -582,8 +582,9 @@ Gets user input and updates a record in table `treatments`'''
                     break
 
         print('''`update treatment` options
-    0 : status
-    1 : paid (if payment is over)
+    0 : treatment name
+    1 : status
+    2 : paid (if payment is over)
 
 NOTE: You can\'t update anything else''')
         while True:
@@ -596,6 +597,15 @@ NOTE: You can\'t update anything else''')
 
         while True:
             if choice==0:
+                treatment=input('Enter (new) name of treatment: ')
+                inner_cursor=connection.cursor()
+                inner_cursor.execute(f'''UPDATE treatments
+SET treatment="{treatment}"
+WHERE treatmentID="{treatment_ID}"''')
+                print('Updated successfully')
+                break
+
+            elif choice==1:
                 status=multilineinput('''What is the status of the treatment?
 You can also add the prescription here''')
                 inner_command=f'''UPDATE treatments
@@ -606,7 +616,7 @@ SET status="{status}" WHERE treatmentID="{treatment_ID}";'''
                 print('Updated successfully')
                 break
 
-            elif choice==1:
+            elif choice==2:
                 while True:
                     try:
                         paid=bool(TrueFalseDict[input('Is the payment complete now [True/False] ?').strip().lower()[0]])
