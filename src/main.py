@@ -252,15 +252,15 @@ VALUES ("{name}",  "{phone}", '{dob}', "{gender}", "{address}");''')
         '''\
 Gets user input and updates a patient in table `patients`'''
         while True:
-            patient_id=input('Enter patientID to update (or show patients): ')
-            if patient_id=='show patients':
+            phone=input('Enter phone number of existing patient to update (or even show patients): ')
+            if phone=='show patients':
                 show_patients()
                 continue
             else:
-                if exists(value=patient_id, column='patientID', table='patients'):
+                if exists(value=phone, column='phone', table='patients'):
                     while True:
-                        value_to_be_updated=input('Enter value to be updated: ')
-                        allowed_patient_update_values=['name', 'dob', 'phone', 'address']
+                        value_to_be_updated=input('Enter value to be updated: ').strip()
+                        allowed_patient_update_values=('name', 'dob', 'phone', 'address', 'gender')
                         if value_to_be_updated in allowed_patient_update_values:
                             if value_to_be_updated=='address':
                                     the_value=multilineinput("Enter address below")
@@ -276,14 +276,14 @@ Gets user input and updates a patient in table `patients`'''
                                             continue
                             break
                         else:
-                            print('Wrong item')
+                            print('Wrong item. Your item must be any of', allowed_patient_update_values, sep='\n')
                             continue
                 else:
-                    print('Wrong patientID. Re-enter it.')
+                    print('Wrong phone number. Re-enter it.')
                     continue
                 inner_cursor=connection.cursor()
                 inner_command=f'''UPDATE patients
-SET {value_to_be_updated}={the_value} WHERE patientID="{patient_id}";'''
+SET {value_to_be_updated}={the_value} WHERE phone="{phone}";'''
                 inner_cursor.execute(inner_command)
                 connection.commit()
                 print('Updated successfully')
