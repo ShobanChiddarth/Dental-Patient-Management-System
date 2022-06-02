@@ -346,16 +346,16 @@ Enter `add patient` to add a patient''')
                 else:
                     print('Wrong phone number. It is either invalid or does not exist.')
 
+        treatment_id=randomstring(8)
+        while exists(value=treatment_id, column='treatmentID', table='appointments'):
             treatment_id=randomstring(8)
-            while exists(value=treatment_id, column='treatmentID', table='appointments'):
-                treatment_id=randomstring(8)
 
-            inner_cursor=connection.cursor()
-            inner_cursor.execute(f'''INSERT INTO Appointments (phone, treatmentID, date, time)
+        inner_cursor=connection.cursor()
+        inner_cursor.execute(f'''INSERT INTO Appointments (phone, treatmentID, date, time)
 VALUES ("{phone}", "{treatment_id}", '{date}', '{time}');''')
-            connection.commit()
+        connection.commit()
 
-            print('New appointment created')
+        print('New appointment created')
 
     def update_appointment():
         '''\
@@ -413,7 +413,7 @@ SET {value_to_be_updated}={the_value} WHERE treatmentID="{treatment_id}";'''
 Shows all records in table `treatments`'''
         inner_command="""\
 SELECT
-patients.patientID, patients.name, patients.phone,
+patients.name, patients.phone,
 treatments.treatmentID, treatments.date, treatments.time, treatments.treatment, treatments.status, treatments.fee,
 CASE treatments.paid
 WHEN 0 THEN "False"
@@ -422,7 +422,7 @@ END AS paid
 FROM
 patients
 JOIN appointments
-ON patients.patientID=appointments.patientID
+ON patients.phone=appointments.phone
 JOIN treatments
 ON treatments.treatmentID=appointments.treatmentID;"""
         inner_cursor=connection.cursor()
