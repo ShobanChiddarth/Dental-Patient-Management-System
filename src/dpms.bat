@@ -1,4 +1,4 @@
 @echo off
 ::path/to/python.exe::
-..\ENV\Scripts\python.exe -m dpms %*
+..\ENV\Scripts\python.exe dpms %*
 @echo on
