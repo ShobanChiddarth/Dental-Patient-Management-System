@@ -121,12 +121,42 @@ def show_patients(password):
     print(patients)
 
 
+@click.command(help='Add a new record to table `patients` from arguements')
+@click.option('--name', 'name', type=click.STRING, required=True, prompt=True)
+@click.option('--phone', 'phone', type=click.STRING, required=True, prompt=True)
+@click.option('--dob', 'dob', type=click.STRING, required=True, prompt=True)
+@click.option('--gender', 'gender', type=click.STRING, required=True, prompt=True)
+@click.option('--address', 'address', type=click.STRING, required=True, prompt=True)
+@click.password_option('-p', '--password', confirmation_prompt=False, required=True, type=click.STRING)
+def add_patient(name, phone, dob, gender, address, password):
+    """\
+Adds a new record to table `patients`
+
+Input Format
+------------
+
+- Date Of Birth (--dob): `YYYY-MM-DD`. Example: `1999-03-12`
+- Gender (--gender): Must be "M" or "F"
+- Address (--address): can be multi-lined
+"""
+    connectionDict=sqlconfig.load.load_data(1)
+    connectionDict['password']=password
+    inner_connection=connector.connect(**connectionDict)
+
+    inner_cursor=inner_connection.cursor()
+    inner_cursor.execute(f'''INSERT INTO patients (name, phone, dob, gender, address)
+VALUES ("{name}",  "{phone}", '{dob}', "{gender}", "{address}");''')
+    inner_connection.commit()
+    print('Successfully added a new patient')
+
+
 
 
 
 
 
 cli.add_command(show_patients)
+cli.add_command(add_patient)
 
 if __name__=='__main__':
     # cli(['--help'], prog_name='dpms')
