@@ -452,9 +452,9 @@ Gets user input and adds a treatment to table `treatments`'''
                 continue
             else:
                 if not exists(value=treatment_ID, column='treatmentID', table='appointments'):
-                    print('Invalid treatmentID. Start from first.')
+                    print('Invalid treatmentID. It does not exist in table `appointments`.')
                     continue
-                else:
+                elif exists(value=treatment_ID, column='treatmentID', table='treatments'):
                     print('''Date format: YYYY-MM-DD
 Example: 1999-03-12''')
                     date=input('Enter date: ')
@@ -504,7 +504,10 @@ VALUES ("{treatment_ID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, 
                     inner_cursor.execute(inner_command)
                     connection.commit()
                     print('Added successfully')
-                    show_treatments()
+                    break
+                else:
+                    print('An appointment with the given treatmentID does not exist.')
+                    continue
 
     def add_treatment_exact():
         '''\
