@@ -211,11 +211,11 @@ Set `add_quotation` to False if you don't want `"` being added to the
 Gets user input and adds a new patient in the table `patients`'''
         print('Adding new patient in table `patients` in database `SrisakthiPatients`')
 
-        patient_id=randomstring(7)
-        while exists(value=patient_id, column='patientID', table='patients'):
-            patient_id=randomstring(7)
 
         name=input('Enter patient name: ')
+        phone=input('Enter phone number with country code: ')
+        while (len(phone)>17 and (not phone.replace('+', '').replace('-', '').isdigit())):
+            phone=input('Re-enter proper phone number: ')
 
         print('''Date Of Birth Format: YYYY-MM-DD
 Example: 1999-03-12''')
@@ -229,21 +229,21 @@ Example: 1999-03-12''')
             print('Invalid DOB')
             dob=input('Re-enter DOB: ')
 
-        phone=input('Enter phone number with country code: ')
 
         while True:
             gender=input('Enter gender (M/F) : ')
             if gender in ('M', "F"):
                 break
             else:
-                print('Invalid gender')
-                print('Re-enter gender')
+                print('''\
+Invalid gender
+Re-enter gender''')
 
         address=multilineinput("Enter address below")
 
         inner_cursor=connection.cursor()
-        inner_cursor.execute(f'''INSERT INTO patients (patientID, name, dob, gender, phone, address)
-VALUES ("{patient_id}", "{name}", '{dob}', "{gender}", "{phone}", "{address}");''')
+        inner_cursor.execute(f'''INSERT INTO patients (name, phone, dob, gender, address)
+VALUES ("{name}",  "{phone}", '{dob}', "{gender}", "{address}");''')
         connection.commit()
 
         print('New patient created')
