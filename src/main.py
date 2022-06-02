@@ -189,7 +189,8 @@ Set `add_quotation` to False if you don't want `"` being added to the
         inner_cursor=connection.cursor()
         inner_cursor.execute(f'SELECT {v} FROM {table};')
         table = from_db_cursor(inner_cursor)
-        table.align=align
+        if align is not False:
+            table.align=align
         return table
 
     def show_patients():
