@@ -331,6 +331,53 @@ VALUES ("{phone}", "{treatmentID}", '{date}', '{time}');''')
     print('Added successfully')
 
 
+@cli.command(help_priority=5)
+@click.option('--treatmentID', 'treatmentID', required=True, type=click.STRING, prompt=True)
+@click.option('--column', 'column', required=True, type=click.STRING, prompt=True)
+@click.option('--value', 'value', required=True, prompt=True)
+@click.option('--quote', is_flag=True)
+@click.password_option('-p', '--password', required=True, type=click.STRING, confirmation_prompt=False)
+def update_appointment(treatmentID, column, value, quote, password):
+    """
+Update an appointment with the given `value` in the given `column`
+
+\b
+Input Format
+------------
+- Column (--column): must be a string and any of ("date", "time")
+- --quote (wether or not to add quotations(") in the front and back of `--value` (is a flag)
+"""
+    connectionDict=sqlconfig.load.load_data(1)
+    connectionDict['password']=password
+    inner_connection=connector.connect(**connectionDict)
+
+    if quote:
+        value='"'+value+'"'
+
+    if not isinstance(treatmentID, str):
+        raise TypeError('arguement `phone` must be a string')
+    elif not exists(value=treatmentID, column='treatmentID', table='appointments', connection=inner_connection):
+        raise ValueError('An appointment with that phone number does not exists.')
+
+    allowed_update_appointment_columns=('date','time')
+
+    if not isinstance(column, str):
+        raise TypeError('arguement `phone` must be a string')
+    elif column not in allowed_update_appointment_columns:
+        raise ValueError(f"`column` must be any of {allowed_update_appointment_columns}")
+
+    inner_cursor=inner_connection.cursor()
+    inner_cursor.execute(f'''\
+UPDATE appointments
+SET {column}={value}
+WHERE treatmentID="{treatmentID}";''')
+    inner_connection.commit()
+    print('Updated successfully')
+
+
+
+
+
 
 if __name__=='__main__':
     cli()
