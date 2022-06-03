@@ -282,4 +282,4 @@ WHERE patients.phone=appointments.phone;''')
 
 
 if __name__=='__main__':
-    cli('--help'.split())
+    cli()
