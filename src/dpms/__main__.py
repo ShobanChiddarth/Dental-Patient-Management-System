@@ -250,7 +250,7 @@ WHERE phone="{phone}";''')
 @cli.command(help_priority=3)
 @click.password_option('-p', '--password', required=True, type=click.STRING, confirmation_prompt=False)
 def show_appointments(password):
-
+    """Print the table `appointments`"""
     connectionDict=sqlconfig.load.load_data(1)
     connectionDict['password']=password
     inner_connection=connector.connect(**connectionDict)
