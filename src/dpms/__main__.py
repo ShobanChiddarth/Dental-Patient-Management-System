@@ -173,6 +173,46 @@ VALUES ("{name}",  "{phone}", '{dob}', "{gender}", "{address}");''')
     print('Successfully added a new patient')
 
 
+@click.command()
+@click.option('--phone', 'phone', required=True, type=click.STRING, prompt=True)
+@click.option('--column', 'column', required=True, type=click.STRING, prompt=True)
+@click.option('--value', 'value', required=True, prompt=True)
+@click.option('--quote', is_flag=True)
+@click.option('-p', '--password', type=click.STRING, required=True, prompt=True)
+def update_patient(phone, column, value, quote, password):
+    """
+Updates the record of a patient with the given `value` in the given `column`
+
+\b
+Input Format
+------------
+- Column (--column): must be a string any of ('name', 'phone', 'dob', 'gender', 'address')
+- --quote (wether or not to add quotations(") in the front and back of `--value` (is a flag)
+"""
+    connectionDict=sqlconfig.load.load_data(1)
+    connectionDict['password']=password
+    inner_connection=connector.connect(**connectionDict)
+
+    if quote:
+        value='"'+value+'"'
+    if not isinstance(phone, str):
+        raise TypeError('arguement `phone` must be a string')
+    elif not exists(value=phone, column='phone', table='patients', connection=inner_connection):
+        raise ValueError('A patient with that phone number does not exists.')
+    allowed_update_patient_columns=('name', 'phone', 'dob', 'gender', 'address')
+    if not isinstance(column, str):
+        raise TypeError('arguement `phone` must be a string')
+    elif column not in allowed_update_patient_columns:
+        raise ValueError(f"`column` must be any of {allowed_update_patient_columns}")
+    
+    inner_cursor=inner_connection.cursor()
+    inner_cursor.execute(f'''\
+UPDATE patients
+SET {column}={value}
+WHERE phone="{phone}";''')
+    inner_connection.commit()
+    print('Updated successfully')
+
 
 
 
@@ -180,6 +220,7 @@ VALUES ("{name}",  "{phone}", '{dob}', "{gender}", "{address}");''')
 
 cli.add_command(show_patients)
 cli.add_command(add_patient)
+cli.add_command(update_patient)
 
 if __name__=='__main__':
     # cli(['--help'], prog_name='dpms')
