@@ -214,13 +214,36 @@ WHERE phone="{phone}";''')
     print('Updated successfully')
 
 
+@click.command()
+@click.password_option('-p', '--password', type=click.STRING, required=True, prompt=True)
+def show_appointments(password):
 
+    connectionDict=sqlconfig.load.load_data(1)
+    connectionDict['password']=password
+    inner_connection=connector.connect(**connectionDict)
+
+    inner_cursor=inner_connection.cursor()
+    inner_cursor.execute('''\
+SELECT patients.name, patients.phone, appointments.treatmentID, appointments.date, appointments.time
+FROM patients, appointments
+WHERE patients.phone=appointments.phone;''')
+    appointments=from_db_cursor(inner_cursor)
+
+    fieldname='Sno'
+    appointments.field_names.insert(0, fieldname)
+    appointments.align[fieldname]='c'
+    appointments.valign[fieldname]='t'
+    for i, _ in enumerate(appointments.rows):
+        appointments.rows[i].insert(0, i+1)
+    
+    print(appointments)
 
 
 
 cli.add_command(show_patients)
 cli.add_command(add_patient)
 cli.add_command(update_patient)
+cli.add_command(show_appointments)
 
 if __name__=='__main__':
     # cli(['--help'], prog_name='dpms')
