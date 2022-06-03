@@ -434,6 +434,72 @@ ON treatments.treatmentID=appointments.treatmentID;""")
     print(treatments)
 
 
+@cli.command(help_priority=8)
+@click.option('--treatmentID', 'treatmentID', required=True, type=click.STRING, prompt=True)
+@click.option('--date', 'date', required=True, type=click.STRING, prompt=True)
+@click.option('--time', 'time', required=True, type=click.STRING, prompt=True)
+@click.option('--treatment', 'treatment', required=True, type=click.STRING, prompt=True)
+@click.option('--status', 'status', required=True, type=click.STRING, prompt=True)
+@click.option('--fee', 'fee', required=True, type=click.FLOAT, prompt=True)
+@click.option('--paid/--not-paid', required=True)
+@click.password_option('-p', '--password', required=True, type=click.STRING, confirmation_prompt=False)
+def add_treatment(treatmentID, date, time, treatment, status, fee, paid, password):
+    """\
+Add a new record to the table `treatments`
+
+\b
+Input Format
+------------
+- date: `YYYY-MM-DD`. Example: `1999-03-12`
+- time: `HH:MM` (24-hr format). Example: `13:50`
+- status: can be multi lined
+- fee: must be a floating point number
+"""
+    connectionDict=sqlconfig.load.load_data(1)
+    connectionDict['password']=password
+    inner_connection=connector.connect(**connectionDict)
+
+    if not isinstance(treatmentID, str):
+        raise TypeError('`treatmentID` must be a string')
+    elif not exists(value=treatmentID, column='treatmentID', table='appointments', connection=inner_connection):
+        raise ValueError('an appointment with the given `treatmentID` does not exist')
+
+    if not isinstance(date, str):
+        raise TypeError('`date` must be a string')
+    elif not (date[0:4].isdigit() and 
+                            date[4]=='-' and 
+                            date[5:7].isdigit() and 
+                            date[7]=='-' and
+                            date[8:10].isdigit()
+                            and len(date)==10 ):
+        raise ValueError('improper `date` format')
+
+    if not isinstance(time, str):
+        raise TypeError('`time` must be a string')
+    elif not (time[0:2].isdigit() and
+                        time[2]==':' and
+                        time[3:5] and
+                        len(time)==5):
+        raise ValueError('improper `time` format')
+
+    if not isinstance(treatment, str):
+        raise TypeError('`treatment` must be a sting')
+
+    if not isinstance(status, str):
+        raise TypeError('`status` must be a string')
+
+    fee=float(fee) # It will raise error automatically if it is a wrong input for `fee`
+
+    # no need to check type for `paid` because it is already boolean
+    # https://click.palletsprojects.com/en/8.1.x/options/#boolean-flags
+
+    inner_cursor=inner_connection.cursor()
+    inner_cursor.execute(f'''\
+INSERT INTO treatments (treatmentID, date, time, treatment, status, fee, paid)
+VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid});''')
+    inner_connection.commit()
+    print('Added successfully')
+
 
 
 
