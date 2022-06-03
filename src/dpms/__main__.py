@@ -399,6 +399,39 @@ WHERE treatmentID="{treatmentID}";''')
     print("Deleted successfully")
 
 
+@cli.command(help_priority=7)
+@click.password_option('-p','--password', required=True, type=click.STRING, confirmation_prompt=False)
+def show_treatments(password):
+    """Print the table `treatments`"""
+    connectionDict=sqlconfig.load.load_data(1)
+    connectionDict['password']=password
+    inner_connection=connector.connect(**connectionDict)
+
+    inner_cursor=inner_connection.cursor()
+    inner_cursor.execute("""\
+SELECT
+patients.name, patients.phone,
+treatments.treatmentID, treatments.date, treatments.time, treatments.treatment, treatments.status, treatments.fee,
+CASE treatments.paid
+WHEN 0 THEN "False"
+WHEN 1 THEN "True"
+END AS paid
+FROM
+patients
+JOIN appointments
+ON patients.phone=appointments.phone
+JOIN treatments
+ON treatments.treatmentID=appointments.treatmentID;""")
+    treatments=from_db_cursor(inner_cursor)
+
+    fieldname='Sno'
+    treatments.field_names.insert(0, fieldname)
+    treatments.align[fieldname]='c'
+    treatments.valign[fieldname]='t'
+    for i, _ in enumerate(treatments.rows):
+        treatments.rows[i].insert(0, i+1)
+
+    print(treatments)
 
 
 
