@@ -160,7 +160,7 @@ def show_patients(password):
 @click.option('--dob', 'dob', type=click.STRING, required=True, prompt=True)
 @click.option('--gender', 'gender', type=click.STRING, required=True, prompt=True)
 @click.option('--address', 'address', type=click.STRING, required=True, prompt=True)
-@click.password_option('-p', '--password', confirmation_prompt=False, required=True, type=click.STRING)
+@click.password_option('-p', '--password', required=True, type=click.STRING, confirmation_prompt=False)
 def add_patient(name, phone, dob, gender, address, password):
     """\
 Adds a new record to table `patients`
@@ -211,7 +211,7 @@ VALUES ("{name}",  "{phone}", '{dob}', "{gender}", "{address}");''')
 @click.option('--column', 'column', required=True, type=click.STRING, prompt=True)
 @click.option('--value', 'value', required=True, prompt=True)
 @click.option('--quote', is_flag=True)
-@click.password_option('-p', '--password', type=click.STRING, required=True, confirmation_prompt=False)
+@click.password_option('-p', '--password', required=True, type=click.STRING, confirmation_prompt=False)
 def update_patient(phone, column, value, quote, password):
     """
 Updates the record of a patient with the given `value` in the given `column`
@@ -248,7 +248,7 @@ WHERE phone="{phone}";''')
 
 
 @cli.command(help_priority=3)
-@click.password_option('-p', '--password', type=click.STRING, required=True, confirmation_prompt=False)
+@click.password_option('-p', '--password', required=True, type=click.STRING, confirmation_prompt=False)
 def show_appointments(password):
 
     connectionDict=sqlconfig.load.load_data(1)
