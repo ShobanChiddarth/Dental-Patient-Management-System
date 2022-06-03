@@ -5,7 +5,7 @@ DENTAL PATIENT MANAGEMENT SYSTEM<br>
 
 
 Just a school project, running in Python Interpreter. It is purely written in python. 
-This is not a GUI or CLI application. It is just run in Python Interpreter directly 
+It is just run in Python Interpreter directly 
 and the output is everything. This is a school project to use python with [class 12 concepts](https://csstudy.in/sumita-arora-python-class-12-pdf-cs-book/). 
 My aim was not to use the concepts but to make it a good software and anyways I 
 ended up using all the concepts taught in school for this project.
