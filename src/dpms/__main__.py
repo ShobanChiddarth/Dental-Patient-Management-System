@@ -375,6 +375,31 @@ WHERE treatmentID="{treatmentID}";''')
     print('Updated successfully')
 
 
+@cli.command(help_priority=6)
+@click.option('--treatmentID', 'treatmentID', required=True, type=click.STRING, prompt=True)
+@click.password_option('-p', '--password', required=True, type=click.STRING, confirmation_prompt=False)
+def remove_appointment(treatmentID, password):
+    """Removes an appointment record if only there is no treatment related to it."""
+    connectionDict=sqlconfig.load.load_data(1)
+    connectionDict['password']=password
+    inner_connection=connector.connect(**connectionDict)
+
+    if not isinstance(treatmentID, str):
+        raise ValueError('`treatmentID` must be a string')
+    elif not exists(value=treatmentID, column='treatmentID', table='appointments', connection=inner_connection):
+        raise ValueError('given `treatmentID` does not exist in appointments')
+    elif exists(value='treatments', column='treatmentID', table='treatments', connection=inner_connection):
+        raise ValueError('a treatment exists with the given `treatmentID`')
+
+    inner_cursor=inner_connection.cursor()
+    inner_cursor.execute(f'''\
+DELETE FROM appointments
+WHERE treatmentID="{treatmentID}";''')
+    inner_connection.commit()
+    print("Deleted successfully")
+
+
+
 
 
 
