@@ -121,7 +121,7 @@ def show_patients(password):
     print(patients)
 
 
-@click.command(help='Add a new record to table `patients` from arguements')
+@click.command()
 @click.option('--name', 'name', type=click.STRING, required=True, prompt=True)
 @click.option('--phone', 'phone', type=click.STRING, required=True, prompt=True)
 @click.option('--dob', 'dob', type=click.STRING, required=True, prompt=True)
