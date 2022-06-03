@@ -179,12 +179,14 @@ Input Format
 
     if not isinstance(name, str):
         raise TypeError('arguement `name` must be a string')
+
     if not isinstance(phone, str):
         raise TypeError('arguement `phone` must be a string')
     elif (len(phone)>17 and (not phone.replace('+', '').replace('-', '').isdigit())):
         raise ValueError('It is not a proper phone number')
     elif exists(value=phone, column='phone', table='patients', connection=inner_connection):
         raise ValueError('A patient with that phone number already exists')
+
     if not isinstance(dob, str):
         raise TypeError('arguement `dob` must be a string')
     elif not (dob[0:4].isdigit() and 
@@ -194,8 +196,10 @@ Input Format
                             dob[8:10].isdigit()
                             and len(dob)==10 ):
         raise ValueError('This is not a proper Date Of Birth')
+
     if gender not in ('M', 'F'):
         raise ValueError('`gender` must be "M" or "F"')
+
     if not isinstance(address, str):
         raise TypeError('arguement `address` must be a string')
 
@@ -228,11 +232,14 @@ Input Format
 
     if quote:
         value='"'+value+'"'
+
     if not isinstance(phone, str):
         raise TypeError('arguement `phone` must be a string')
     elif not exists(value=phone, column='phone', table='patients', connection=inner_connection):
         raise ValueError('A patient with that phone number does not exists.')
+
     allowed_update_patient_columns=('name', 'phone', 'dob', 'gender', 'address')
+
     if not isinstance(column, str):
         raise TypeError('arguement `phone` must be a string')
     elif column not in allowed_update_patient_columns:
