@@ -214,7 +214,7 @@ VALUES ("{name}",  "{phone}", '{dob}', "{gender}", "{address}");''')
 @click.option('--phone', 'phone', required=True, type=click.STRING, prompt=True)
 @click.option('--column', 'column', required=True, type=click.STRING, prompt=True)
 @click.option('--value', 'value', required=True, prompt=True)
-@click.option('--quote', is_flag=True)
+@click.option('--quote/--no-quote', default=True)
 @click.password_option('-p', '--password', required=True, type=click.STRING, confirmation_prompt=False)
 def update_patient(phone, column, value, quote, password):
     """
@@ -335,7 +335,7 @@ VALUES ("{phone}", "{treatmentID}", '{date}', '{time}');''')
 @click.option('--treatmentID', 'treatmentID', required=True, type=click.STRING, prompt=True)
 @click.option('--column', 'column', required=True, type=click.STRING, prompt=True)
 @click.option('--value', 'value', required=True, prompt=True)
-@click.option('--quote', is_flag=True)
+@click.option('--quote/--no-quote', default=True)
 @click.password_option('-p', '--password', required=True, type=click.STRING, confirmation_prompt=False)
 def update_appointment(treatmentID, column, value, quote, password):
     """
