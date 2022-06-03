@@ -279,6 +279,57 @@ WHERE patients.phone=appointments.phone;''')
     print(appointments)
 
 
+@cli.command(help_priority=4)
+@click.option('--phone', 'phone', required=True, type=click.STRING, prompt=True)
+@click.option('--date', 'date', required=True, type=click.STRING, prompt=True)
+@click.option('--time', 'time', required=True, type=click.STRING, prompt=True)
+@click.password_option('-p', '--password', required=True, type=click.STRING, confirmation_prompt=False)
+def add_appointment(phone, date, time, password):
+    """\
+Adds a new record to table `patients`
+
+\b
+Input Format
+------------
+- Time (--time): `HH:MM` (Example: "13:50")
+- Date (--date): `YYYY-MM-DD` (Example: `1993-04-20`)
+"""
+    connectionDict=sqlconfig.load.load_data(1)
+    connectionDict['password']=password
+    inner_connection=connector.connect(**connectionDict)
+
+    if not isinstance(phone, str):
+        raise TypeError('arguement `phone` must be a string')
+    elif (len(phone)>17 and (not phone.replace('+', '').replace('-', '').isdigit())):
+        raise ValueError('It is not a proper phone number')
+    elif not exists(value=phone, column='phone', table='patients', connection=inner_connection):
+        raise ValueError('A patient with that phone does not exists')
+
+    if not (date[0:4].isdigit() and 
+                            date[4]=='-' and 
+                            date[5:7].isdigit() and 
+                            date[7]=='-' and
+                            date[8:10].isdigit()
+                            and len(date)==10 ):
+        raise ValueError('improper `date` format')
+
+    if not (time[0:2].isdigit() and
+                        time[2]==':' and
+                        time[3:5] and
+                        len(time)==5):
+        raise ValueError('improper `time` format')
+    
+    treatmentID=randomstring(8)
+    while exists(value=treatmentID, column='treatmentID', table='appointments', connection=inner_connection):
+        treatmentID=randomstring(8)
+    
+    inner_cursor=inner_connection.cursor()
+    inner_cursor.execute(f'''\
+INSERT INTO Appointments (phone, treatmentID, date, time)
+VALUES ("{phone}", "{treatmentID}", '{date}', '{time}');''')
+    inner_connection.commit()
+    print('Added successfully')
+
 
 
 if __name__=='__main__':
