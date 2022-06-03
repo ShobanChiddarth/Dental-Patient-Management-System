@@ -98,11 +98,44 @@ def table_from_db(connection:CMySQLConnection, table:str, v='*', align='l') -> P
         ptable.align=align
     return ptable
 
-@click.group()
+
+class SpecialHelpOrder(click.Group):
+    """This code was taken from [StackOverflow](https://stackoverflow.com/a/47984810/14195452)"""
+    def __init__(self, *args, **kwargs):
+        self.help_priorities = {}
+        super(SpecialHelpOrder, self).__init__(*args, **kwargs)
+
+    def get_help(self, ctx):
+        self.list_commands = self.list_commands_for_help
+        return super(SpecialHelpOrder, self).get_help(ctx)
+
+    def list_commands_for_help(self, ctx):
+        """reorder the list of commands when listing the help"""
+        commands = super(SpecialHelpOrder, self).list_commands(ctx)
+        return (c[1] for c in sorted(
+            (self.help_priorities.get(command, 1), command)
+            for command in commands))
+
+    def command(self, *args, **kwargs):
+        """Behaves the same as `click.Group.command()` except capture
+        a priority for listing command names in help.
+        """
+        help_priority = kwargs.pop('help_priority', 1)
+        help_priorities = self.help_priorities
+
+        def decorator(f):
+            cmd = super(SpecialHelpOrder, self).command(*args, **kwargs)(f)
+            help_priorities[cmd.name] = help_priority
+            return cmd
+
+        return decorator
+
+
+@click.group(cls=SpecialHelpOrder)
 def cli():
     pass
 
-@click.command()
+@cli.command(help_priority=0)
 @click.password_option('-p', '--password', confirmation_prompt=False, required=True, type=click.STRING)
 def show_patients(password):
     '''Prints table `patients`'''
@@ -121,7 +154,7 @@ def show_patients(password):
     print(patients)
 
 
-@click.command()
+@cli.command(help_priority=1)
 @click.option('--name', 'name', type=click.STRING, required=True, prompt=True)
 @click.option('--phone', 'phone', type=click.STRING, required=True, prompt=True)
 @click.option('--dob', 'dob', type=click.STRING, required=True, prompt=True)
@@ -173,7 +206,7 @@ VALUES ("{name}",  "{phone}", '{dob}', "{gender}", "{address}");''')
     print('Successfully added a new patient')
 
 
-@click.command()
+@cli.command(help_priority=2)
 @click.option('--phone', 'phone', required=True, type=click.STRING, prompt=True)
 @click.option('--column', 'column', required=True, type=click.STRING, prompt=True)
 @click.option('--value', 'value', required=True, prompt=True)
@@ -214,7 +247,7 @@ WHERE phone="{phone}";''')
     print('Updated successfully')
 
 
-@click.command()
+@cli.command(help_priority=3)
 @click.password_option('-p', '--password', type=click.STRING, required=True, prompt=True)
 def show_appointments(password):
 
@@ -240,11 +273,7 @@ WHERE patients.phone=appointments.phone;''')
 
 
 
-cli.add_command(show_patients)
-cli.add_command(add_patient)
-cli.add_command(update_patient)
-cli.add_command(show_appointments)
 
 if __name__=='__main__':
     # cli(['--help'], prog_name='dpms')
-    cli()
+    cli('--help'.split())
