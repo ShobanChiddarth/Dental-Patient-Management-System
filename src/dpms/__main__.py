@@ -132,9 +132,9 @@ def add_patient(name, phone, dob, gender, address, password):
     """\
 Adds a new record to table `patients`
 
+\b
 Input Format
 ------------
-
 - Date Of Birth (--dob): `YYYY-MM-DD`. Example: `1999-03-12`
 - Gender (--gender): Must be "M" or "F"
 - Address (--address): can be multi-lined
