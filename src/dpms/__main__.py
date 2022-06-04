@@ -1,5 +1,3 @@
-import sys
-import os
 import string
 
 from collections import deque
@@ -11,11 +9,8 @@ from typing import Any
 from mysql import connector
 from mysql.connector.connection_cext import CMySQLConnection
 from prettytable import PrettyTable, from_db_cursor
-from pyautogui import password
-from pwinput import pwinput
 import click
 
-import helper
 import sqlconfig
 
 
