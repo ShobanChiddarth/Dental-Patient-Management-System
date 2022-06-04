@@ -192,6 +192,7 @@ def show_patients(password):
         patients.rows[i].insert(0, i+1)
 
     print(patients)
+    inner_connection.close()
 
 
 @cli.command(help_priority=next(myHelpDeterminer))
@@ -248,6 +249,7 @@ Input Format
 VALUES ("{name}",  "{phone}", '{dob}', "{gender}", "{address}");''')
     inner_connection.commit()
     print('Successfully added a new patient')
+    inner_connection.close()
 
 
 @cli.command(help_priority=next(myHelpDeterminer))
@@ -292,6 +294,7 @@ SET {column}={value}
 WHERE phone="{phone}";''')
     inner_connection.commit()
     print('Updated successfully')
+    inner_connection.close()
 
 
 @cli.command(help_priority=next(myHelpDeterminer))
@@ -317,6 +320,7 @@ WHERE patients.phone=appointments.phone;''')
         appointments.rows[i].insert(0, i+1)
     
     print(appointments)
+    inner_connection.close()
 
 
 @cli.command(help_priority=next(myHelpDeterminer))
@@ -369,6 +373,7 @@ INSERT INTO Appointments (phone, treatmentID, date, time)
 VALUES ("{phone}", "{treatmentID}", '{date}', '{time}');''')
     inner_connection.commit()
     print('Added successfully')
+    inner_connection.close()
 
 
 @cli.command(help_priority=next(myHelpDeterminer))
@@ -413,6 +418,7 @@ SET {column}={value}
 WHERE treatmentID="{treatmentID}";''')
     inner_connection.commit()
     print('Updated successfully')
+    inner_connection.close()
 
 
 @cli.command(help_priority=next(myHelpDeterminer))
@@ -437,6 +443,7 @@ DELETE FROM appointments
 WHERE treatmentID="{treatmentID}";''')
     inner_connection.commit()
     print("Deleted successfully")
+    inner_connection.close()
 
 
 @cli.command(help_priority=next(myHelpDeterminer))
@@ -472,6 +479,7 @@ ON treatments.treatmentID=appointments.treatmentID;""")
         treatments.rows[i].insert(0, i+1)
 
     print(treatments)
+    inner_connection.close()
 
 
 @cli.command(help_priority=next(myHelpDeterminer))
@@ -539,6 +547,7 @@ INSERT INTO treatments (treatmentID, date, time, treatment, status, fee, paid)
 VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid});''')
     inner_connection.commit()
     print('Added successfully')
+    inner_connection.close()
 
 
 @cli.command(help_priority=next(myHelpDeterminer))
@@ -581,7 +590,7 @@ SET {column}={value}
 WHERE treatmentID="{treatmentID}";''')
     inner_connection.commit()
     print('Updated successfully')
-
+    inner_connection.close()
 
 
 
