@@ -4,7 +4,6 @@ from collections import deque
 import json
 import pprint
 import random
-import tkinter as tk
 from typing import Any
 from mysql import connector
 from mysql.connector.connection_cext import CMySQLConnection
@@ -21,36 +20,6 @@ class MutableStringContainer():
 
     def __str__(self) -> str:
         return str(self.data)
-
-def multilineinput(input_text='Enter your input'):
-    '''Get and return a multi line input (GUI)'''
-    string=MutableStringContainer()
-
-    window=tk.Tk()
-    window.title('Dental Patient Management System')
-    window.geometry('600x230')
-
-    title=tk.Label(window, text=input_text)
-    title.pack(side=tk.TOP)
-
-    yscrollbar=tk.Scrollbar(window, orient='vertical')
-    yscrollbar.pack(side=tk.RIGHT, fill='y')
-
-    text=tk.Text(window, height=7, width=50, padx=30, pady=20, yscrollcommand=yscrollbar.set)
-
-
-    yscrollbar.config(command=text.yview)
-    text.pack()
-
-    def submitf(msc=string):
-        msc.data+=text.get(1.0 , "end-1c")
-        window.destroy()
-    
-    submit=tk.Button(window, text='SUBMIT', command=submitf)
-
-    submit.pack()
-    window.mainloop()
-    return string.data.strip()
 
 def randomstring(length, nums=True, upper=True, lower=False) -> str:
     '''\
