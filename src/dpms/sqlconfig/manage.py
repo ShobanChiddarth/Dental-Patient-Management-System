@@ -42,4 +42,4 @@ If key is allowed, set the value in `d`. Else, raise ValueError.
     if key in load.load_allowed(1):
         d[key]=value
     else:
-        raise ValueError('`key` is a not-llowed value')
+        raise ValueError('`key` is a not-allowed value')
