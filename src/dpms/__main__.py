@@ -135,7 +135,25 @@ class SpecialHelpOrder(click.Group):
 def cli():
     pass
 
-@cli.command(help_priority=0)
+# begin `myHelpDeterminer`
+total=10
+myHelpDeterminer=iter(range(total))
+# I have put this piece of code here in order to
+# set the help_order of every command in the same
+# order they are created in this script. This is
+# very useful as one does not have to edit every
+# first line of command declaration when declaring
+# a new command in the begginning or somewhere in
+# the middle (`@cli.command(help_priority=int)`)
+# just use `next(myHelpDeterminer)` in the place of
+# `int` to show the command in the same order in the
+# script. Make sure to edit the value of `total` (set
+# it to the total number of commands so that we don't
+# get StopIteration error when iterating more than the
+# length of range)
+
+
+@cli.command(help_priority=next(myHelpDeterminer))
 @click.password_option('-p', '--password', confirmation_prompt=False, required=True, type=click.STRING)
 def show_patients(password):
     '''Prints table `patients`'''
@@ -154,7 +172,7 @@ def show_patients(password):
     print(patients)
 
 
-@cli.command(help_priority=1)
+@cli.command(help_priority=next(myHelpDeterminer))
 @click.option('--name', 'name', type=click.STRING, required=True, prompt=True)
 @click.option('--phone', 'phone', type=click.STRING, required=True, prompt=True)
 @click.option('--dob', 'dob', type=click.STRING, required=True, prompt=True)
@@ -210,7 +228,7 @@ VALUES ("{name}",  "{phone}", '{dob}', "{gender}", "{address}");''')
     print('Successfully added a new patient')
 
 
-@cli.command(help_priority=2)
+@cli.command(help_priority=next(myHelpDeterminer))
 @click.option('--phone', 'phone', required=True, type=click.STRING, prompt=True)
 @click.option('--column', 'column', required=True, type=click.STRING, prompt=True)
 @click.option('--value', 'value', required=True, prompt=True)
@@ -254,7 +272,7 @@ WHERE phone="{phone}";''')
     print('Updated successfully')
 
 
-@cli.command(help_priority=3)
+@cli.command(help_priority=next(myHelpDeterminer))
 @click.password_option('-p', '--password', required=True, type=click.STRING, confirmation_prompt=False)
 def show_appointments(password):
     """Print the table `appointments`"""
@@ -279,7 +297,7 @@ WHERE patients.phone=appointments.phone;''')
     print(appointments)
 
 
-@cli.command(help_priority=4)
+@cli.command(help_priority=next(myHelpDeterminer))
 @click.option('--phone', 'phone', required=True, type=click.STRING, prompt=True)
 @click.option('--date', 'date', required=True, type=click.STRING, prompt=True)
 @click.option('--time', 'time', required=True, type=click.STRING, prompt=True)
@@ -331,7 +349,7 @@ VALUES ("{phone}", "{treatmentID}", '{date}', '{time}');''')
     print('Added successfully')
 
 
-@cli.command(help_priority=5)
+@cli.command(help_priority=next(myHelpDeterminer))
 @click.option('--treatmentID', 'treatmentID', required=True, type=click.STRING, prompt=True)
 @click.option('--column', 'column', required=True, type=click.STRING, prompt=True)
 @click.option('--value', 'value', required=True, prompt=True)
@@ -375,7 +393,7 @@ WHERE treatmentID="{treatmentID}";''')
     print('Updated successfully')
 
 
-@cli.command(help_priority=6)
+@cli.command(help_priority=next(myHelpDeterminer))
 @click.option('--treatmentID', 'treatmentID', required=True, type=click.STRING, prompt=True)
 @click.password_option('-p', '--password', required=True, type=click.STRING, confirmation_prompt=False)
 def remove_appointment(treatmentID, password):
@@ -399,7 +417,7 @@ WHERE treatmentID="{treatmentID}";''')
     print("Deleted successfully")
 
 
-@cli.command(help_priority=7)
+@cli.command(help_priority=next(myHelpDeterminer))
 @click.password_option('-p','--password', required=True, type=click.STRING, confirmation_prompt=False)
 def show_treatments(password):
     """Print the table `treatments`"""
@@ -434,7 +452,7 @@ ON treatments.treatmentID=appointments.treatmentID;""")
     print(treatments)
 
 
-@cli.command(help_priority=8)
+@cli.command(help_priority=next(myHelpDeterminer))
 @click.option('--treatmentID', 'treatmentID', required=True, type=click.STRING, prompt=True)
 @click.option('--date', 'date', required=True, type=click.STRING, prompt=True)
 @click.option('--time', 'time', required=True, type=click.STRING, prompt=True)
@@ -501,7 +519,7 @@ VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {
     print('Added successfully')
 
 
-@cli.command(help_priority=9)
+@cli.command(help_priority=next(myHelpDeterminer))
 @click.option('--treatmentID', 'treatmentID', required=True, type=click.STRING, prompt=True)
 @click.option('--column', 'column', required=True, type=click.STRING, prompt=True)
 @click.option('--value', 'value', required=True, prompt=True)
