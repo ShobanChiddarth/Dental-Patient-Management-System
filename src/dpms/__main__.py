@@ -136,7 +136,7 @@ def cli():
     pass
 
 # begin `myHelpDeterminer`
-total=10
+total=13
 myHelpDeterminer=iter(range(total))
 # I have put this piece of code here in order to
 # set the help_order of every command in the same
@@ -151,6 +151,71 @@ myHelpDeterminer=iter(range(total))
 # it to the total number of commands so that we don't
 # get StopIteration error when iterating more than the
 # length of range)
+
+
+
+@cli.command(help_priority=next(myHelpDeterminer))
+@click.option('--jsonoutput', is_flag=True, default=False)
+def load_allowed(jsonoutput):
+    """\
+Print the list of all "allowed" configuration arguement keys.
+
+\b
+Input Flags
+-----------
+- `--jsonOutput`
+  decides wether or not to give the output in json format
+  If given -> print it using json.dumps
+  Else -> print it in python format
+"""
+    if jsonoutput:
+        print(json.dumps(sqlconfig.load.load_allowed(1), indent=4))
+    else:
+        print(pprint.pformat(sqlconfig.load.load_allowed(1), indent=4, sort_dicts=False).replace("'", '"'))
+
+
+@cli.command(help_priority=next(myHelpDeterminer))
+@click.option('--jsonoutput', is_flag=True, default=False)
+def read_config(jsonoutput):
+    """\
+Print the list of all "allowed" configuration arguement keys.
+
+\b
+Input Flags
+-----------
+- `--jsonOutput`
+  decides wether or not to give the output in json format
+  If given -> print it using json.dumps
+  Else -> print it in python format
+"""
+    if jsonoutput:
+        print(json.dumps(sqlconfig.load.load_data(1), indent=4))
+    else:
+        print(pprint.pformat(sqlconfig.load.load_data(1), indent=4, sort_dicts=False).replace("'", '"'))
+
+
+@cli.command(help_priority=next(myHelpDeterminer))
+@click.option('--key', 'key', required=True, type=click.STRING, prompt=False)
+@click.option('--value', 'value', required=True, prompt=False)
+def config(key, value):
+    """\
+Configuration command: Uses the module `sqlconfig`
+
+
+Input Format
+------------
+- key (--key) must be an "allowed" value.
+
+\b
+Allowed values are values that can be passed as an kwarg to
+mysql.connector.connect function. They can be found here
+https://dev.mysql.com/doc/connector-python/en/connector-python-connectargs.html
+
+To get the list of allowed values, use `loadAllowed` command."""
+
+    connectionDict=sqlconfig.load.load_data(1)
+    sqlconfig.manage.safe_edit(connectionDict, key=key, value=value)
+    sqlconfig.manage.flushdict(connectionDict)
 
 
 @cli.command(help_priority=next(myHelpDeterminer))
