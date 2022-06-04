@@ -13,13 +13,6 @@ import click
 import sqlconfig
 
 
-class MutableStringContainer():
-    """Just a mutable container of an immutable type str. The data is in `self.data`."""
-    def __init__(self, data:str='') -> None:
-        self.data=data
-
-    def __str__(self) -> str:
-        return str(self.data)
 
 def randomstring(length, nums=True, upper=True, lower=False) -> str:
     '''\
