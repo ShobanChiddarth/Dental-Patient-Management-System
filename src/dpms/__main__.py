@@ -307,7 +307,7 @@ def show_appointments(password):
 
     inner_cursor=inner_connection.cursor()
     inner_cursor.execute('''\
-SELECT patients.name, patients.phone, appointments.treatmentID, appointments.date, appointments.time
+SELECT patients.Name, patients.Phone, appointments.treatmentID, appointments.Date, appointments.Time
 FROM patients, appointments
 WHERE patients.phone=appointments.phone;''')
     appointments=from_db_cursor(inner_cursor)
@@ -457,12 +457,12 @@ def show_treatments(password):
     inner_cursor=inner_connection.cursor()
     inner_cursor.execute("""\
 SELECT
-patients.name, patients.phone,
-treatments.treatmentID, treatments.date, treatments.time, treatments.treatment, treatments.status, treatments.fee,
-CASE treatments.paid
+patients.Name, patients.Phone,
+treatments.treatmentID, treatments.Date, treatments.Time, treatments.Treatment, treatments.Status, treatments.Fee,
+CASE treatments.Paid
 WHEN 0 THEN "False"
 WHEN 1 THEN "True"
-END AS paid
+END AS Paid
 FROM
 patients
 JOIN appointments
