@@ -221,7 +221,8 @@ Allowed values are values that can be passed as an kwarg to
 mysql.connector.connect function. They can be found here
 https://dev.mysql.com/doc/connector-python/en/connector-python-connectargs.html
 
-To get the list of allowed values, use `loadAllowed` command."""
+To get the list of allowed values, use `loadAllowed` command.
+"""
 
     connectionDict=sqlconfig.load.load_data(1)
     sqlconfig.manage.safe_edit(connectionDict, key=key, value=value)
@@ -231,7 +232,9 @@ To get the list of allowed values, use `loadAllowed` command."""
 @cli.command(help_priority=next(myHelpDeterminer))
 @click.password_option('-p', '--password', confirmation_prompt=False, required=True, type=click.STRING)
 def show_patients(password):
-    '''Prints table `patients`'''
+    '''\
+Prints table `patients`
+'''
     connectionDict=sqlconfig.load.load_data(1)
     connectionDict['password']=password
     inner_connection=connector.connect(**connectionDict)
@@ -348,7 +351,9 @@ WHERE phone="{phone}";''')
 @cli.command(help_priority=next(myHelpDeterminer))
 @click.password_option('-p', '--password', required=True, type=click.STRING, confirmation_prompt=False)
 def show_appointments(password):
-    """Print the table `appointments`"""
+    """\
+Print the table `appointments`
+"""
     connectionDict=sqlconfig.load.load_data(1)
     connectionDict['password']=password
     inner_connection=connector.connect(**connectionDict)
@@ -468,7 +473,9 @@ WHERE treatmentID="{treatmentID}";''')
 @click.option('--treatmentID', 'treatmentID', required=True, type=click.STRING, prompt=True)
 @click.password_option('-p', '--password', required=True, type=click.STRING, confirmation_prompt=False)
 def remove_appointment(treatmentID, password):
-    """Removes an appointment record if only there is no treatment related to it."""
+    """\
+Removes an appointment record if only there is no treatment related to it.
+"""
     connectionDict=sqlconfig.load.load_data(1)
     connectionDict['password']=password
     inner_connection=connector.connect(**connectionDict)
@@ -492,7 +499,9 @@ WHERE treatmentID="{treatmentID}";''')
 @cli.command(help_priority=next(myHelpDeterminer))
 @click.password_option('-p','--password', required=True, type=click.STRING, confirmation_prompt=False)
 def show_treatments(password):
-    """Print the table `treatments`"""
+    """\
+Print the table `treatments`
+"""
     connectionDict=sqlconfig.load.load_data(1)
     connectionDict['password']=password
     inner_connection=connector.connect(**connectionDict)
