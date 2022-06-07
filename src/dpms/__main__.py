@@ -55,6 +55,29 @@ def table_from_db(connection:CMySQLConnection, table:str, v='*', align='l') -> P
         ptable.align=align
     return ptable
 
+def addSerialNo(table : PrettyTable, fieldname: str ='Sno', startFrom0 : bool = False) -> PrettyTable:
+    """\
+Adds a column {fieldname} (serial numbers) to a given PrettyTable in the front
+
+NOTE: It also returns the table
+
+PARAMETERS
+----------
+1. `table`     : an instance of prettytable.Prettytable
+2. `fieldname` : what should the serial number column have as a heading
+3. `startFrom0`: should the serial number counting start from 0?
+"""
+    table.field_names.insert(0, fieldname)
+    table.align[fieldname]='c'
+    table.valign[fieldname]='t'
+    if startFrom0:
+        for i, _ in enumerate(table.rows):
+            table.rows[i].insert(0, i)
+    else:
+        for i, _ in enumerate(table.rows):
+            table.rows[i].insert(0, i+1)
+    
+    return table
 
 class SpecialHelpOrder(click.Group):
     """This code was taken from [StackOverflow](https://stackoverflow.com/a/47984810/14195452)"""
