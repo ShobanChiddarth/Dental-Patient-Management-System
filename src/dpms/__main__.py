@@ -192,6 +192,50 @@ It adds the ability to specify a help_priority, which allows the sort order to b
 
 @click.group(cls=SpecialHelpOrder)
 def cli():
+    """\
+Dental Patient Management System CLI
+
+\b
+DPMS stands for Dental Patient Management System.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+<https://github.com/ShobanChiddarth/Dental-Patient-Management-System/blob/dpms-cli/LICENSE>
+
+\b
+This is a CLI application, used to manage a database like the one in
+https://github.com/ShobanChiddarth/Dental-Patient-Management-System/blob/5019db80eaf7897b9065efb5b12d661d0a62fdd4/backup.sql.
+
+\b
+Pre-requisites
+--------------
+- MySQL server with a database "SrisakthiPatients"
+- The database "SrisakthiPatients" should have the data in backup.sql loaded
+- Python (3.10.2 is better)
+- The modules listed in requirements.txt
+
+Usage
+
+This is solely indented to be used by the doctor of a dental clinic.
+After all, this is a Dental Patient Management System.
+The database has 3 tables, namely, `patients`, `appointments` and `treatments`.
+You have to store the record of each patient in the table `patients`, their
+appointments in `appointments` table and the treatment records in `treatments` table.
+The link between a patient and his appointment, and the appointment with the treatment
+for the appointment is the `treatmentID`.
+
+Whenever you add a patient, you will have to use the phone number of that patient to
+create an appointment for him and you will get a treatmentID automatically. You have
+to create a treatment record for him with the treatmentID. This setup is indented for
+a clinic which functions like you give a treatment for the patient only with the
+appointment (patient has to come only with an appointment), patient, appointment,
+treatment records are stored separately.
+
+\b
+NOTE
+----
+- Payment related stuff are not brought in as this is a school project.
+- You get the output in the terminal you are using this.
+"""
     pass
 
 
