@@ -55,7 +55,16 @@ Set `add_quotation` to False if you don't want `"` being added to the
         return bool(data)
 
 def table_from_db(connection:CMySQLConnection, table:str, v='*', align='l') -> PrettyTable:
-    '''Return the given table name as prettytable from database'''
+    '''\
+Return the given table name as prettytable from database
+
+PARAMETERS
+----------
+- connection : the mysql connection with the database you want to look up
+- table      : the name of the table you want as PrettyTable
+- v          : the values you want to be selected from the table
+- align      : what do you want the table to be aligned as?
+'''
     inner_cursor=connection.cursor()
     inner_cursor.execute(f'SELECT {v} FROM {table};')
     ptable = from_db_cursor(inner_cursor)
