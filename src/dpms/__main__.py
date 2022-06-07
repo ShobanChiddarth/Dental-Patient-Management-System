@@ -71,6 +71,55 @@ PARAMETERS
         ptable.align=align
     return ptable
 
+def isValidDate(date : str) -> bool:
+    """\
+Tell if the given date is a valid date or not.
+
+Valid means it is in the format `YYYY-MM-DD`
+Example: 2000-03-04
+Which is March 4, 2000
+"""
+    return (date[0:4].isdigit() and 
+            date[4]=='-' and 
+            date[5:7].isdigit() and 
+            date[7]=='-' and
+            date[8:10].isdigit()
+            and len(date)==10 )
+
+def isValidTime(time : str, includeSeconds : bool = False):
+    """\
+Tell if the given time is a proper time or not
+
+PARAMETERS
+----------
+includeSeconds : wether or not to include seconds in the calculation
+
+if seconds are included, tell if the time format is like `HH:MM:SS`
+
+else, tell if the time format is like `HH:MM`
+"""
+    if includeSeconds:
+        return bool(time[0:2].isdigit() and
+                    time[2]==':' and
+                    time[3:5].isdigit() and
+                    time[5]==':' and
+                    time[5:8].isdigit() and
+                    len(time)==8) 
+    else:
+        return bool(time[0:2].isdigit() and
+                    time[2]==':' and
+                    time[3:5].isdigit() and
+                    len(time)==5)
+
+def isValidPhone(phone : str):
+    """\
+Tell if the given phone is a proper phone number
+
+(if it is lesser than 17 characters and consists of only digits
+(excluding '+' and '-' characters))
+"""
+    return bool(len(phone)>17 and (not phone.replace('+', '').replace('-', '').isdigit()))
+
 def addSerialNo(table : PrettyTable, fieldname: str ='Sno', startFrom0 : bool = False) -> PrettyTable:
     """\
 Adds a column {fieldname} (serial numbers) to a given PrettyTable in the front
@@ -274,19 +323,14 @@ Input Format
 
     if not isinstance(phone, str):
         raise TypeError('arguement `phone` must be a string')
-    elif (len(phone)>17 and (not phone.replace('+', '').replace('-', '').isdigit())):
+    elif isValidPhone(phone):
         raise ValueError('It is not a proper phone number')
     elif exists(value=phone, column='phone', table='patients', connection=inner_connection):
         raise ValueError('A patient with that phone number already exists')
 
     if not isinstance(dob, str):
         raise TypeError('arguement `dob` must be a string')
-    elif not (dob[0:4].isdigit() and 
-                            dob[4]=='-' and 
-                            dob[5:7].isdigit() and 
-                            dob[7]=='-' and
-                            dob[8:10].isdigit()
-                            and len(dob)==10 ):
+    elif not isValidDate(dob):
         raise ValueError('This is not a proper Date Of Birth')
 
     if gender not in ('M', 'F'):
@@ -323,8 +367,7 @@ Input Format
     connectionDict['password']=password
     inner_connection=connector.connect(**connectionDict)
 
-    if quote:
-        value='"'+value+'"'
+
 
     if not isinstance(phone, str):
         raise TypeError('arguement `phone` must be a string')
@@ -337,7 +380,20 @@ Input Format
         raise TypeError('arguement `phone` must be a string')
     elif column not in allowed_update_patient_columns:
         raise ValueError(f"`column` must be any of {allowed_update_patient_columns}")
-    
+    else:
+        if column=='phone':
+            if not isValidPhone(value):
+                raise ValueError('The given phone number is not a proper phone number')
+        elif column=='dob':
+            if not isValidDate(value):
+                raise ValueError('The given date of birth is not a valid date')
+        elif column=='gender':
+            if not value in ('M', 'F'):
+                raise ValueError('Gender must be (M)ale or (F)emale')
+
+    if quote:
+        value='"'+value+'"'
+
     inner_cursor=inner_connection.cursor()
     inner_cursor.execute(f'''\
 UPDATE patients
@@ -392,23 +448,15 @@ Input Format
 
     if not isinstance(phone, str):
         raise TypeError('arguement `phone` must be a string')
-    elif (len(phone)>17 and (not phone.replace('+', '').replace('-', '').isdigit())):
+    elif not isValidPhone(phone):
         raise ValueError('It is not a proper phone number')
     elif not exists(value=phone, column='phone', table='patients', connection=inner_connection):
         raise ValueError('A patient with that phone does not exists')
 
-    if not (date[0:4].isdigit() and 
-                            date[4]=='-' and 
-                            date[5:7].isdigit() and 
-                            date[7]=='-' and
-                            date[8:10].isdigit()
-                            and len(date)==10 ):
+    if not isValidDate(date):
         raise ValueError('improper `date` format')
 
-    if not (time[0:2].isdigit() and
-                        time[2]==':' and
-                        time[3:5] and
-                        len(time)==5):
+    if not isValidTime(time):
         raise ValueError('improper `time` format')
     
     treatmentID=randomstring(8)
@@ -418,7 +466,7 @@ Input Format
     inner_cursor=inner_connection.cursor()
     inner_cursor.execute(f'''\
 INSERT INTO Appointments (phone, treatmentID, date, time)
-VALUES ("{phone}", "{treatmentID}", '{date}', '{time}');''')
+VALUES ("{phone}", "{treatmentID}", "{date}", "{time}");''')
     inner_connection.commit()
     print('Added successfully')
     inner_connection.close()
@@ -444,8 +492,6 @@ Input Format
     connectionDict['password']=password
     inner_connection=connector.connect(**connectionDict)
 
-    if quote:
-        value='"'+value+'"'
 
     if not isinstance(treatmentID, str):
         raise TypeError('arguement `phone` must be a string')
@@ -458,6 +504,16 @@ Input Format
         raise TypeError('arguement `phone` must be a string')
     elif column not in allowed_update_appointment_columns:
         raise ValueError(f"`column` must be any of {allowed_update_appointment_columns}")
+    else:
+        if column=='date':
+            if not isValidDate(value):
+                raise ValueError('The given date is not a valid date')
+        elif column=='time':
+            if not isValidTime(value):
+                raise ValueError('The given time is not a valid time')
+
+    if quote:
+        value='"'+value+'"'
 
     inner_cursor=inner_connection.cursor()
     inner_cursor.execute(f'''\
@@ -563,20 +619,12 @@ Input Format
 
     if not isinstance(date, str):
         raise TypeError('`date` must be a string')
-    elif not (date[0:4].isdigit() and 
-                            date[4]=='-' and 
-                            date[5:7].isdigit() and 
-                            date[7]=='-' and
-                            date[8:10].isdigit()
-                            and len(date)==10 ):
+    elif not isValidDate(date):
         raise ValueError('improper `date` format')
 
     if not isinstance(time, str):
         raise TypeError('`time` must be a string')
-    elif not (time[0:2].isdigit() and
-                        time[2]==':' and
-                        time[3:5] and
-                        len(time)==5):
+    elif not isValidTime(time):
         raise ValueError('improper `time` format')
 
     if not isinstance(treatment, str):
@@ -628,6 +676,13 @@ Input Format
         raise TypeError('`column` must be a string')
     elif column not in allowed_treatment_update_values:
         raise ValueError(f'`column` must be any of {allowed_treatment_update_values}')
+    else:
+        if column=='date':
+            if not isValidDate(value):
+                raise ValueError('It is not a proper date')
+        elif column=='time':
+            if not isValidTime(value):
+                raise ValueError('It is not a proper time')
     
     if quote:
         value='"'+value+'"'
