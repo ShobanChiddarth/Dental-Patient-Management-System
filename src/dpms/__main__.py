@@ -13,7 +13,7 @@ import click
 import sqlconfig
 
 
-def randomstring(length, nums=True, upper=True, lower=False) -> str:
+def randomString(length, nums=True, upper=True, lower=False) -> str:
     '''\
 Return a (pseudo)-random string
 
@@ -24,21 +24,21 @@ PARAMETERS
 - upper  : wether or not to include upper cased characters in your random string
 - lower  : wether or not to include lower cased characters in your random string
 '''
-    choice_of_strings=deque()
+    choiceOfStrings=deque()
     if nums:
-        choice_of_strings.extend(deque(string.digits))
+        choiceOfStrings.extend(deque(string.digits))
     if upper:
-        choice_of_strings.extend(deque(string.ascii_uppercase))
+        choiceOfStrings.extend(deque(string.ascii_uppercase))
     if lower:
-        choice_of_strings.extend(deque(string.ascii_lowercase))
-    return ''.join(random.choices(choice_of_strings, k=length)).strip()
+        choiceOfStrings.extend(deque(string.ascii_lowercase))
+    return ''.join(random.choices(choiceOfStrings, k=length)).strip()
 
 def exists(
             value : Any,
             column : str,
             table : str,
             connection : CMySQLConnection,
-            add_quotation=True
+            quote=True
             ):
         """\
 Tell if the given value exists in the given column in given table.
@@ -46,14 +46,14 @@ Tell if the given value exists in the given column in given table.
 Set `add_quotation` to False if you don't want `"` being added to the
  front and back of the `value` automatically (If your `value` is not str).
 """
-        if add_quotation:
+        if quote:
             value='"'+value+'"'
         inner_cursor=connection.cursor()
         inner_cursor.execute(f'SELECT * from {table} where {column}={value};')
         data=inner_cursor.fetchall()
         return bool(data)
 
-def table_from_db(connection:CMySQLConnection, table:str, v='*', align='l') -> PrettyTable:
+def tableFromDB(connection:CMySQLConnection, table:str, v='*', align='l') -> PrettyTable:
     '''\
 Return the given table name as prettytable from database
 
@@ -64,9 +64,9 @@ PARAMETERS
 - v          : the values you want to be selected from the table
 - align      : what do you want the table to be aligned as?
 '''
-    inner_cursor=connection.cursor()
-    inner_cursor.execute(f'SELECT {v} FROM {table};')
-    ptable = from_db_cursor(inner_cursor)
+    innerCursor=connection.cursor()
+    innerCursor.execute(f'SELECT {v} FROM {table};')
+    ptable = from_db_cursor(innerCursor)
     if align is not False:
         ptable.align=align
     return ptable
@@ -286,13 +286,13 @@ Prints table `patients`
 '''
     connectionDict=sqlconfig.load.load_data(1)
     connectionDict['password']=password
-    inner_connection=connector.connect(**connectionDict)
-    patients=table_from_db(inner_connection, 'patients')
+    innerConnection=connector.connect(**connectionDict)
+    patients=tableFromDB(innerConnection, 'patients')
 
     addSerialNo(patients)
 
     print(patients)
-    inner_connection.close()
+    innerConnection.close()
 
 
 @cli.command(help_priority=next(myHelpDeterminer))
@@ -315,7 +315,7 @@ Input Format
 """
     connectionDict=sqlconfig.load.load_data(1)
     connectionDict['password']=password
-    inner_connection=connector.connect(**connectionDict)
+    innerConnection=connector.connect(**connectionDict)
 
 
     if not isinstance(name, str):
@@ -325,7 +325,7 @@ Input Format
         raise TypeError('arguement `phone` must be a string')
     elif isValidPhone(phone):
         raise ValueError('It is not a proper phone number')
-    elif exists(value=phone, column='phone', table='patients', connection=inner_connection):
+    elif exists(value=phone, column='phone', table='patients', connection=innerConnection):
         raise ValueError('A patient with that phone number already exists')
 
     if not isinstance(dob, str):
@@ -339,12 +339,12 @@ Input Format
     if not isinstance(address, str):
         raise TypeError('arguement `address` must be a string')
 
-    inner_cursor=inner_connection.cursor()
-    inner_cursor.execute(f'''INSERT INTO patients (name, phone, dob, gender, address)
+    innerCursor=innerConnection.cursor()
+    innerCursor.execute(f'''INSERT INTO patients (name, phone, dob, gender, address)
 VALUES ("{name}",  "{phone}", '{dob}', "{gender}", "{address}");''')
-    inner_connection.commit()
+    innerConnection.commit()
     print('Successfully added a new patient')
-    inner_connection.close()
+    innerConnection.close()
 
 
 @cli.command(help_priority=next(myHelpDeterminer))
@@ -365,13 +365,13 @@ Input Format
 """
     connectionDict=sqlconfig.load.load_data(1)
     connectionDict['password']=password
-    inner_connection=connector.connect(**connectionDict)
+    innerConnection=connector.connect(**connectionDict)
 
 
 
     if not isinstance(phone, str):
         raise TypeError('arguement `phone` must be a string')
-    elif not exists(value=phone, column='phone', table='patients', connection=inner_connection):
+    elif not exists(value=phone, column='phone', table='patients', connection=innerConnection):
         raise ValueError('A patient with that phone number does not exists.')
 
     allowed_update_patient_columns=('name', 'phone', 'dob', 'gender', 'address')
@@ -394,14 +394,14 @@ Input Format
     if quote:
         value='"'+value+'"'
 
-    inner_cursor=inner_connection.cursor()
-    inner_cursor.execute(f'''\
+    innerCursor=innerConnection.cursor()
+    innerCursor.execute(f'''\
 UPDATE patients
 SET {column}={value}
 WHERE phone="{phone}";''')
-    inner_connection.commit()
+    innerConnection.commit()
     print('Updated successfully')
-    inner_connection.close()
+    innerConnection.close()
 
 
 @cli.command(help_priority=next(myHelpDeterminer))
@@ -412,19 +412,19 @@ Print the table `appointments`
 """
     connectionDict=sqlconfig.load.load_data(1)
     connectionDict['password']=password
-    inner_connection=connector.connect(**connectionDict)
+    innerConnection=connector.connect(**connectionDict)
 
-    inner_cursor=inner_connection.cursor()
-    inner_cursor.execute('''\
+    innerCursor=innerConnection.cursor()
+    innerCursor.execute('''\
 SELECT patients.Name, patients.Phone, appointments.treatmentID, appointments.Date, appointments.Time
 FROM patients, appointments
 WHERE patients.phone=appointments.phone;''')
-    appointments=from_db_cursor(inner_cursor)
+    appointments=from_db_cursor(innerCursor)
 
     addSerialNo(appointments)
     
     print(appointments)
-    inner_connection.close()
+    innerConnection.close()
 
 
 @cli.command(help_priority=next(myHelpDeterminer))
@@ -444,13 +444,13 @@ Input Format
 """
     connectionDict=sqlconfig.load.load_data(1)
     connectionDict['password']=password
-    inner_connection=connector.connect(**connectionDict)
+    innerConnection=connector.connect(**connectionDict)
 
     if not isinstance(phone, str):
         raise TypeError('arguement `phone` must be a string')
     elif not isValidPhone(phone):
         raise ValueError('It is not a proper phone number')
-    elif not exists(value=phone, column='phone', table='patients', connection=inner_connection):
+    elif not exists(value=phone, column='phone', table='patients', connection=innerConnection):
         raise ValueError('A patient with that phone does not exists')
 
     if not isValidDate(date):
@@ -459,17 +459,17 @@ Input Format
     if not isValidTime(time):
         raise ValueError('improper `time` format')
     
-    treatmentID=randomstring(8)
-    while exists(value=treatmentID, column='treatmentID', table='appointments', connection=inner_connection):
-        treatmentID=randomstring(8)
+    treatmentID=randomString(8)
+    while exists(value=treatmentID, column='treatmentID', table='appointments', connection=innerConnection):
+        treatmentID=randomString(8)
     
-    inner_cursor=inner_connection.cursor()
-    inner_cursor.execute(f'''\
+    innerCursor=innerConnection.cursor()
+    innerCursor.execute(f'''\
 INSERT INTO Appointments (phone, treatmentID, date, time)
 VALUES ("{phone}", "{treatmentID}", "{date}", "{time}");''')
-    inner_connection.commit()
+    innerConnection.commit()
     print('Added successfully')
-    inner_connection.close()
+    innerConnection.close()
 
 
 @cli.command(help_priority=next(myHelpDeterminer))
@@ -490,20 +490,20 @@ Input Format
 """
     connectionDict=sqlconfig.load.load_data(1)
     connectionDict['password']=password
-    inner_connection=connector.connect(**connectionDict)
+    innerConnection=connector.connect(**connectionDict)
 
 
     if not isinstance(treatmentID, str):
         raise TypeError('arguement `phone` must be a string')
-    elif not exists(value=treatmentID, column='treatmentID', table='appointments', connection=inner_connection):
+    elif not exists(value=treatmentID, column='treatmentID', table='appointments', connection=innerConnection):
         raise ValueError('An appointment with that phone number does not exists.')
 
-    allowed_update_appointment_columns=('date','time')
+    allowedUpdateAppointmentColumns=('date','time')
 
     if not isinstance(column, str):
         raise TypeError('arguement `phone` must be a string')
-    elif column not in allowed_update_appointment_columns:
-        raise ValueError(f"`column` must be any of {allowed_update_appointment_columns}")
+    elif column not in allowedUpdateAppointmentColumns:
+        raise ValueError(f"`column` must be any of {allowedUpdateAppointmentColumns}")
     else:
         if column=='date':
             if not isValidDate(value):
@@ -515,14 +515,14 @@ Input Format
     if quote:
         value='"'+value+'"'
 
-    inner_cursor=inner_connection.cursor()
-    inner_cursor.execute(f'''\
+    innerCursor=innerConnection.cursor()
+    innerCursor.execute(f'''\
 UPDATE appointments
 SET {column}={value}
 WHERE treatmentID="{treatmentID}";''')
-    inner_connection.commit()
+    innerConnection.commit()
     print('Updated successfully')
-    inner_connection.close()
+    innerConnection.close()
 
 
 @cli.command(help_priority=next(myHelpDeterminer))
@@ -534,22 +534,22 @@ Removes an appointment record if only there is no treatment related to it.
 """
     connectionDict=sqlconfig.load.load_data(1)
     connectionDict['password']=password
-    inner_connection=connector.connect(**connectionDict)
+    innerConnection=connector.connect(**connectionDict)
 
     if not isinstance(treatmentID, str):
         raise ValueError('`treatmentID` must be a string')
-    elif not exists(value=treatmentID, column='treatmentID', table='appointments', connection=inner_connection):
+    elif not exists(value=treatmentID, column='treatmentID', table='appointments', connection=innerConnection):
         raise ValueError('given `treatmentID` does not exist in appointments')
-    elif exists(value='treatments', column='treatmentID', table='treatments', connection=inner_connection):
+    elif exists(value='treatments', column='treatmentID', table='treatments', connection=innerConnection):
         raise ValueError('a treatment exists with the given `treatmentID`')
 
-    inner_cursor=inner_connection.cursor()
-    inner_cursor.execute(f'''\
+    innerCursor=innerConnection.cursor()
+    innerCursor.execute(f'''\
 DELETE FROM appointments
 WHERE treatmentID="{treatmentID}";''')
-    inner_connection.commit()
+    innerConnection.commit()
     print("Deleted successfully")
-    inner_connection.close()
+    innerConnection.close()
 
 
 @cli.command(help_priority=next(myHelpDeterminer))
@@ -560,10 +560,10 @@ Print the table `treatments`
 """
     connectionDict=sqlconfig.load.load_data(1)
     connectionDict['password']=password
-    inner_connection=connector.connect(**connectionDict)
+    innerConnection=connector.connect(**connectionDict)
 
-    inner_cursor=inner_connection.cursor()
-    inner_cursor.execute("""\
+    innerCursor=innerConnection.cursor()
+    innerCursor.execute("""\
 SELECT
 patients.Name, patients.Phone,
 treatments.treatmentID, treatments.Date, treatments.Time, treatments.Treatment, treatments.Status, treatments.Fee,
@@ -577,14 +577,14 @@ JOIN appointments
 ON patients.phone=appointments.phone
 JOIN treatments
 ON treatments.treatmentID=appointments.treatmentID;""")
-    treatments=from_db_cursor(inner_cursor)
+    treatments=from_db_cursor(innerCursor)
 
     addSerialNo(treatments)
 
     treatments.align['Treatment']='l'
     treatments.align['Status']='l'
     print(treatments)
-    inner_connection.close()
+    innerConnection.close()
 
 
 @cli.command(help_priority=next(myHelpDeterminer))
@@ -610,11 +610,11 @@ Input Format
 """
     connectionDict=sqlconfig.load.load_data(1)
     connectionDict['password']=password
-    inner_connection=connector.connect(**connectionDict)
+    innerConnection=connector.connect(**connectionDict)
 
     if not isinstance(treatmentID, str):
         raise TypeError('`treatmentID` must be a string')
-    elif not exists(value=treatmentID, column='treatmentID', table='appointments', connection=inner_connection):
+    elif not exists(value=treatmentID, column='treatmentID', table='appointments', connection=innerConnection):
         raise ValueError('an appointment with the given `treatmentID` does not exist')
 
     if not isinstance(date, str):
@@ -638,13 +638,13 @@ Input Format
     # no need to check type for `paid` because it is already boolean
     # https://click.palletsprojects.com/en/8.1.x/options/#boolean-flags
 
-    inner_cursor=inner_connection.cursor()
-    inner_cursor.execute(f'''\
+    innerCursor=innerConnection.cursor()
+    innerCursor.execute(f'''\
 INSERT INTO treatments (treatmentID, date, time, treatment, status, fee, paid)
 VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid});''')
-    inner_connection.commit()
+    innerConnection.commit()
     print('Added successfully')
-    inner_connection.close()
+    innerConnection.close()
 
 
 @cli.command(help_priority=next(myHelpDeterminer))
@@ -664,18 +664,18 @@ Input Format
 """
     connectionDict=sqlconfig.load.load_data(1)
     connectionDict['password']=password
-    inner_connection=connector.connect(**connectionDict)
+    innerConnection=connector.connect(**connectionDict)
 
     if not isinstance(treatmentID, str):
         raise TypeError('`treatmentID` must be a string')
-    elif not exists(value=treatmentID, column='treatmentID', table='treatments', connection=inner_connection):
+    elif not exists(value=treatmentID, column='treatmentID', table='treatments', connection=innerConnection):
         raise ValueError('Given `treatmentID` does not exist in table `treatments`')
     
-    allowed_treatment_update_values=("date", "time", "treatment", "status", "fee", "paid")
+    allowedTreatmentUpdateValues=("date", "time", "treatment", "status", "fee", "paid")
     if not isinstance(column, str):
         raise TypeError('`column` must be a string')
-    elif column not in allowed_treatment_update_values:
-        raise ValueError(f'`column` must be any of {allowed_treatment_update_values}')
+    elif column not in allowedTreatmentUpdateValues:
+        raise ValueError(f'`column` must be any of {allowedTreatmentUpdateValues}')
     else:
         if column=='date':
             if not isValidDate(value):
@@ -687,14 +687,14 @@ Input Format
     if quote:
         value='"'+value+'"'
     
-    inner_cursor=inner_connection.cursor()
-    inner_cursor.execute(f'''\
+    innerCursor=innerConnection.cursor()
+    innerCursor.execute(f'''\
 UPDATE treatments
 SET {column}={value}
 WHERE treatmentID="{treatmentID}";''')
-    inner_connection.commit()
+    innerConnection.commit()
     print('Updated successfully')
-    inner_connection.close()
+    innerConnection.close()
 
 
 
