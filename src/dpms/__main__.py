@@ -79,12 +79,12 @@ Valid means it is in the format `YYYY-MM-DD`
 Example: 2000-03-04
 Which is March 4, 2000
 """
-    return (date[0:4].isdigit() and 
+    return bool(date[0:4].isdigit() and 
             date[4]=='-' and 
             date[5:7].isdigit() and 
             date[7]=='-' and
             date[8:10].isdigit()
-            and len(date)==10 )
+            and len(date)==10)
 
 def isValidTime(time : str, includeSeconds : bool = False):
     """\
