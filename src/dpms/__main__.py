@@ -13,7 +13,6 @@ import click
 import sqlconfig
 
 
-
 def randomstring(length, nums=True, upper=True, lower=False) -> str:
     '''\
 Return a (pseudo)-random string
@@ -96,6 +95,7 @@ PARAMETERS
     
     return table
 
+
 class SpecialHelpOrder(click.Group):
     """\
 This code was taken from [StackOverflow](https://stackoverflow.com/a/47984810/14195452)
@@ -145,6 +145,7 @@ It adds the ability to specify a help_priority, which allows the sort order to b
 def cli():
     pass
 
+
 # begin `myHelpDeterminer`
 total=13
 myHelpDeterminer=iter(range(total))
@@ -161,7 +162,6 @@ myHelpDeterminer=iter(range(total))
 # it to the total number of commands so that we don't
 # get StopIteration error when iterating more than the
 # length of range)
-
 
 
 @cli.command(help_priority=next(myHelpDeterminer))
@@ -640,8 +640,6 @@ WHERE treatmentID="{treatmentID}";''')
     inner_connection.commit()
     print('Updated successfully')
     inner_connection.close()
-
-
 
 
 
