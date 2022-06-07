@@ -478,6 +478,8 @@ ON treatments.treatmentID=appointments.treatmentID;""")
     for i, _ in enumerate(treatments.rows):
         treatments.rows[i].insert(0, i+1)
 
+    treatments.align['Treatment']='l'
+    treatments.align['Status']='l'
     print(treatments)
     inner_connection.close()
 
