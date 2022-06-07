@@ -16,7 +16,15 @@ import sqlconfig
 
 def randomstring(length, nums=True, upper=True, lower=False) -> str:
     '''\
-Return a random string'''
+Return a (pseudo)-random string
+
+PARAMETERS
+----------
+- length : length of your random string
+- nums   : wether or not to include digits (0-9) in your random string
+- upper  : wether or not to include upper cased characters in your random string
+- lower  : wether or not to include lower cased characters in your random string
+'''
     choice_of_strings=deque()
     if nums:
         choice_of_strings.extend(deque(string.digits))
