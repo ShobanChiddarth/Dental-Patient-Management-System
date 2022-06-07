@@ -207,12 +207,7 @@ def show_patients(password):
     inner_connection=connector.connect(**connectionDict)
     patients=table_from_db(inner_connection, 'patients')
 
-    fieldname='Sno'
-    patients.field_names.insert(0, fieldname)
-    patients.align[fieldname]='c'
-    patients.valign[fieldname]='t'
-    for i, _ in enumerate(patients.rows):
-        patients.rows[i].insert(0, i+1)
+    addSerialNo(patients)
 
     print(patients)
     inner_connection.close()
@@ -335,12 +330,7 @@ FROM patients, appointments
 WHERE patients.phone=appointments.phone;''')
     appointments=from_db_cursor(inner_cursor)
 
-    fieldname='Sno'
-    appointments.field_names.insert(0, fieldname)
-    appointments.align[fieldname]='c'
-    appointments.valign[fieldname]='t'
-    for i, _ in enumerate(appointments.rows):
-        appointments.rows[i].insert(0, i+1)
+    addSerialNo(appointments)
     
     print(appointments)
     inner_connection.close()
@@ -494,12 +484,7 @@ JOIN treatments
 ON treatments.treatmentID=appointments.treatmentID;""")
     treatments=from_db_cursor(inner_cursor)
 
-    fieldname='Sno'
-    treatments.field_names.insert(0, fieldname)
-    treatments.align[fieldname]='c'
-    treatments.valign[fieldname]='t'
-    for i, _ in enumerate(treatments.rows):
-        treatments.rows[i].insert(0, i+1)
+    addSerialNo(treatments)
 
     treatments.align['Treatment']='l'
     treatments.align['Status']='l'
