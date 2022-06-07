@@ -97,7 +97,20 @@ PARAMETERS
     return table
 
 class SpecialHelpOrder(click.Group):
-    """This code was taken from [StackOverflow](https://stackoverflow.com/a/47984810/14195452)"""
+    """\
+This code was taken from [StackOverflow](https://stackoverflow.com/a/47984810/14195452)
+
+Stack Overflow Answer
+=====================
+The order of the commands listed by help is set by the list_commands() method of the click.Group
+class. So, one way to approach the desire to change the help listing order is to inherit for
+click.Group and override list_commands to give the desired order.
+
+Custom Class
+------------
+This class overrides the click.Group.command() method which is used to decorate command functions.
+It adds the ability to specify a help_priority, which allows the sort order to be modified as desired.
+"""
     def __init__(self, *args, **kwargs):
         self.help_priorities = {}
         super(SpecialHelpOrder, self).__init__(*args, **kwargs)
