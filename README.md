@@ -42,7 +42,7 @@ future. It is always a free and open source project.
    ```
 1. Success. Now you can run [main.py](/src/main.py).
 
-#### LINKS
+### LINKS
 - [Documentation](./docs/)
 - [Developer Documentation](./docs/devdocs)
 - [Bugs and Features](https://github.com/ShobanChiddarth/Dental-Patient-Management-System/issues)
