@@ -252,7 +252,7 @@ NOTE
 
 
 # begin `myHelpDeterminer`
-total=13
+total=14
 myHelpDeterminer=iter(range(total))
 # I have put this piece of code here in order to
 # set the help_order of every command in the same
@@ -331,6 +331,15 @@ To get the list of allowed values, use `loadAllowed` command.
 
     connectionDict=sqlconfig.load.load_data(1)
     sqlconfig.manage.safe_edit(connectionDict, key=key, value=value)
+    sqlconfig.manage.flushdict(connectionDict)
+
+
+@cli.command(help_priority=next(myHelpDeterminer))
+@click.option('--key', 'key', required=True, type=click.STRING, prompt=False)
+def del_config(key):
+    """"""
+    connectionDict=sqlconfig.load.load_data(1)
+    del connectionDict[key]
     sqlconfig.manage.flushdict(connectionDict)
 
 
