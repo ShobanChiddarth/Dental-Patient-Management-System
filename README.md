@@ -48,3 +48,14 @@ future. It is always a free and open source project.
 - [Bugs and Features](https://github.com/ShobanChiddarth/Dental-Patient-Management-System/issues)
 - [Discussions](https://github.com/ShobanChiddarth/Dental-Patient-Management-System/discussions)
 - [Contributing](.github/CONTRIBUTING.md)
+
+### DISCLAIMER
+1. All the patient names, phone numbers, addresses, etc. shown anywhere
+in comments, issues, pull requests, etc. are imaginary and resemblance
+to any person living or dead is **purely co-incidental**.
+1. The clinic's name "Sri Sakthi Dental Clinic" is used as a **Sample** for
+a clinic name in places where it is needed. The database backup file
+[backup.sql](https://github.com/ShobanChiddarth/Dental-Patient-Management-System/blob/d985c7a09cd2a052a3d47ce70db3bea31c2e79fd/backup.sql#L22) <!-- Permalink is used in case the database is updated in the future, the line where the `CREATE DATABASE` statement would be present may not be the same -->
+has the database name stored as `SrisakthiPatients` and the program also
+mentions the clinic's name during run. These are all purely demonstration
+purposes and this is not a commercial product owned by Sri Sakthi Dental Clinic.
