@@ -312,7 +312,8 @@ Input Flags
 @cli.command(help_priority=next(myHelpDeterminer))
 @click.option('--key', 'key', required=True, type=click.STRING, prompt=False)
 @click.option('--value', 'value', required=True, prompt=False)
-def config(key, value):
+@click.option('--evaluate', is_flag=True, default=False)
+def config(key, value, evaluate):
     """\
 Configuration command: Uses the module `sqlconfig`
 
@@ -328,6 +329,8 @@ https://dev.mysql.com/doc/connector-python/en/connector-python-connectargs.html
 
 To get the list of allowed values, use `loadAllowed` command.
 """
+    if evaluate:
+        value=eval(value)
 
     connectionDict=sqlconfig.load.load_data(1)
     sqlconfig.manage.safe_edit(connectionDict, key=key, value=value)
