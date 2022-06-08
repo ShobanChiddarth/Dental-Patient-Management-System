@@ -1,3 +1,15 @@
+"""\
+DENTAL PATIENT MANAGEMENT SYSTEM CLI
+====================================
+
+This is the script of the CLI app. The script is made as a CLI with the help
+of [click](https://palletsprojects.com/p/click). This offers all
+functionalities of the [old script](https://github.com/ShobanChiddarth/Dental-Patient-Management-System/blob/31b994185e733120252cad1afd520ee2d5ea1055/src/main.py)
+but as a CLI app. This is meant to provide a Command Line Interface as an API,
+with which the main script can be re-written using this API.
+
+NOTE: dpms is not a module and should not be tried to import from anywhere.
+"""
 import string
 
 from collections import deque
