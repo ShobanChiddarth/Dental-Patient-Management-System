@@ -340,7 +340,9 @@ To get the list of allowed values, use `loadAllowed` command.
 @cli.command(help_priority=next(myHelpDeterminer))
 @click.option('--key', 'key', required=True, type=click.STRING, prompt=False)
 def del_config(key):
-    """"""
+    """\
+Deletes the given `key` (--key) in the configuration dictionary
+"""
     connectionDict=sqlconfig.load.load_data(1)
     del connectionDict[key]
     sqlconfig.manage.flushdict(connectionDict)
