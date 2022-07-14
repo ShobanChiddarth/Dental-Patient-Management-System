@@ -103,6 +103,7 @@ In short:
    Right now, the version acronyms are
    - SCRIPT
    - CLI
+
    To use these , use the following syntax
    ```git-commit
    {version-acronym}.{standard-acronym}: <Commit message>
