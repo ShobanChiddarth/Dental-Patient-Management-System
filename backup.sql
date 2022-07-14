@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.28, for Win64 (x86_64)
 --
--- Host: localhost    Database: SrisakthiPatients
+-- Host: localhost    Database: srisakthipatients
 -- ------------------------------------------------------
 -- Server version	8.0.28
 
@@ -16,12 +16,12 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Current Database: `SrisakthiPatients`
+-- Current Database: `srisakthipatients`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `SrisakthiPatients` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `srisakthipatients` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
-USE `SrisakthiPatients`;
+USE `srisakthipatients`;
 
 --
 -- Table structure for table `appointments`
@@ -33,9 +33,11 @@ DROP TABLE IF EXISTS `appointments`;
 CREATE TABLE `appointments` (
   `Phone` varchar(17) NOT NULL,
   `treatmentID` varchar(10) NOT NULL,
-  `date` date NOT NULL,
-  `time` time NOT NULL,
-  PRIMARY KEY (`treatmentID`)
+  `Date` date NOT NULL,
+  `Time` time NOT NULL,
+  PRIMARY KEY (`treatmentID`),
+  KEY `Phone` (`Phone`),
+  CONSTRAINT `appointments_ibfk_1` FOREIGN KEY (`Phone`) REFERENCES `patients` (`Phone`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -59,7 +61,7 @@ CREATE TABLE `patients` (
   `Name` varchar(255) NOT NULL,
   `Phone` varchar(17) NOT NULL,
   `DOB` date NOT NULL,
-  `Gender` char(1) NOT NULL DEFAULT 'M',
+  `Gender` enum('M','F') DEFAULT NULL,
   `Address` text NOT NULL,
   PRIMARY KEY (`Phone`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -83,13 +85,14 @@ DROP TABLE IF EXISTS `treatments`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `treatments` (
   `treatmentID` varchar(10) NOT NULL,
-  `date` date NOT NULL,
-  `time` time NOT NULL,
-  `treatment` varchar(255) NOT NULL,
-  `status` text NOT NULL,
-  `fee` double(16,2) NOT NULL,
-  `paid` tinyint(1) NOT NULL,
-  UNIQUE KEY `treatmentID` (`treatmentID`)
+  `Date` date NOT NULL,
+  `Time` time NOT NULL,
+  `Treatment` varchar(255) NOT NULL,
+  `Status` text NOT NULL,
+  `Fee` double(16,2) NOT NULL,
+  `Paid` tinyint(1) NOT NULL,
+  UNIQUE KEY `treatmentID` (`treatmentID`),
+  CONSTRAINT `treatments_ibfk_1` FOREIGN KEY (`treatmentID`) REFERENCES `appointments` (`treatmentID`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -111,4 +114,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-06-01 20:08:35
+-- Dump completed on 2022-07-14 21:27:14
