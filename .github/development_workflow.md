@@ -83,6 +83,7 @@ In short:
    Describing the motivation for a change, the nature of a bug for bug fixes or some details on what an enhancement does are also good to include in a commit message. Messages should be understandable without looking at the code changes. A commit message like `MAINT: fixed another one` is an example of what not to do; the reader has to go look for context elsewhere.
 
    Please stick to this commit message convention
+
    Standard acronyms to start the commit message with are:
    | Acronym | Usage |
    | ------- | ----- |
@@ -97,6 +98,23 @@ In short:
    | STY | style fix (whitespace, PEP8) |
    | REL | related to releases |
    | DB  | change related to the [database backup](../backup.sql)
+
+   When working on a specific version, use the name of the version with the standard acronym.
+   Right now, the version acronyms are
+   - SCRIPT
+   - CLI
+   To use these , use the following syntax
+   ```git-commit
+   {version-acronym}.{standard-acronym}: <Commit message>
+
+   <Optional Description>
+   ```
+   For example, if you have removed trailing whitespaces in the script, you may write
+   ```git-commit
+   SCRIPT.STY: Removed trailing whitespaces
+   ```
+
+   When you are not working on a specific version, you may not use the version acronym and that `.`
 
 3. When finished:
    Contributors: push your feature branch to your own Github repo, and create a pull request.
