@@ -1,0 +1,31 @@
+{
+    "**GENERAL COMMANDS**":
+    {
+        "help"                : "show this message",
+        "exit"                : "exit the script",
+        "quit"                : "alias of exit"
+    },
+
+    "**PATIENT COMMANDS**":
+    {
+        "show patients"       : "print the table `patients` in database `SrisakthiPatients`",
+        "add patient"         : "create a new patient in database `SrisakthiPatients` table `patients`",
+        "update patient"      : "update a patient in table `patients` in database `SrisakthiPatients` (You must provide `patientID`)"
+    },
+
+    "**APPOINTMENT COMMANDS**":
+    {
+        "show appointments"   : "print the table `Appointments` in database `SrisakthiPatients`",
+        "add appointment"     : "add a new appointment in table `Appointments` in database `SrisakthiPatients`",
+        "update appointment"  : "update an existing appointment in table `Appointments` in database `SrisakthiPatients` (You must provide `treatmentID`)",
+        "remove appointment"  : "remove an appointment in table `Appointments` in database `SrisakthiPatients` (You must provide `treatmentID`)"
+    },
+
+    "**TREATMENT COMMANDS**":
+    {
+        "show treatments"     : "print the table `treatments` in database `SrisakthiPatients`",
+        "add treatment"       : "add new treatment in table `treatments` in database `SrisakthiPatients` (You must provide `treatmentID`)",
+        "add treatment-exact" : "add new treatment in table `treatments` in database `SrisakthiPatients` with the exact date and time in table `Appointments`",
+        "update treatment"    : "update treatment in in table `treatments` in database `SrisakthiPatients` (You must provide `treatmentID`)"
+    }
+}
