@@ -298,9 +298,9 @@ SET {value_to_be_updated}={the_value} WHERE phone="{phone}";'''
 Shows all the appointments in `appointments` table'''
         inner_cursor=connection.cursor()
         inner_cursor.execute('''\
-SELECT patients.name, patients.phone, appointments.treatmentID, appointments.date, appointments.time
+SELECT patients.Name, patients.Phone, appointments.treatmentID, appointments.Date, appointments.Time
 FROM patients, appointments
-WHERE patients.phone=appointments.phone;''')
+WHERE patients.Phone=appointments.Phone;''')
         appointments=from_db_cursor(inner_cursor)
 
         fieldname='Sno'
@@ -417,18 +417,18 @@ SET {value_to_be_updated}="{the_value}" WHERE treatmentID="{treatment_id}";'''
 Shows all records in table `treatments`'''
         inner_command="""\
 SELECT
-patients.name, patients.phone,
-treatments.treatmentID, treatments.date, treatments.time, treatments.treatment, treatments.status, treatments.fee,
-CASE treatments.paid
+patients.Name, patients.Phone,
+treatments.treatmentID, treatments.Date, treatments.Time, treatments.Treatment, treatments.Status, treatments.Fee,
+CASE treatments.Paid
 WHEN 0 THEN "False"
 WHEN 1 THEN "True"
-END AS paid
+END AS Paid
 FROM
 patients
 JOIN appointments
-ON patients.phone=appointments.phone
+ON patients.Phone=appointments.Phone
 JOIN treatments
-ON treatments.treatmentID=appointments.treatmentID;"""
+ON treatments.TreatmentID=appointments.TreatmentID;"""
         inner_cursor=connection.cursor()
         inner_cursor.execute(inner_command)
         treatments=from_db_cursor(inner_cursor)
