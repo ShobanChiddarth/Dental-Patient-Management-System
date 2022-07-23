@@ -19,7 +19,7 @@
 -- Current Database: `srisakthipatients`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `srisakthipatients` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `srisakthipatients` /*!40100 DEFAULT CHARACTER SET utf8mb4 */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
 USE `srisakthipatients`;
 
@@ -38,7 +38,7 @@ CREATE TABLE `appointments` (
   PRIMARY KEY (`treatmentID`),
   KEY `Phone` (`Phone`),
   CONSTRAINT `appointments_ibfk_1` FOREIGN KEY (`Phone`) REFERENCES `patients` (`Phone`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -64,7 +64,7 @@ CREATE TABLE `patients` (
   `Gender` enum('M','F') DEFAULT NULL,
   `Address` text NOT NULL,
   PRIMARY KEY (`Phone`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -93,7 +93,7 @@ CREATE TABLE `treatments` (
   `Paid` tinyint(1) NOT NULL,
   UNIQUE KEY `treatmentID` (`treatmentID`),
   CONSTRAINT `treatments_ibfk_1` FOREIGN KEY (`treatmentID`) REFERENCES `appointments` (`treatmentID`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
