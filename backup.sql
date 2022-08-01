@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 8.0.28, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.5.56, for Win32 (AMD64)
 --
 -- Host: localhost    Database: srisakthipatients
 -- ------------------------------------------------------
--- Server version	8.0.28
+-- Server version	5.5.56
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -16,20 +16,12 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Current Database: `srisakthipatients`
---
-
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `srisakthipatients` /*!40100 DEFAULT CHARACTER SET utf8mb4 */ /*!80016 DEFAULT ENCRYPTION='N' */;
-
-USE `srisakthipatients`;
-
---
 -- Table structure for table `appointments`
 --
 
 DROP TABLE IF EXISTS `appointments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `appointments` (
   `Phone` varchar(17) NOT NULL,
   `treatmentID` varchar(10) NOT NULL,
@@ -51,12 +43,38 @@ LOCK TABLES `appointments` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `doctors`
+--
+
+DROP TABLE IF EXISTS `doctors`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `doctors` (
+  `Phone` varchar(17) NOT NULL,
+  `Name` varchar(225) NOT NULL,
+  `Qualification` text,
+  `Role` varchar(225) DEFAULT NULL,
+  `Special_In` text,
+  PRIMARY KEY (`Phone`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `doctors`
+--
+
+LOCK TABLES `doctors` WRITE;
+/*!40000 ALTER TABLE `doctors` DISABLE KEYS */;
+/*!40000 ALTER TABLE `doctors` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `patients`
 --
 
 DROP TABLE IF EXISTS `patients`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `patients` (
   `Name` varchar(255) NOT NULL,
   `Phone` varchar(17) NOT NULL,
@@ -82,9 +100,10 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `treatments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `treatments` (
   `treatmentID` varchar(10) NOT NULL,
+  `DoctorsPhone` varchar(17) NOT NULL,
   `Date` date NOT NULL,
   `Time` time NOT NULL,
   `Treatment` varchar(255) NOT NULL,
@@ -92,7 +111,9 @@ CREATE TABLE `treatments` (
   `Fee` double(16,2) NOT NULL,
   `Paid` tinyint(1) NOT NULL,
   UNIQUE KEY `treatmentID` (`treatmentID`),
-  CONSTRAINT `treatments_ibfk_1` FOREIGN KEY (`treatmentID`) REFERENCES `appointments` (`treatmentID`) ON UPDATE CASCADE
+  KEY `DoctorsPhone` (`DoctorsPhone`),
+  CONSTRAINT `treatments_ibfk_1` FOREIGN KEY (`treatmentID`) REFERENCES `appointments` (`treatmentID`) ON UPDATE CASCADE,
+  CONSTRAINT `treatments_ibfk_2` FOREIGN KEY (`DoctorsPhone`) REFERENCES `doctors` (`Phone`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -114,4 +135,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-07-14 21:27:14
+-- Dump completed on 2022-08-01 15:13:16
