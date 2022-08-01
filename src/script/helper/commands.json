@@ -27,5 +27,11 @@
         "add treatment"       : "add new treatment in table `treatments` in database `SrisakthiPatients` (You must provide `treatmentID`)",
         "add treatment-exact" : "add new treatment in table `treatments` in database `SrisakthiPatients` with the exact date and time in table `Appointments`",
         "update treatment"    : "update treatment in in table `treatments` in database `SrisakthiPatients` (You must provide `treatmentID`)"
+    },
+    "**MISCALLANEOUS COMMANDS**":
+    {
+        "show doctors"        : "shows the list of doctors in the clinic",
+        "show treatments of patient" : "shows all the treatments taken by a patient (provide phone number)",
+        "show treatments of doctor"  : "shows all the treatments given by a doctor (provide phone number)"
     }
 }
