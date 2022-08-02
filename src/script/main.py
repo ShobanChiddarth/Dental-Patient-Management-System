@@ -568,7 +568,6 @@ VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {
                         print('Added Successfully')
                         break
 
-
     def update_treatment():
         '''\
 Gets user input and updates a record in table `treatments`'''
@@ -668,6 +667,17 @@ a record in the table `treatments`'''
 WHERE treatmentID="{treatmentID}";''')
                     print('Deleted successfully')                       
 
+    def show_doctors():
+        """Shows the table `doctors`"""
+        doctors=table_from_db('doctors')
+        fieldname='Sno'
+        doctors.field_names.insert(0, fieldname)
+        doctors.align[fieldname]='c'
+        doctors.valign[fieldname]='t'
+        for i, _ in enumerate(doctors.rows):
+            doctors.rows[i].insert(0, i+1)
+        print(doctors)
+
 
 
     while True:
@@ -718,6 +728,9 @@ WHERE treatmentID="{treatmentID}";''')
 
         elif command=='remove treatment':
             print('You can\'t remove treatments')
+        
+        elif command=='show doctors':
+            show_doctors()
 
         else:
             print("WRONG COMMAND [See `help`]")
