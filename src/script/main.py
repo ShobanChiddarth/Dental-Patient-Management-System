@@ -418,7 +418,7 @@ Shows all records in table `treatments`'''
         inner_command="""\
 SELECT
 patients.Name, patients.Phone,
-treatments.treatmentID, treatments.Date, treatments.Time, treatments.Treatment, treatments.Status, treatments.Fee,
+treatments.treatmentID, treatments.DoctorsPhone,  treatments.Date, treatments.Time, treatments.Treatment, treatments.Status, treatments.Fee,
 CASE treatments.Paid
 WHEN 0 THEN "False"
 WHEN 1 THEN "True"
