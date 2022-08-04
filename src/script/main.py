@@ -12,6 +12,7 @@ from mysql import connector
 from prettytable import PrettyTable, from_db_cursor
 from pyautogui import password
 from pwinput import pwinput
+import pandas as pd
 
 import helper
 import sqlconfig
@@ -462,6 +463,9 @@ Gets user input and adds a treatment to table `treatments`'''
                 elif exists(value=treatment_ID, column='treatmentID', table='treatments'):
                     print('''Date format: YYYY-MM-DD
 Example: 1999-03-12''')
+
+                    DoctorsPhone=input('Enter the phone of doctor of this treatments (also `show doctors`): ')
+
                     date=input('Enter date: ')
                     while not (date[0:4].isdigit() and 
                                 date[4]=='-' and 
@@ -503,13 +507,16 @@ You can also add the prescription here''')
                             print('Anything other than `True`, `False`, `0`, `1` cannot be accepted')
                             continue
 
-                    inner_command=f'''INSERT INTO treatments (treatmentID, date, time, treatment, status, fee, paid)
-VALUES ("{treatment_ID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid});'''
-                    inner_cursor=connection.cursor()
-                    inner_cursor.execute(inner_command)
-                    connection.commit()
-                    print('Added successfully')
-                    break
+                    if exists(value=DoctorsPhone, column='Phone', table='doctors'):
+                        inner_command=f'''INSERT INTO treatments (treatmentID, DoctorsPhone, date, time, treatment, status, fee, paid)
+VALUES ("{treatment_ID}", "{DoctorsPhone}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid});'''
+                        inner_cursor=connection.cursor()
+                        inner_cursor.execute(inner_command)
+                        connection.commit()
+                        print('Added successfully')
+                        break
+                    else:
+                        print("Wrong phone number of doctor")
                 else:
                     print('An appointment with the given treatmentID does not exist.')
                     continue
@@ -559,14 +566,18 @@ You can also add the prescription here''')
                                 print('You entered',k)
                                 print('Anything other than `True`, `False`, `0`, `1` cannot be accepted')
                                 continue
-
-                        command=f'''INSERT INTO treatments (treatmentID, date, time, treatment, status, fee, paid)
-VALUES ("{treatmentID}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid});'''
-                        inner_cursor=connection.cursor()
-                        inner_cursor.execute(command)
-                        connection.commit()
-                        print('Added Successfully')
-                        break
+                        DoctorsPhone=input('Enter the phone of doctor of this treatments (also `show doctors`): ')
+                        if exists(value=DoctorsPhone, column="Phone", table="doctors"):
+                            command=f'''INSERT INTO treatments (treatmentID, DoctorsPhone, date, time, treatment, status, fee, paid)
+VALUES ("{treatmentID}", "{DoctorsPhone}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid});'''
+                            inner_cursor=connection.cursor()
+                            inner_cursor.execute(command)
+                            connection.commit()
+                            print('Added Successfully')
+                            break
+                        else:
+                            print("Wrong phone number of doctor")
+                            continue
 
     def update_treatment():
         '''\
@@ -678,7 +689,47 @@ WHERE treatmentID="{treatmentID}";''')
             doctors.rows[i].insert(0, i+1)
         print(doctors)
 
+    def show_treatments_of_patient():
+        """"""
+        while True:
+            phone=input('''\
+Enter phone number of existing patient to show their treatments
+(or even show patients): ''')
+            if phone=='show patients':
+                show_patients()
+                continue
+            else:
+                if exists(value=phone, column='phone', table='patients'):
+                    inner_cursor=connection.cursor()
+                    inner_cursor.execute(f'''\
+SELECT
+patients.Name, patients.Phone,
+treatments.treatmentID, treatments.DoctorsPhone,  treatments.Date, treatments.Time, treatments.Treatment, treatments.Status, treatments.Fee,
+CASE treatments.Paid
+WHEN 0 THEN "False"
+WHEN 1 THEN "True"
+END AS Paid
+FROM
+patients
+JOIN appointments
+ON patients.Phone=appointments.Phone
+JOIN treatments
+ON treatments.TreatmentID=appointments.TreatmentID;''')
+                    table=from_db_cursor(inner_cursor)
 
+                    df=pd.DataFrame(table.rows, columns=table.field_names)
+                    temp=pd.DataFrame(columns=table.field_names)
+
+                    for index, value in enumerate(df["Phone"]):
+                            if value==phone:
+                                temp.append(df.loc[index])
+                    print(temp)
+                    break
+                else:
+                    print("Wrong phone number. Re-enter it.")
+                    continue
+        inner_cursor=connection.cursor()
+        inner_cursor.execute()
 
     while True:
         command=input('Enter command> ')
@@ -731,6 +782,9 @@ WHERE treatmentID="{treatmentID}";''')
         
         elif command=='show doctors':
             show_doctors()
+
+        elif command=='show treatments of patient':
+            show_treatments_of_patient()
 
         else:
             print("WRONG COMMAND [See `help`]")
