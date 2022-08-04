@@ -705,7 +705,7 @@ WHERE treatmentID="{treatmentID}";''')
         print(doctors)
 
     def show_treatments_of_patient():
-        """"""
+        """Shows the list of treatments of a particular patient in table form"""
         while True:
             phone=input('''\
 Enter phone number of existing patient to show their treatments
@@ -716,35 +716,46 @@ Enter phone number of existing patient to show their treatments
             else:
                 if exists(value=phone, column='phone', table='patients'):
                     inner_cursor=connection.cursor()
-                    inner_cursor.execute(f'''\
+                    inner_command=(f'''\
 SELECT
 patients.Name, patients.Phone,
-treatments.treatmentID, treatments.DoctorsPhone,  treatments.Date, treatments.Time, treatments.Treatment, treatments.Status, treatments.Fee,
+treatments.treatmentID, doctors.Name AS "Name of Doctor", treatments.DoctorsPhone AS "Doctor's Phone", 
+treatments.Date, treatments.Time, treatments.Treatment, treatments.Status, treatments.Fee,
+
 CASE treatments.Paid
 WHEN 0 THEN "False"
 WHEN 1 THEN "True"
 END AS Paid
+
 FROM
 patients
+
+
 JOIN appointments
 ON patients.Phone=appointments.Phone
 JOIN treatments
-ON treatments.TreatmentID=appointments.TreatmentID;''')
+ON treatments.TreatmentID=appointments.TreatmentID
+JOIN doctors
+ON doctors.Phone=treatments.DoctorsPhone;''')
+                    inner_cursor.execute(inner_command)
                     table=from_db_cursor(inner_cursor)
 
                     df=pd.DataFrame(table.rows, columns=table.field_names)
-                    temp=pd.DataFrame(columns=table.field_names)
+                    # print(df.to_string(index=False, ))
+                    temp=PrettyTable(field_names=table.field_names)
 
                     for index, value in enumerate(df["Phone"]):
                             if value==phone:
-                                temp.append(df.loc[index])
+                                # temp.append(df.loc[index])
+                                temp_row=list(df.loc[index])
+                                temp_row[6]=str(temp_row[6])[-8:]
+                                temp.add_row(temp_row)
                     print(temp)
                     break
+
                 else:
                     print("Wrong phone number. Re-enter it.")
                     continue
-        inner_cursor=connection.cursor()
-        inner_cursor.execute()
 
     while True:
         command=input('Enter command> ')
