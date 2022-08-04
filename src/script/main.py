@@ -10,7 +10,7 @@ import tkinter as tk
 from typing import Any
 from mysql import connector
 from prettytable import PrettyTable, from_db_cursor
-from pyautogui import password
+from pymsgbox import password
 from pwinput import pwinput
 import pandas as pd
 
@@ -812,6 +812,8 @@ ON doctors.Phone=treatments.DoctorsPhone;''')
         elif command=='show treatments of patient':
             show_treatments_of_patient()
 
+        elif command=='show treatments of doctor':
+            show_treatments_of_doctor()
         else:
             print("WRONG COMMAND [See `help`]")
 
