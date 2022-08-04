@@ -565,19 +565,27 @@ You can also add the prescription here''')
                             except KeyError as k:
                                 print('You entered',k)
                                 print('Anything other than `True`, `False`, `0`, `1` cannot be accepted')
-                                continue
-                        DoctorsPhone=input('Enter the phone of doctor of this treatments (also `show doctors`): ')
-                        if exists(value=DoctorsPhone, column="Phone", table="doctors"):
-                            command=f'''INSERT INTO treatments (treatmentID, DoctorsPhone, date, time, treatment, status, fee, paid)
+                                continue    
+
+                        while True:    
+                            DoctorsPhone=input('Enter the phone of doctor of this treatments (also `show doctors`): ')
+                            if exists(value=DoctorsPhone, column="Phone", table="doctors"):
+                                command=f'''\
+INSERT INTO treatments (treatmentID, DoctorsPhone, date, time, treatment, status, fee, paid)
 VALUES ("{treatmentID}", "{DoctorsPhone}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid});'''
-                            inner_cursor=connection.cursor()
-                            inner_cursor.execute(command)
-                            connection.commit()
-                            print('Added Successfully')
-                            break
-                        else:
-                            print("Wrong phone number of doctor")
-                            continue
+                                inner_cursor=connection.cursor()
+                                inner_cursor.execute(command)
+                                connection.commit()
+                                print('Added Successfully')
+                                break
+                            elif DoctorsPhone=='show doctors':
+                                show_doctors()
+                                continue
+                            else:
+                                print("Wrong phone number of doctor")
+                                continue
+                        
+                        break
 
     def update_treatment():
         '''\
