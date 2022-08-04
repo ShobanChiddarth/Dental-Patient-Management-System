@@ -419,17 +419,24 @@ Shows all records in table `treatments`'''
         inner_command="""\
 SELECT
 patients.Name, patients.Phone,
-treatments.treatmentID, treatments.DoctorsPhone,  treatments.Date, treatments.Time, treatments.Treatment, treatments.Status, treatments.Fee,
+treatments.treatmentID, doctors.Name AS "Name of Doctor", treatments.DoctorsPhone AS "Doctor's Phone", 
+treatments.Date, treatments.Time, treatments.Treatment, treatments.Status, treatments.Fee,
+
 CASE treatments.Paid
 WHEN 0 THEN "False"
 WHEN 1 THEN "True"
 END AS Paid
+
 FROM
 patients
+
+
 JOIN appointments
 ON patients.Phone=appointments.Phone
 JOIN treatments
-ON treatments.TreatmentID=appointments.TreatmentID;"""
+ON treatments.TreatmentID=appointments.TreatmentID
+JOIN doctors
+ON doctors.Phone=treatments.DoctorsPhone;"""
         inner_cursor=connection.cursor()
         inner_cursor.execute(inner_command)
         treatments=from_db_cursor(inner_cursor)
