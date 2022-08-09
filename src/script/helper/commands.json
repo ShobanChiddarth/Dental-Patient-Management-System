@@ -36,6 +36,7 @@
     },
     "**ADMINISTRATIVE COMMANDS**":
     {
-        "add doctor"          : "add a doctor record to in the table `doctors`"
+        "add doctor"          : "add a doctor record to in the table `doctors`",
+        "update doctor"       : "update a doctor record (provide phone number of doctor)"
     }
 }

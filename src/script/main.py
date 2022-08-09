@@ -10,6 +10,7 @@ import tkinter as tk
 from typing import Any
 from mysql import connector
 from prettytable import PrettyTable, from_db_cursor
+import pymsgbox
 from pymsgbox import password
 from pwinput import pwinput
 import pandas as pd
@@ -840,6 +841,82 @@ INSERT INTO doctors (Phone, Name, Qualification, Role, Special_In) values
         connection.commit()
         print("Added successfully")
 
+    def update_doctor():
+        """Update a doctor record in the table `doctors`"""
+        while True:
+            Phone=input("""\
+Enter the phone number of the doctor you wan't to update values
+(also `show doctors`): """)
+            if Phone=='show doctors':
+                show_doctors()
+                continue
+            elif exists(value=Phone, column="Phone", table='doctors'):
+                break
+            else:
+                print("Phone number does'nt exist. Re-enter it")
+                continue
+
+
+
+        print("Values that can be updated: ")
+
+        v = tuple(pd.read_sql("desc doctors;", con=connection)['Field'])
+        values_that_can_be_updated=pd.Series(v)
+        print(values_that_can_be_updated.to_string())
+
+        while True:
+            value_to_be_updated = input("Which value do you wan't to update (enter the number before it)? ")
+            try: 
+                value_to_be_updated=int(value_to_be_updated)
+            except ValueError as VE:
+                print(VE)
+                print("Re-enter it.")
+                continue
+            else:
+                if 0<=value_to_be_updated<=len(v):
+                    print(f"Would you like to confirm you have selected to update {v[value_to_be_updated]}?")
+
+                    while True:
+                        confirmation=input("Yes/no: ")
+                        if confirmation.lower().strip() in ('yes', 'y', '1', 'true'):
+                            confirmation=True
+                            break
+                        elif confirmation.lower.strip() in ('no', 'n', 0, 'false'):
+                            confirmation=False
+                            break
+                        else:
+                            print("Wrong input for confirming selected item. Re-enter it")
+                            continue
+                    
+                    if confirmation:
+                        print("Confirmed")
+                        break
+                    else:
+                        print("Re-select it")
+                        continue
+
+                else:
+                    print("Invalid Input. Re-enter it.")
+                    continue
+        
+        new_value=input(f"Enter new value of {v[value_to_be_updated]} : ")
+
+        if value_to_be_updated==4: # Special_In
+            if new_value.lower().strip() in ('null', 'none', '0'):
+                new_value='NULL'
+            else:
+                new_value='"'+new_value+'"'
+
+        inner_cursor=connection.cursor()
+        inner_command=f"""
+UPDATE `doctors`
+SET {v[value_to_be_updated]} = {new_value}
+WHERE Phone={Phone};"""
+        inner_cursor.execute(inner_command)
+        connection.commit()
+        print("Updated successfully")
+
+
     while True:
         command=input('Enter command> ')
         command=command.strip().lower()
@@ -900,6 +977,9 @@ INSERT INTO doctors (Phone, Name, Qualification, Role, Special_In) values
 
         elif command=='add doctor':
             add_doctor()
+        
+        elif command=='update doctor':
+            update_doctor()
 
         else:
             print("WRONG COMMAND [See `help`]")
