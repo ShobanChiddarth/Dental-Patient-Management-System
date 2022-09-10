@@ -1,18 +1,18 @@
-import sys
-import os
-import string
-
-from collections import deque
 import json
+import os
 import pprint
 import random
+import string
+import sys
 import tkinter as tk
+from collections import deque
 from typing import Any
+
+import pandas as pd
 from mysql import connector
 from prettytable import PrettyTable, from_db_cursor
-from pymsgbox import password
 from pwinput import pwinput
-import pandas as pd
+from pymsgbox import password
 
 import helper
 import sqlconfig
