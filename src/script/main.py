@@ -94,21 +94,33 @@ with open(file=filepath, mode='rt', encoding='utf-8', newline='') as fh:
 
 print('But it looks like', pprint.pformat(current_sql_configuration, indent=4), sep='\n')
 
-while True:
-    try:
-        # proceedict and TrueFalseDict are just to turn user input into python boolean variables
-        proceeddict={'y':True, 'n': False}
-        TrueFalseDict={
+def mapTrueFalse(s : str) -> bool:
+    """Converts the string given to boolean value"""
+    TrueFalseDict={
             'y':True,
             'n':False,
             't':True,
             'f':False,
             '0':False,
-            '1':True
+            '1':True,
+            'yes':True,
+            'no':False,
+            'true':True,
+            'false':False,
         }
-        proceed=proceeddict[input('Do you wish to proceed with the following (please make changes according to your need) [Y/n]?')[0].lower()]
+    if s.lower().strip() in TrueFalseDict:
+        return TrueFalseDict[s]
+    else:
+        raise ValueError('This string cannot be converted to True or False')
+    
+
+
+while True:
+    try:
+        proceed=input('Do you wish to proceed with the following (please make changes according to your need) [Y/n]?')
+        proceed=mapTrueFalse(proceed)
         break
-    except KeyError:
+    except ValueError:
         print('Invalid input')
         continue
 
@@ -134,11 +146,12 @@ Type `allowed` to get a list of all allowed items''')
         # just in case if there is some error when flushing the dict, it would be detected
         while True:
             try:
-                proceed=proceeddict[input('Are you satisfied [Y/n]?')[0].lower()]
-            except KeyError:
-                print('Invalid input')
-            else:
+                proceed=input('Are you satisfied [Y/n]?')
                 break
+            except ValueError:
+                print('Invalid input')
+                continue
+                
 
     else:
         print('Your `item` is not allowed. ')
@@ -510,10 +523,11 @@ You can also add the prescription here''')
 
                     while True:
                         try:
-                            paid=bool(TrueFalseDict[input('Is the payment complete [True/False] ?').strip().lower()[0]])
+                            paid=input('Is the payment complete [True/False] ?')
+                            paid=mapTrueFalse(paid)
                             break
-                        except KeyError as k:
-                            print('You entered',k)
+                        except ValueError as v:
+                            print('You entered',v)
                             print('Anything other than `True`, `False`, `0`, `1` cannot be accepted')
                             continue
 
@@ -570,10 +584,11 @@ You can also add the prescription here''')
 
                         while True:
                             try:
-                                paid=bool(TrueFalseDict[input('Is the payment complete [True/False] ?').strip().lower()[0]])
+                                paid=input('Is the payment complete [True/False] ?')
+                                paid=mapTrueFalse(paid)
                                 break
-                            except KeyError as k:
-                                print('You entered',k)
+                            except ValueError as v:
+                                print('You entered',v)
                                 print('Anything other than `True`, `False`, `0`, `1` cannot be accepted')
                                 continue    
 
@@ -651,10 +666,11 @@ SET status="{status}" WHERE treatmentID="{treatment_ID}";'''
             elif choice==2:
                 while True:
                     try:
-                        paid=bool(TrueFalseDict[input('Is the payment complete now [True/False] ?').strip().lower()[0]])
+                        paid=input('Is the payment complete now [True/False] ?')
+                        paid=mapTrueFalse(paid)
                         break
-                    except KeyError as k:
-                        print('You entered',k)
+                    except ValueError as v:
+                        print('You entered',v)
                         print('Anything other than `True`, `False`, `0`, `1` cannot be accepted')
                         continue
 
