@@ -10,7 +10,6 @@ import tkinter as tk
 from typing import Any
 from mysql import connector
 from prettytable import PrettyTable, from_db_cursor
-import pymsgbox
 from pymsgbox import password
 from pwinput import pwinput
 import pandas as pd
