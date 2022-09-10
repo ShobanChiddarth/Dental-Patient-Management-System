@@ -178,7 +178,7 @@ except connector.errors.DatabaseError as connectionerror:
 if connection.is_connected():
     print('Connected to MySQL Database SriSakthiPatients')
     print('''\
-Welcome admin
+Welcome
 Type `help` for help
 ''')
 
