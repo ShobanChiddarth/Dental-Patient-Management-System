@@ -202,7 +202,7 @@ Set `add_quotation` to False if you don't want `"` being added to the
         data=inner_cursor.fetchall()
         return bool(data)
 
-    def table_from_db(table:str, v='*', align='l') -> PrettyTable:
+    def table_from_db(table:str, v='*', align='l', connection=connection) -> PrettyTable:
         '''Return the given table name as prettytable from database'''
         inner_cursor=connection.cursor()
         inner_cursor.execute(f'SELECT {v} FROM {table};')
