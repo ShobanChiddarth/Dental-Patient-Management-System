@@ -109,7 +109,7 @@ def mapTrueFalse(s : str) -> bool:
             'false':False,
         }
     if s.lower().strip() in TrueFalseDict:
-        return TrueFalseDict[s]
+        return TrueFalseDict[s.lower().strip()]
     else:
         raise ValueError('This string cannot be converted to True or False')
     
@@ -125,37 +125,67 @@ while True:
         continue
 
 while not proceed:
-    print('''\
+    print('Do you want to update/add or delete?')
+    print(pd.Series(['update/add', 'delete']).to_string())
+    while True:
+        _edit_choice=input('Enter your choice: ')
+        try:
+            _edit_choice=int(_edit_choice)
+            break
+        except ValueError as VE:
+            print('Invalid Input.', VE)
+            continue
+
+    if _edit_choice==0:
+        print('''\
 Enter the item you wish to update/add
 You have to add only items that are allowed.
 Type `allowed` to get a list of all allowed items''')
-    allowed = sqlconfig.load.load_allowed(1)
-    item=input(': ').strip()
-    if item=='allowed':
-        pprint.pprint(allowed, indent=4)
-        continue
-    elif item in allowed:
-        value=eval(input("Enter updated value (will be evaluated by python's `eval` function): "))
+        allowed = sqlconfig.load.load_allowed(1)
+        item=input(': ').strip()
+        if item=='allowed':
+            pprint.pprint(allowed, indent=4)
+            continue
+        elif item in allowed:
+            value=eval(input("Enter updated value (will be evaluated by python's `eval` function): "))
 
-        sqlconfig.manage.safe_edit(current_sql_configuration, item, value)
-        sqlconfig.manage.flushdict(current_sql_configuration)
+            sqlconfig.manage.safe_edit(current_sql_configuration, item, value)
+            sqlconfig.manage.flushdict(current_sql_configuration)
 
-        print('Dictionary now is')
-        pprint.pprint(sqlconfig.load.load_data(1), indent=4)
-        # not using the variable `current_sql_configuration`
-        # just in case if there is some error when flushing the dict, it would be detected
-        while True:
-            try:
-                proceed=input('Are you satisfied [Y/n]?')
-                break
-            except ValueError:
-                print('Invalid input')
-                continue
-                
+            print('Dictionary now is')
+            pprint.pprint(sqlconfig.load.load_data(1), indent=4)
+            # not using the variable `current_sql_configuration`
+            # just in case if there is some error when flushing the dict, it would be detected
+
+        else:
+            print('Your `item` is not allowed. ')
+            continue
+
+    elif _edit_choice==1:
+        del_key=input('Enter the key to be deleted: ')
+        if del_key in current_sql_configuration:
+            del current_sql_configuration[del_key]
+            sqlconfig.manage.flushdict(current_sql_configuration)
+            print('Deleted')
+        else:
+            print('Key does not exist')
 
     else:
-        print('Your `item` is not allowed. ')
-        continue
+        print('Invalid Input')
+    
+    print('Do you wish to continue with the following configuration')
+    pprint.pprint(current_sql_configuration, indent=4)
+    proceed=input('Yes/No: ')
+
+    while True:
+        try:
+            proceed=mapTrueFalse(proceed)
+            break
+        except ValueError as VE:
+            print('Invalid Input')
+            continue
+
+
 
 # begin password getting process
 if 'idlelib.run' in sys.modules:
