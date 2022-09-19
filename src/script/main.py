@@ -511,14 +511,14 @@ Gets user input and adds a treatment to table `treatments`'''
                 continue
             else:
                 if not exists(value=treatment_ID, column='treatmentID', table='appointments'):
-                    print('Invalid treatmentID. It does not exist in table `appointments`.')
+                    print('An appointment with the given treatmentID does not exist.')
                     continue
                 elif exists(value=treatment_ID, column='treatmentID', table='treatments'):
+                    print('A treatment with the given treatmentID exists')
+                    continue
+                elif exists(value=treatment_ID, column='treatmentID', table='appointments'):
                     print('''Date format: YYYY-MM-DD
 Example: 1999-03-12''')
-
-                    DoctorsPhone=input('Enter the phone of doctor of this treatments (also `show doctors`): ')
-
                     date=input('Enter date: ')
                     while not (date[0:4].isdigit() and 
                                 date[4]=='-' and 
@@ -560,20 +560,25 @@ You can also add the prescription here''')
                             print('You entered',v)
                             print('Anything other than `True`, `False`, `0`, `1` cannot be accepted')
                             continue
+                    
+                    while True:
+                        DoctorsPhone=input('Enter the phone of doctor of this treatments (also `show doctors`): ').strip()
+                        if DoctorsPhone=='show doctors':
+                            show_doctors()
+                            continue
+                        elif exists(value=DoctorsPhone, column='Phone', table='doctors'):
+                            break
+                        else:
+                            print("Wrong phone number of doctor")
+                            continue
 
-                    if exists(value=DoctorsPhone, column='Phone', table='doctors'):
-                        inner_command=f'''INSERT INTO treatments (treatmentID, DoctorsPhone, date, time, treatment, status, fee, paid)
+                    inner_command=f'''INSERT INTO treatments (treatmentID, DoctorsPhone, date, time, treatment, status, fee, paid)
 VALUES ("{treatment_ID}", "{DoctorsPhone}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid});'''
-                        inner_cursor=connection.cursor()
-                        inner_cursor.execute(inner_command)
-                        connection.commit()
-                        print('Added successfully')
-                        break
-                    else:
-                        print("Wrong phone number of doctor")
-                else:
-                    print('An appointment with the given treatmentID does not exist.')
-                    continue
+                    inner_cursor=connection.cursor()
+                    inner_cursor.execute(inner_command)
+                    connection.commit()
+                    print('Added successfully')
+                    break
 
     def add_treatment_exact():
         '''\
