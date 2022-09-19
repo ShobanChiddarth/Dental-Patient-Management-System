@@ -334,7 +334,7 @@ Gets user input and updates a patient in table `patients`'''
                     continue
                 inner_cursor=connection.cursor()
                 inner_command=f'''UPDATE patients
-SET {value_to_be_updated}="{the_value}" WHERE phone="{phone}";'''
+SET {value_to_be_updated}={the_value} WHERE phone="{phone}";'''
                 inner_cursor.execute(inner_command)
                 connection.commit()
                 print('Updated successfully')
