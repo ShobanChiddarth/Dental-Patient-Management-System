@@ -50,7 +50,7 @@ print('But it looks like this', pprint.pformat(current_sql_configuration, indent
 while True:
     try:
         proceed=input('''\
-Do you wish to uaw the following configuration?
+Do you wish to use the following configuration?
 (please make changes according to your need) [Y/n]: ''')
         proceed=mapTrueFalse(proceed)
         break
