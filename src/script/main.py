@@ -213,7 +213,6 @@ Re-enter gender''')
         inner_cursor=connection.cursor()
         inner_cursor.execute(f'''INSERT INTO patients (name, phone, dob, gender, address)
 VALUES ("{name}",  "{phone}", '{dob}', "{gender}", "{address}");''')
-        connection.commit()
 
         print('New patient created')
 
@@ -254,7 +253,6 @@ Gets user input and updates a patient in table `patients`'''
                 inner_command=f'''UPDATE patients
 SET {value_to_be_updated}={the_value} WHERE phone="{phone}";'''
                 inner_cursor.execute(inner_command)
-                connection.commit()
                 print('Updated successfully')
                 break
 
@@ -324,7 +322,6 @@ Enter `add patient` to add a patient''')
         inner_cursor=connection.cursor()
         inner_cursor.execute(f'''INSERT INTO Appointments (phone, treatmentID, date, time)
 VALUES ("{phone}", "{treatment_id}", '{date}', '{time}');''')
-        connection.commit()
 
         print('New appointment created')
 
@@ -374,7 +371,6 @@ Updatable values
         inner_command=f'''UPDATE appointments
 SET {value_to_be_updated}="{the_value}" WHERE treatmentID="{treatment_id}";'''
         inner_cursor.execute(inner_command)
-        connection.commit()
         print('Updated successfully')
 
     def show_treatments():
@@ -494,7 +490,6 @@ You can also add the prescription here''')
 VALUES ("{treatment_ID}", "{DoctorsPhone}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid});'''
                     inner_cursor=connection.cursor()
                     inner_cursor.execute(inner_command)
-                    connection.commit()
                     print('Added successfully')
                     break
 
@@ -561,7 +556,6 @@ INSERT INTO treatments (treatmentID, DoctorsPhone, date, time, treatment, status
 VALUES ("{treatmentID}", "{DoctorsPhone}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid});'''
         inner_cursor=connection.cursor()
         inner_cursor.execute(inner_command)
-        connection.commit()
         print('Added successfully')
 
     def update_treatment():
@@ -611,7 +605,6 @@ You can also add the prescription here''')
 SET status="{status}" WHERE treatmentID="{treatment_ID}";'''
                 inner_cursor=connection.cursor()
                 inner_cursor.execute(inner_command)
-                connection.commit()
                 print('Updated successfully')
                 break
 
@@ -630,7 +623,6 @@ SET status="{status}" WHERE treatmentID="{treatment_ID}";'''
 SET paid={paid} WHERE treatmentID="{treatment_ID}";'''
                 inner_cursor=connection.cursor()
                 inner_cursor.execute(inner_command)
-                connection.commit()
                 print('Updated Successfully')
                 break
         
@@ -805,7 +797,6 @@ Specialist in what? """)
         inner_cursor.execute(f"""\
 INSERT INTO doctors (Phone, Name, Qualification, Role, Special_In) values
 ("{Phone}", "{Name}", "{Qualification}", "{Role}", {Special_In});""")
-        connection.commit()
         print("Added successfully")
 
     def update_doctor():
@@ -880,7 +871,6 @@ UPDATE `doctors`
 SET {v[value_to_be_updated]} = {new_value}
 WHERE Phone={Phone};"""
         inner_cursor.execute(inner_command)
-        connection.commit()
         print("Updated successfully")
 
 
