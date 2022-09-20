@@ -234,7 +234,7 @@ Gets user input and updates a patient in table `patients`'''
                         allowed_patient_update_values=('name', 'dob', 'phone', 'address', 'gender')
                         if value_to_be_updated in allowed_patient_update_values:
                             if value_to_be_updated=='address':
-                                    the_value=multilineinput("Enter address below")
+                                    the_value='"'+multilineinput("Enter address below")+'"'
                             else:
                                     while True:
                                         try:
@@ -253,9 +253,11 @@ Gets user input and updates a patient in table `patients`'''
                     print('Wrong phone number. Re-enter it.')
                     continue
                 inner_cursor=connection.cursor()
-                inner_command=f'''UPDATE patients
-SET {value_to_be_updated}={the_value} WHERE phone="{phone}";'''
-                inner_cursor.execute(inner_command)
+                inner_cursor.execute(f'''\
+UPDATE PATIENTS
+SET {value_to_be_updated}={the_value}
+WHERE Phone="{phone}";''')
+
                 print('Updated successfully')
                 break
 
