@@ -859,7 +859,7 @@ Enter the phone number of the doctor you wan't to update values
         
         new_value=input(f"Enter new value of {v[value_to_be_updated]} : ")
 
-        if value_to_be_updated==4: # Special_In
+        if value_to_be_updated==4:
             if new_value.lower().strip() in ('null', 'none', '0'):
                 new_value='NULL'
             else:
