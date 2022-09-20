@@ -34,15 +34,18 @@ def multilineinput(input_text='Enter your input'):
 
     window=tk.Tk()
     window.title('Dental Patient Management System')
-    window.geometry('600x230')
 
-    title=tk.Label(window, text=input_text)
+    window.geometry('600x230')
+    window.configure(bg='#121212')
+
+    title=tk.Label(window, text=input_text , fg='white' ,bg='#121212', font=("Comic Sans MS", 20))
     title.pack(side=tk.TOP)
 
     yscrollbar=tk.Scrollbar(window, orient='vertical')
     yscrollbar.pack(side=tk.RIGHT, fill='y')
 
-    text=tk.Text(window, height=7, width=50, padx=30, pady=20, yscrollcommand=yscrollbar.set)
+    text=tk.Text(window, height=7, width=50, padx=30, pady=20, yscrollcommand=yscrollbar.set ,
+                    bg='black' , fg='white', insertbackground='white', font=("Consolas", 10))
 
 
     yscrollbar.config(command=text.yview)
@@ -52,7 +55,7 @@ def multilineinput(input_text='Enter your input'):
         msc.data+=text.get(1.0 , "end-1c")
         window.destroy()
     
-    submit=tk.Button(window, text='SUBMIT', command=submitf)
+    submit=tk.Button(window, text='SUBMIT', command=submitf , fg='white' , bg='#21211d', font=("Helvetica", 14))
 
     submit.pack()
     window.attributes('-topmost',1)
