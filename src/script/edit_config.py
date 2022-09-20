@@ -34,7 +34,8 @@ if __name__ != "__main__":
 
 print("""\
 This program is to edit the connection configuration stored in the file
-`sqlcredentials.json` (inside sqlconfig module). """)
+`sqlcredentials.json` (inside sqlconfig module).
+""")
 
 
 current_sql_configuration = sqlconfig.load.load_data(1)
@@ -42,9 +43,11 @@ filepath=os.path.join(os.path.dirname(__file__), 'sqlcredentials_sample.json')
 
 print('''Please look at this dictionary to get an idea about sql connection config dict.
 Your dictionary must look somewhat like this.''')
+
 with open(file=filepath, mode='rt', encoding='utf-8', newline='') as fh:
     pprint.pprint(json.loads(fh.read()))
 
+print()
 print('But it looks like this', pprint.pformat(current_sql_configuration, indent=4), sep='\n')
 
 while True:
@@ -104,7 +107,8 @@ Type `allowed` to get a list of all allowed items''')
 
     else:
         print('Invalid Input')
-    
+
+    print()
     print('Do you wish to save the following configuration?')
     pprint.pprint(current_sql_configuration, indent=4)
     proceed=input('Yes/No: ')
@@ -118,5 +122,6 @@ Type `allowed` to get a list of all allowed items''')
             continue
 
 
+print()
 print("Exiting program with configuration as")
 pprint.pprint(current_sql_configuration)
