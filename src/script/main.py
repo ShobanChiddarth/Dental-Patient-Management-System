@@ -704,7 +704,6 @@ ON doctors.Phone=treatments.DoctorsPhone;''')
                     table=from_db_cursor(inner_cursor)
 
                     df=pd.DataFrame(table.rows, columns=table.field_names)
-                    # print(df.to_string(index=False, ))
                     temp=PrettyTable(field_names=table.field_names)
 
                     for index, value in enumerate(df["Phone"]):
