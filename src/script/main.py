@@ -586,66 +586,65 @@ Gets user input but date and time are of the exact time as per table `appointmen
 and inserts into table `treatments`'''
         while True:
             print('Enter treatmentID to add treatment in exact date, time of appointment')
-            treatmentID=input('(or even `show appointments`) : ')
+            treatmentID=input('(or even `show appointments`) : ').strip()
             if treatmentID=='show appointments':
                 show_appointments()
                 continue
+            elif not exists(value=treatmentID, column='treatmentID', table='appointments'):
+                print('An appointment with the given treatmentID does not exist.')
+                continue
+            elif exists(value=treatmentID, column='treatmentID', table='treatments'):
+                print('A treatment with the given treatmentID exists')
+                continue
             else:
-                if not exists(value=treatmentID, column='treatmentID', table='appointments'):
-                    print('Wrong treatmentID. Appointment does not exist.')
-                    continue
-                else:
-                    if exists(value=treatmentID, column='treatmentID', table='treatments'):
-                        print('Wrong treatmentID. Treatment exists.')
-                        continue
-                    else:
-                        inner_cursor=connection.cursor()
-                        inner_cursor.execute(f'SELECT date, time from appointments WHERE treatmentID="{treatmentID}";')
-                        (date, time)=inner_cursor.fetchall()[0]
-                        date=date.strftime('%Y-%m-%d')
-                        time=str(time)
+                break
+            
+        inner_cursor=connection.cursor()
+        inner_cursor.execute(f'SELECT date, time from appointments WHERE treatmentID="{treatmentID}";')
+        (date, time)=inner_cursor.fetchall()[0]
+        date=date.strftime('%Y-%m-%d')
+        time=str(time)
 
-                        treatment=input('What treatment it is ? ')
+        treatment=input('What treatment it is ? ').strip()
 
-                        status=multilineinput('''What is the status of the treatment?
+        status=multilineinput('''What is the status of the treatment?
 You can also add the prescription here''')
 
-                        while True:
-                            fee=eval(input('Enter amount in rupees (without symbols) : '))
-                            if not isinstance(fee, (int, float)):
-                                print('Should be integer or decimal')
-                                continue
-                            break
+        while True:
+            try:
+                fee=float(input('Enter amount in rupees (without symbols) : ').strip())
+                break
+            except ValueError as VE:
+                print(VE)
+                continue
 
-                        while True:
-                            try:
-                                paid=input('Is the payment complete [True/False] ?')
-                                paid=mapTrueFalse(paid)
-                                break
-                            except ValueError as v:
-                                print('You entered',v)
-                                print('Anything other than `True`, `False`, `0`, `1` cannot be accepted')
-                                continue    
+        while True:
+            try:
+                paid=input('Is the payment complete [True/False] ?')
+                paid=mapTrueFalse(paid)
+                break
+            except ValueError as VE:
+                print(VE)
+                continue    
 
-                        while True:    
-                            DoctorsPhone=input('Enter the phone of doctor of this treatments (also `show doctors`): ')
-                            if exists(value=DoctorsPhone, column="Phone", table="doctors"):
-                                command=f'''\
+        while True:    
+            DoctorsPhone=input('Enter the phone of doctor of this treatments (also `show doctors`): ')
+            if DoctorsPhone=='show doctors':
+                show_doctors()
+                continue
+            elif not exists(value=DoctorsPhone, column="Phone", table="doctors"):
+                print("Wrong phone number of doctor")
+                continue
+            elif exists(value=DoctorsPhone, column="Phone", table="doctors"):
+                break
+        
+        inner_command=f'''\
 INSERT INTO treatments (treatmentID, DoctorsPhone, date, time, treatment, status, fee, paid)
 VALUES ("{treatmentID}", "{DoctorsPhone}", "{date}", "{time}", "{treatment}", "{status}", {fee}, {paid});'''
-                                inner_cursor=connection.cursor()
-                                inner_cursor.execute(command)
-                                connection.commit()
-                                print('Added Successfully')
-                                break
-                            elif DoctorsPhone=='show doctors':
-                                show_doctors()
-                                continue
-                            else:
-                                print("Wrong phone number of doctor")
-                                continue
-                        
-                        break
+        inner_cursor=connection.cursor()
+        inner_cursor.execute(inner_command)
+        connection.commit()
+        print('Added successfully')
 
     def update_treatment():
         '''\
