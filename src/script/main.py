@@ -457,6 +457,10 @@ Example: 13:50''')
                                 len(time)==5):
                         print('Invalid Time')
                         time=input('Re-enter time: ')
+                    
+                    print('Here are the list of available basic treatments')
+                    with open(os.path.join(os.path.dirname(__file__), 'treatments.json'), encoding='utf-8') as fh:
+                        print(' '+pprint.pformat(json.loads(fh.read()), indent=4).strip('{}'))
 
                     treatment=input('What treatment it is ? ')
 
@@ -522,6 +526,10 @@ and inserts into table `treatments`'''
         (date, time)=inner_cursor.fetchall()[0]
         date=date.strftime('%Y-%m-%d')
         time=str(time)
+
+        print('Here are the list of available basic treatments')
+        with open(os.path.join(os.path.dirname(__file__), 'treatments.json'), encoding='utf-8') as fh:
+            print(' '+pprint.pformat(json.loads(fh.read()), indent=4).strip('{}'))
 
         treatment=input('What treatment it is ? ').strip()
 
