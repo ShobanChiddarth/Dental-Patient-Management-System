@@ -34,11 +34,23 @@ def multilineinput(input_text='Enter your input'):
 
     window=tk.Tk()
     window.title('Dental Patient Management System')
+    if len(input_text.split('\n'))==1:
+        windowGeometry='600x240'
+    elif len(input_text.split('\n'))==2:
+        windowGeometry='600x270'
+    elif len(input_text.split('\n'))==3:
+        windowGeometry='600x300'
+    window.geometry(windowGeometry)
 
-    window.geometry('600x230')
     window.configure(bg='#121212')
 
-    title=tk.Label(window, text=input_text , fg='white' ,bg='#121212', font=("Comic Sans MS", 20))
+    if len(input_text.split('\n'))==1:
+        titleFontSize=27
+    elif len(input_text.split('\n'))==2:
+        titleFontSize=22
+    elif len(input_text.split('\n'))==3:
+        titleFontSize=17
+    title=tk.Label(window, text=input_text , fg='white' ,bg='#121212', font=("Helvetica", titleFontSize))
     title.pack(side=tk.TOP)
 
     yscrollbar=tk.Scrollbar(window, orient='vertical')
