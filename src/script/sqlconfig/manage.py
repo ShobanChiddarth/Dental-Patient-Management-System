@@ -8,7 +8,8 @@ import json
 from typing import Any
 from . import load
 
-def dict_has_only_allowed_values(d : dict) -> bool:
+
+def dict_has_only_allowed_values(d: dict) -> bool:
     """\
 If d has only values that are allowed,
 return True.
@@ -22,7 +23,7 @@ def fileisemtpy():
     return bool(load.load_data(0).replace(json.dumps({}), ''))
 
 
-def flushdict(d : dict):
+def flushdict(d: dict):
     """\
 Flush the dictionary to the file holding credentials if dict has only allowed values.
 else, ValueError
@@ -35,11 +36,12 @@ To be called after modifying the dictionary in memory.
     else:
         raise ValueError('dict has unallowed values')
 
-def safe_edit(d : dict, key : str, value : Any):
+
+def safe_edit(d: dict, key: str, value: Any):
     """\
 If key is allowed, set the value in `d`. Else, raise ValueError.
 """
     if key in load.load_allowed(1):
-        d[key]=value
+        d[key] = value
     else:
         raise ValueError('`key` is a not-allowed value')
