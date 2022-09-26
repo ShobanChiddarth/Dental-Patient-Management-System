@@ -1,4 +1,4 @@
-
+"""This program is for editing the database connection configuration of the main program"""
 import json
 import os
 import pprint
