@@ -879,8 +879,8 @@ Enter the phone number of the doctor you wan't to update values
         if value_to_be_updated == 4:
             if new_value.lower().strip() in ('null', 'none', '0'):
                 new_value = 'NULL'
-            else:
-                new_value = '"'+new_value+'"'
+        else:
+            new_value = '"'+new_value+'"'
 
         inner_cursor = connection.cursor()
         inner_command = f"""
