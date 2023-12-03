@@ -1,6 +1,6 @@
 <h1 align="center">
 DENTAL PATIENT MANAGEMENT SYSTEM<br>
-<img src="Assets/Teeth-logo.png" width="300">
+<img src="Assets/Teeth-logo-stretched.png" width="300">
 </h1>
 
 ### Introduction
