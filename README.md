@@ -7,10 +7,6 @@ DENTAL PATIENT MANAGEMENT SYSTEM<br>
 Just a school project, running in Python. It is purely written in python. 
 It is just run in Python directly and the output in the terminal is everything.
 This is a school project to use python with [class 12 concepts](https://csstudy.in/sumita-arora-python-class-12-pdf-cs-book/).
-This is currently a script that uses a CLI interface as an API. It gets user
-input and runs the CLI, gives the output in the main script. 
-My aim was not to use the concepts but to make it a good software and anyways I 
-ended up using all the concepts taught in school for this project.
 
 When I say it is just a school project, I mean it can't be used in real life, as
 a real software to manage patient records in a  real dental clinic. It is very very
